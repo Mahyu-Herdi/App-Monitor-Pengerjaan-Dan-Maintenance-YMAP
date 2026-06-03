@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMM Dapur - PWA Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1c2541">
+    <style>
+        :root {
+            --bg-color: #0b132b; 
+            --card-bg: #1c2541;
+            --btn-color: #3a506b; 
+            --border-red: #ff4d4d;
+            --text-color: #e0e1dd;
+            --clay-shadow: 8px 8px 16px #060b19, -8px -8px 16px #101c3d;
+            --inset-shadow: inset 4px 4px 8px #060b19, inset -4px -4px 8px #101c3d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { max-width: 1100px; margin: auto; }
+
+        .kop-header {
+            text-align: center; padding: 15px; margin-bottom: 30px;
+            border-bottom: 3px double var(--border-red);
+        }
+        .kop-title {
+            font-size: 1.6rem; font-weight: 800; letter-spacing: 1.5px;
+            color: #48cae4; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); margin: 5px 0;
+        }
+        .kop-subtitle { font-size: 0.9rem; color: #94d2bd; letter-spacing: 1px; margin: 0; }
+
+        .card {
+            background: var(--card-bg); border-radius: 16px; padding: 25px; margin-bottom: 25px;
+            box-shadow: var(--clay-shadow); border: 1px solid var(--border-red);
+        }
+
+        .card h2, .card h3 { color: #48cae4; border-left: 4px solid var(--border-red); padding-left: 10px; margin-top: 0; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+        @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: #a5a5a5; }
+
+        input, select, textarea {
+            width: 100%; padding: 12px; border-radius: 10px; border: none;
+            background: var(--bg-color); color: var(--text-color);
+            box-shadow: var(--inset-shadow); box-sizing: border-box; transition: 0.3s;
+        }
+        input:focus, select:focus { outline: 1px solid #48cae4; }
+
+        .table-responsive { overflow-x: auto; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: rgba(58, 80, 107, 0.4); padding: 12px; text-align: left; color: #48cae4; border-bottom: 2px solid var(--border-red); }
+        td { padding: 10px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .btn {
+            padding: 12px 20px; border: none; border-radius: 10px; background: var(--btn-color);
+            color: #fff; font-weight: 700; cursor: pointer;
+            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.15), inset -2px -2px 4px rgba(0,0,0,0.4), 4px 4px 10px rgba(0,0,0,0.4);
+            transition: 0.2s;
+        }
+        .btn:active { box-shadow: var(--inset-shadow); transform: scale(0.98); }
+        .btn-danger { background: #d90429; }
+        .btn-success { background: #2a9d8f; }
+        .btn-full { width: 100%; font-size: 1.1rem; padding: 15px; margin-top: 15px;}
+
+        .badge { padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+        .badge-progress { background: #f4a261; color: #000; }
+        .badge-cicil { background: #e9c46a; color: #000; }
+        .badge-lunas { background: #2a9d8f; color: #fff; }
+
+        .action-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="kop-header">
+        <div id="logoContainer"></div>
+        <div class="kop-title">SISTEM MONITORING ANGGARAN & REKONSTRUKSI DAPUR</div>
+        <div class="kop-subtitle">Yayasan Mbg Perbaikan & Maintenance Real-Time System</div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn" onclick="showSection('input-section')">📝 Form Input Baru</button>
+        <button class="btn" onclick="showSection('monitoring-section')">📊 Dashboard Monitoring</button>
+        <button class="btn" onclick="showSection('setting-section')">⚙️ Pengaturan Dokumen</button>
+    </div>
+
+    <div id="setting-section" class="card app-section" style="display:none;">
+        <h2>Pengaturan Tanda Tangan & Pembayaran Invoice</h2>
+        <form id="formSetting">
+            <div class="grid-2">
+                <div class="form-group"><label>Lokasi Penandatanganan</label><input type="text" id="setLokasi"></div>
+                <div class="form-group"><label>Jabatan Penanggung Jawab</label><input type="text" id="setJabatan"></div>
+                <div class="form-group"><label>Nama Bank Pembayaran</label><input type="text" id="setBank"></div>
+                <div class="form-group"><label>Nomor Rekening</label><input type="text" id="setNoRek"></div>
+                <div class="form-group"><label>Rekening Atas Nama</label><input type="text" id="setAtasNama"></div>
+                <div class="form-group"><label>Link Gambar Kop Surat (Drive)</label><input type="text" id="setKopSurat"></div>
+            </div>
+            <button type="button" class="btn btn-success" onclick="simpanSettingLocal()">💾 Simpan Parameter Sistem</button>
+        </form>
+    </div>
+
+    <div id="input-section" class="card app-section">
+        <h2>Input Perbaikan & Belanja Barang Dapur</h2>
+        <form id="formUtama">
+            <div class="grid-2">
+                <div class="form-group"><label>Nama Dapur</label><input type="text" id="namaDapur" required></div>
+                <div class="form-group"><label>Nama PIC / SPPG</label><input type="text" id="pic" required></div>
+                <div class="form-group"><label>Tanggal Mulai</label><input type="date" id="tglMulai" required></div>
+                <div class="form-group"><label>Tanggal Selesai</label><input type="date" id="tglSelesai" required></div>
+            </div>
+
+            <h3>Rincian Pengeluaran Barang</h3>
+            <div class="table-responsive">
+                <table id="tabelBarang">
+                    <thead>
+                        <tr>
+                            <th style="width: 35%;">Nama Barang</th>
+                            <th style="width: 10%;">Qty</th>
+                            <th style="width: 15%;">Satuan</th>
+                            <th style="width: 20%;">Harga Satuan</th>
+                            <th style="width: 20%;">Total</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyBarang">
+                        <tr>
+                            <td><input type="text" class="namaBarang" required></td>
+                            <td><input type="number" class="qty" value="1" min="1" required></td>
+                            <td><input type="text" class="satuan" required></td>
+                            <td><input type="number" class="harga" required></td>
+                            <td><input type="number" class="total" required></td>
+                            <td><button type="button" class="btn btn-danger hapusBaris">X</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="btn" style="margin-top: 10px;" id="tambahBaris">➕ Tambah Item</button>
+
+            <h3 style="margin-top:25px;">Lampiran Dokumen Bukti Fisik</h3>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Foto Progress Pekerjaan (Pilih banyak)</label>
+                    <input type="file" id="fotoKerja" accept="image/*" multiple required>
+                </div>
+                <div class="form-group">
+                    <label>Foto Nota / Kwitansi (Pilih banyak)</label>
+                    <input type="file" id="fotoNota" accept="image/*" multiple required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-full" id="btnSimpan">🚀 SIMPAN DATA KE SPREADSHEET</button>
+        </form>
+    </div>
+
+    <div id="monitoring-section" class="card app-section" style="display:none;">
+        <h2>Dashboard Laporan Bulanan & Cetak Dokumen</h2>
+        
+        <div class="grid-3" style="margin-bottom: 20px;">
+            <div class="form-group">
+                <label>Pilih PIC</label>
+                <select id="dropPIC" onchange="filterDapurDropdown()"><option value="">-- Pilih PIC --</option></select>
+            </div>
+            <div class="form-group">
+                <label>Pilih Dapur</label>
+                <select id="dropDapur" onchange="filterTanggalDropdown()" disabled><option value="">-- Pilih Dapur --</option></select>
+            </div>
+            <div class="form-group">
+                <label>Pilih Tanggal</label>
+                <select id="dropTanggal" onchange="muatDataTerpilih()" disabled><option value="">-- Pilih Tanggal --</option></select>
+            </div>
+        </div>
+        
+        <div id="printPanel" style="display:none; margin-bottom: 20px;" class="action-bar">
+            <button class="btn btn-success" onclick="bukaHalamanCetak('sp')">🖨️ Cetak SP</button>
+            <button class="btn btn-success" onclick="bukaHalamanCetak('invoice')">🧾 Cetak Invoice</button>
+            <button class="btn btn-success" onclick="bukaHalamanCetak('lampiran')">🖼️ Cetak Lampiran</button>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th><th>Tgl Mulai</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelRealtimeMonitoring"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+    }
+
+    let dbPesananGlobal = JSON.parse(localStorage.getItem('cache_pesanan')) || [];
+    let dbMonitoringGlobal = JSON.parse(localStorage.getItem('cache_monitoring')) || [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+        muatSettingLocal();
+        bangunCascadingDropdown();
+        renderTabelMonitoring();
+    });
+
+    function showSection(id) {
+        document.querySelectorAll('.app-section').forEach(sec => sec.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function simpanSettingLocal() {
+        const conf = {
+            lokasi: document.getElementById('setLokasi').value, jabatan: document.getElementById('setJabatan').value,
+            bank: document.getElementById('setBank').value, norek: document.getElementById('setNoRek').value,
+            atasnama: document.getElementById('setAtasNama').value, kop: document.getElementById('setKopSurat').value
+        };
+        localStorage.setItem('smm_setting_cetak', JSON.stringify(conf));
+        alert("Pengaturan disimpan!"); muatSettingLocal();
+    }
+
+    function muatSettingLocal() {
+        const cache = localStorage.getItem('smm_setting_cetak');
+        if(cache) {
+            const data = JSON.parse(cache);
+            document.getElementById('setLokasi').value = data.lokasi || '';
+            document.getElementById('setJabatan').value = data.jabatan || '';
+            document.getElementById('setBank').value = data.bank || '';
+            document.getElementById('setNoRek').value = data.norek || '';
+            document.getElementById('setAtasNama').value = data.atasnama || '';
+            document.getElementById('setKopSurat').value = data.kop || '';
+            if(data.kop) document.getElementById('logoContainer').innerHTML = `<img src="${data.kop}" style="max-height:80px; margin-bottom:10px;">`;
+        }
+    }
+
+    // Kalkulasi Harga & Total 2 Arah
+    document.getElementById('bodyBarang').addEventListener('input', function(e) {
+        const row = e.target.closest('tr');
+        const qty = parseFloat(row.querySelector('.qty').value) || 0;
+        const harga = row.querySelector('.harga');
+        const total = row.querySelector('.total');
+
+        if (e.target.classList.contains('harga') || e.target.classList.contains('qty')) {
+            total.value = Math.round(qty * (parseFloat(harga.value) || 0));
+        } else if (e.target.classList.contains('total')) {
+            harga.value = qty > 0 ? Math.round(parseFloat(total.value || 0) / qty) : 0;
+        }
+    });
+
+    document.getElementById('tambahBaris').addEventListener('click', () => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="namaBarang" required></td>
+            <td><input type="number" class="qty" value="1" min="1" required></td>
+            <td><input type="text" class="satuan" required></td>
+            <td><input type="number" class="harga" required></td>
+            <td><input type="number" class="total" required></td>
+            <td><button type="button" class="btn btn-danger hapusBaris">X</button></td>`;
+        document.getElementById('bodyBarang').appendChild(tr);
+    });
+
+    document.getElementById('bodyBarang').addEventListener('click', e => {
+        if (e.target.classList.contains('hapusBaris')) {
+            if(document.querySelectorAll('#bodyBarang tr').length > 1) e.target.closest('tr').remove();
+        }
+    });
+
+    const fileToBase64 = file => new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => res(reader.result);
+        reader.onerror = err => rej(err);
+    });
+
+    document.getElementById('formUtama').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btnSimpan');
+        btn.innerText = "MENGIRIM..."; btn.disabled = true;
+
+        try {
+            let items = [], totalAnggaran = 0;
+            document.querySelectorAll('#bodyBarang tr').forEach(row => {
+                const tot = parseFloat(row.querySelector('.total').value) || 0;
+                totalAnggaran += tot;
+                items.push({
+                    namaBarang: row.querySelector('.namaBarang').value, qty: row.querySelector('.qty').value,
+                    satuan: row.querySelector('.satuan').value, hargaSatuan: row.querySelector('.harga').value, total: tot
+                });
+            });
+
+            const fKerja = document.getElementById('fotoKerja').files;
+            const fNota = document.getElementById('fotoNota').files;
+            let arrFotoKerja = [], arrFotoNota = [];
+            for(let f of fKerja) arrFotoKerja.push(await fileToBase64(f));
+            for(let f of fNota) arrFotoNota.push(await fileToBase64(f));
+
+            const pic = document.getElementById('pic').value, dapur = document.getElementById('namaDapur').value;
+            const tglM = document.getElementById('tglMulai').value, tglS = document.getElementById('tglSelesai').value;
+            const noUrut = dbMonitoringGlobal.length + 1;
+
+            dbMonitoringGlobal.push({ noUrut, tglMulai: tglM, namaDapur: dapur, pic, anggaranAwal: totalAnggaran, dibayar: 0, sisa: totalAnggaran, status: "Dalam Pengerjaan" });
+            items.forEach(it => dbPesananGlobal.push({ noUrut, tglMulai: tglM, tglSelesai: tglS, namaDapur: dapur, pic, ...it, fotoKerja: arrFotoKerja, fotoNota: arrFotoNota }));
+            
+            localStorage.setItem('cache_pesanan', JSON.stringify(dbPesananGlobal));
+            localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitoringGlobal));
+
+            if (navigator.onLine && API_URL.includes("http")) {
+                await fetch(API_URL, {
+                    method: "POST", mode: "no-cors",
+                    body: JSON.stringify({ action: "simpanPesanan", noUrut, namaDapur: dapur, pic, tglMulai: tglM, tglSelesai: tglS, items, fotoKerjaBase64: arrFotoKerja, fotoNotaBase64: arrFotoNota, anggaranAwal: totalAnggaran })
+                });
+                alert("Data berhasil tersimpan ke sistem Cloud!");
+            } else {
+                alert("Tersimpan sementara di lokal (Offline / API belum diatur).");
+            }
+
+            document.getElementById('formUtama').reset();
+            bangunCascadingDropdown(); renderTabelMonitoring(); showSection('monitoring-section');
+        } catch (err) { alert("Error: " + err.message); } 
+        finally { btn.innerText = "🚀 SIMPAN DATA"; btn.disabled = false; }
+    });
+
+    function bangunCascadingDropdown() {
+        const dropPIC = document.getElementById('dropPIC');
+        dropPIC.innerHTML = '<option value="">-- Pilih PIC --</option>';
+        [...new Set(dbMonitoringGlobal.map(i => i.pic))].forEach(p => dropPIC.innerHTML += `<option value="${p}">${p}</option>`);
+    }
+
+    function filterDapurDropdown() {
+        const selPIC = document.getElementById('dropPIC').value;
+        const dropDapur = document.getElementById('dropDapur');
+        dropDapur.innerHTML = '<option value="">-- Pilih Dapur --</option>';
+        document.getElementById('dropTanggal').innerHTML = '<option value="">-- Pilih Tanggal --</option>';
+        document.getElementById('printPanel').style.display = 'none';
+
+        if(!selPIC) { dropDapur.disabled = true; document.getElementById('dropTanggal').disabled = true; return; }
+
+        [...new Set(dbMonitoringGlobal.filter(x => x.pic === selPIC).map(x => x.namaDapur))].forEach(d => dropDapur.innerHTML += `<option value="${d}">${d}</option>`);
+        dropDapur.disabled = false;
+    }
+
+    function filterTanggalDropdown() {
+        const selPIC = document.getElementById('dropPIC').value, selDapur = document.getElementById('dropDapur').value;
+        const dropTanggal = document.getElementById('dropTanggal');
+        dropTanggal.innerHTML = '<option value="">-- Pilih Tanggal --</option>';
+        document.getElementById('printPanel').style.display = 'none';
+
+        if(!selDapur) { dropTanggal.disabled = true; return; }
+
+        dbMonitoringGlobal.filter(x => x.pic === selPIC && x.namaDapur === selDapur).forEach(t => dropTanggal.innerHTML += `<option value="${t.tglMulai}">${t.tglMulai}</option>`);
+        dropTanggal.disabled = false;
+    }
+
+    function muatDataTerpilih() {
+        const pic = document.getElementById('dropPIC').value, dapur = document.getElementById('dropDapur').value, tgl = document.getElementById('dropTanggal').value;
+        if(pic && dapur && tgl) {
+            const bundle = dbMonitoringGlobal.find(x => x.pic === pic && x.namaDapur === dapur && x.tglMulai === tgl);
+            const items = dbPesananGlobal.filter(x => x.pic === pic && x.namaDapur === dapur && x.tglMulai === tgl);
+            localStorage.setItem('smm_siap_cetak', JSON.stringify({ bundle, items }));
+            document.getElementById('printPanel').style.display = 'flex';
+        }
+    }
+
+    function bukaHalamanCetak(jenis) { window.open(`${jenis}.html`, '_blank'); }
+
+    function renderTabelMonitoring() {
+        const tbody = document.getElementById('tabelRealtimeMonitoring');
+        tbody.innerHTML = '';
+        if(!dbMonitoringGlobal.length) return tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Data kosong.</td></tr>';
+        
+        dbMonitoringGlobal.forEach(x => {
+            let badge = x.status.includes('Lunas') ? 'badge-lunas' : x.status.includes('Cicil') ? 'badge-cicil' : 'badge-progress';
+            tbody.innerHTML += `<tr>
+                <td>#${x.noUrut}</td><td>${x.tglMulai}</td><td>${x.namaDapur}</td><td>${x.pic}</td>
+                <td>Rp ${x.anggaranAwal.toLocaleString('id-ID')}</td><td>Rp ${(x.dibayar||0).toLocaleString('id-ID')}</td>
+                <td>Rp ${(x.sisa||x.anggaranAwal).toLocaleString('id-ID')}</td><td><span class="badge ${badge}">${x.status}</span></td>
+            </tr>`;
+        });
+    }
+</script>
+</body>
+</html>
