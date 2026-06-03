@@ -311,11 +311,13 @@
             const pic = document.getElementById('pic').value, dapur = document.getElementById('namaDapur').value;
             const tglM = document.getElementById('tglMulai').value, tglS = document.getElementById('tglSelesai').value;
             const noUrut = dbMonitoringGlobal.length + 1;
+dbMonitoringGlobal.push({ noUrut, tglMulai: tglM, namaDapur: dapur, pic, anggaranAwal: totalAnggaran, dibayar: 0, sisa: totalAnggaran, status: "Dalam Pengerjaan" });
 
-            dbMonitoringGlobal.push({ noUrut, tglMulai: tglM, namaDapur: dapur, pic, anggaranAwal: totalAnggaran, dibayar: 0, sisa: totalAnggaran, status: "Dalam Pengerjaan" });
-            items.forEach(it => dbPesananGlobal.push({ noUrut, tglMulai: tglM, tglSelesai: tglS, namaDapur: dapur, pic, ...it, fotoKerja: arrFotoKerja, fotoNota: arrFotoNota }));
+// Foto kita hilangkan dari penyimpanan lokal browser biar memori nggak jebol
+items.forEach(it => dbPesananGlobal.push({ noUrut, tglMulai: tglM, tglSelesai: tglS, namaDapur: dapur, pic, ...it }));
             
-            localStorage.setItem('cache_pesanan', JSON.stringify(dbPesananGlobal));
+localStorage.setItem('cache_pesanan', JSON.stringify(dbPesananGlobal));
+    
             localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitoringGlobal));
 
             if (navigator.onLine && API_URL.includes("http")) {
