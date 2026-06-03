@@ -19,7 +19,8 @@
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:15px 15px 90px;font-size:14px}
-    .container{max-width:1000px;margin:auto}
+    
+    .container{width:100%;max-width:100%;margin:auto}
 
     /* HEADER */
     .app-header{display:flex;justify-content:space-between;align-items:center;padding:15px;margin-bottom:20px;border-radius:20px;background:var(--bg);box-shadow:var(--sh-out)}
@@ -29,7 +30,7 @@
 
     /* CARD */
     .card{background:var(--bg);border-radius:20px;padding:20px;margin-bottom:25px;box-shadow:var(--sh-out)}
-    .card h2,.card h3{color:var(--blue);margin:0 0 15px;font-size:1.1rem;text-transform:uppercase;letter-spacing:.5px}
+    .card h2,.card h3{color:var(--blue);margin:0 0 15px;font-size:1.1rem;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
 
     /* GRID */
     .g2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
@@ -37,7 +38,7 @@
     @media(max-width:768px){.g2,.g3{grid-template-columns:1fr;gap:12px}}
 
     /* INPUT */
-    label{display:block;margin-bottom:6px;font-size:.8rem;font-weight:bold;color:var(--muted)}
+    label{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:.8rem;font-weight:bold;color:var(--muted)}
     input,select{width:100%;padding:14px;border-radius:14px;border:none;background:var(--bg);color:var(--txt);box-shadow:var(--sh-in);font-size:.95rem;font-weight:bold;transition:all .3s}
     input:focus,select:focus{outline:none;box-shadow:var(--sh-in),0 0 0 3px rgba(84,140,168,.2)}
     input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
@@ -70,6 +71,8 @@
     .modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg);box-shadow:var(--sh-out);padding:25px;border-radius:20px;z-index:9999;text-align:center;width:88%;max-width:340px}
     .modal p{color:var(--txt);font-size:.95rem;margin:0 0 20px;line-height:1.5;font-weight:bold}
     .modal-inp{margin-bottom:20px;text-align:center;font-size:1.2rem;color:var(--blue);box-shadow:var(--sh-in);background:var(--bg)}
+    .modal-icon-wrap {display:flex;justify-content:center;margin-bottom:15px}
+    .modal-icon-wrap svg {width:48px;height:48px}
 
     /* NAV */
     .nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:92%;max-width:450px;background:var(--bg);box-shadow:var(--sh-out);border-radius:30px;display:flex;justify-content:space-around;align-items:center;padding:10px 5px;z-index:9000}
@@ -85,16 +88,19 @@
 </head>
 <body>
 
-<!-- MODAL NOTIF -->
 <div id="ovAlert" class="overlay"></div>
 <div id="mdAlert" class="modal">
+  <div class="modal-icon-wrap" id="mdIcon">
+    </div>
   <p id="mdMsg"></p>
   <button class="btn full" style="margin-top:0" onclick="closeAlert()">Paham</button>
 </div>
 
-<!-- MODAL BAYAR -->
 <div id="ovBayar" class="overlay"></div>
 <div id="mdBayar" class="modal">
+  <div class="modal-icon-wrap" style="color:var(--blue)">
+    <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+  </div>
   <h3 style="color:var(--blue);margin-bottom:10px">CATAT PEMBAYARAN</h3>
   <p id="mdBayarDesc" style="font-size:.85rem;color:var(--muted)"></p>
   <input type="text" id="inpBayar" class="modal-inp" placeholder="Rp 0" oninput="fmtRp(this)">
@@ -106,15 +112,16 @@
 
 <div class="container">
 
-  <!-- HEADER -->
   <div class="app-header">
     <div><div class="title">SMM DAPUR MBG</div><div class="sub">Sistem Rekonstruksi &amp; Anggaran</div></div>
     <img src="icon.png" alt="Logo">
   </div>
 
-  <!-- ===== SECTION: SETTING ===== -->
   <div id="sec-setting" class="card app-sec" style="display:none">
-    <h2>⚙ Pengaturan Dokumen</h2>
+    <h2>
+      <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+      Pengaturan Dokumen
+    </h2>
     <div class="g2">
       <div><label>Lokasi / Kota TTD</label><input type="text" id="sLokasi" placeholder="Contoh: Jakarta"></div>
       <div><label>Jabatan Penanda Tangan</label><input type="text" id="sJabatan" placeholder="Contoh: Koordinator MBG"></div>
@@ -129,9 +136,11 @@
     </button>
   </div>
 
-  <!-- ===== SECTION: INPUT FORM ===== -->
   <div id="sec-input" class="card app-sec">
-    <h2>✏ Form Perbaikan / Pengadaan</h2>
+    <h2>
+      <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.995.995 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+      Form Perbaikan / Pengadaan
+    </h2>
     <form id="frmUtama" autocomplete="off">
       <div class="g2">
         <div><label>Nama Dapur</label><input type="text" id="fDapur" placeholder="Nama dapur" required></div>
@@ -160,8 +169,20 @@
       </button>
 
       <div class="g2" style="margin-top:20px">
-        <div><label>📷 Foto Pekerjaan</label><input type="file" id="fFotoKerja" accept="image/*" multiple></div>
-        <div><label>🧾 Foto Nota</label><input type="file" id="fFotoNota" accept="image/*" multiple></div>
+        <div>
+          <label>
+            <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            Foto Pekerjaan
+          </label>
+          <input type="file" id="fFotoKerja" accept="image/*" multiple>
+        </div>
+        <div>
+          <label>
+            <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            Foto Nota
+          </label>
+          <input type="file" id="fFotoNota" accept="image/*" multiple>
+        </div>
       </div>
 
       <button type="submit" class="btn grn full" id="btnSimpan">
@@ -170,9 +191,11 @@
     </form>
   </div>
 
-  <!-- ===== SECTION: DASHBOARD ===== -->
   <div id="sec-monitor" class="card app-sec" style="display:none">
-    <h2>📊 Dashboard Validasi</h2>
+    <h2>
+      <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M5 19.248V4h14v15.248l-2.5-1.5-2.5 1.5-2.5-1.5-2.5 1.5-1.5-1zM17 6H7v2h10V6zm0 4H7v2h10v-2zm-4 4H7v2h6v-2z"/></svg>
+      Dashboard Validasi
+    </h2>
 
     <div class="g3" style="margin-bottom:25px">
       <div class="dc"><h4>Total Anggaran</h4><h2 id="sumTotal">Rp 0</h2></div>
@@ -180,7 +203,6 @@
       <div class="dc red"><h4>Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2></div>
     </div>
 
-    <!-- FILTER -->
     <div class="card" style="box-shadow:var(--sh-in);background:transparent">
       <div class="g3">
         <div><label>Dari Tgl</label><input type="date" id="flTglA"></div>
@@ -204,15 +226,16 @@
       </div>
     </div>
 
-    <!-- PRINT PANEL -->
     <div id="pnlCetak" class="pbar" style="display:none">
-      <span style="color:var(--blue);font-weight:bold;font-size:.85rem;flex:1">🖨 Cetak Dokumen:</span>
+      <span style="color:var(--blue);font-weight:bold;font-size:.85rem;flex:1;display:flex;align-items:center;gap:6px">
+        <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-2-9H7v3h10V3z"/></svg>
+        Cetak Dokumen:
+      </span>
       <button class="btn" onclick="buka('sp')"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> Surat Pesanan</button>
       <button class="btn" onclick="buka('invoice')"><svg viewBox="0 0 24 24"><path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"/></svg> Invoice</button>
       <button class="btn" onclick="buka('lampiran')"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg> Lampiran Foto</button>
     </div>
 
-    <!-- TABEL MONITORING -->
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>No</th><th>Tgl Mulai</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead>
@@ -221,10 +244,7 @@
     </div>
   </div>
 
-</div><!-- /container -->
-
-<!-- BOTTOM NAV -->
-<nav class="nav">
+</div><nav class="nav">
   <div class="ni on" id="ni-input" onclick="showSec('input')">
     <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.995.995 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
     <span>Input Baru</span>
@@ -268,8 +288,16 @@ function hitungBaris(el){
   }
 }
 
-// ── ALERT / MODAL ──────────────────────────────────────────────
-function showAlert(msg){
+// ── STRUKTUR STRlNG SVG NOTIFIKASI ──
+const SVG_ICONS = {
+  success: `<svg viewBox="0 0 24 24" style="fill:var(--green)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
+  error: `<svg viewBox="0 0 24 24" style="fill:var(--red)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+  info: `<svg viewBox="0 0 24 24" style="fill:var(--blue)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`
+};
+
+// MODIFIKASI: Fungsi alert menerima parameter tipe (success / error / info)
+function showAlert(msg, type = 'info'){
+  document.getElementById('mdIcon').innerHTML = SVG_ICONS[type] || SVG_ICONS.info;
   document.getElementById('mdMsg').innerText = msg;
   document.getElementById('ovAlert').style.display = 'block';
   document.getElementById('mdAlert').style.display = 'block';
@@ -321,7 +349,7 @@ function saveSetting(){
     kop: document.getElementById('sKopUrl').value.trim()
   };
   localStorage.setItem('smm_setting', JSON.stringify(s));
-  showAlert('✅ Pengaturan berhasil disimpan!');
+  showAlert('Pengaturan berhasil disimpan!', 'success');
 }
 
 // ── TABEL INPUT ────────────────────────────────────────────────
@@ -339,10 +367,9 @@ document.getElementById('btnTambah').onclick = () => {
   document.getElementById('bodyBarang').insertAdjacentHTML('beforeend', rowHtml());
 };
 function hapusBaris(btn){
-  if(document.querySelectorAll('#bodyBarang tr').length <= 1) return showAlert('Minimal 1 item!');
+  if(document.querySelectorAll('#bodyBarang tr').length <= 1) return showAlert('Minimal harus ada 1 item barang!', 'error');
   btn.closest('tr').remove();
 }
-// Hitung juga saat qty berubah
 document.getElementById('bodyBarang').addEventListener('input', e => {
   if(e.target.classList.contains('qty')) hitungBaris(e.target);
 });
@@ -378,7 +405,6 @@ document.getElementById('frmUtama').addEventListener('submit', async e => {
     const pic        = document.getElementById('fPIC').value.trim();
     const noUrut     = Date.now();
 
-    // Kumpulkan items
     let items=[], totalAng=0;
     document.querySelectorAll('#bodyBarang tr').forEach(tr => {
       const tot = unRp(tr.querySelector('.tot').value);
@@ -392,41 +418,62 @@ document.getElementById('frmUtama').addEventListener('submit', async e => {
       });
     });
 
-    // Kompres foto
     const fk = document.getElementById('fFotoKerja').files;
     const fn = document.getElementById('fFotoNota').files;
     const fotoKerja = fk.length ? await Promise.all([...fk].map(kompres)) : [];
     const fotoNota  = fn.length ? await Promise.all([...fn].map(kompres)) : [];
 
-    // Simpan lokal
     const monRow = { noUrut, tglMulai, namaDapur:dapur, pic, anggaranAwal:totalAng, dibayar:0, sisa:totalAng, status:'Dalam Pengerjaan' };
     items.forEach(it => dbP.push({ noUrut, tglMulai, tglSelesai, namaDapur:dapur, pic, ...it, fotoKerja, fotoNota }));
     dbM.push(monRow);
     localStorage.setItem('db_monitor',  JSON.stringify(dbM));
     localStorage.setItem('db_pesanan',  JSON.stringify(dbP));
 
-    // Kirim ke GAS
     if(navigator.onLine && typeof API_URL !== 'undefined' && API_URL.startsWith('http')){
-      const body = JSON.stringify({
-        action:'simpanPesanan', noUrut, namaDapur:dapur, pic,
-        tglMulai, tglSelesai, items,
-        fotoKerjaBase64: fotoKerja, fotoNotaBase64: fotoNota,
-        anggaranAwal: totalAng
+      
+      const bodyMonitor = JSON.stringify({
+        "jenis_data": "Monitoring",
+        "noUrut": noUrut,
+        "tglMulai": tglMulai,
+        "namaDapur": dapur,
+        "pic": pic,
+        "anggaranAwal": totalAng,
+        "dibayar": 0,
+        "sisa": totalAng,
+        "status": 'Dalam Pengerjaan'
       });
-      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body });
-      if(!res.ok) throw new Error('Server error ' + res.status);
-      showAlert('✅ Data berhasil disimpan ke Cloud!');
+      await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: bodyMonitor });
+
+      for (let it of items) {
+        const bodyPesanan = JSON.stringify({
+          "jenis_data": "Pesanan",
+          "noUrut": noUrut,
+          "tglMulai": tglMulai,
+          "tglSelesai": tglSelesai,
+          "namaDapur": dapur,
+          "pic": pic,
+          "namaBarang": it.namaBarang,
+          "qty": it.qty,
+          "satuan": it.satuan,
+          "hargaSatuan": it.hargaSatuan,
+          "total": it.total,
+          "fotoKerjaBase64": fotoKerja.join(" | "),
+          "fotoNotaBase64": fotoNota.join(" | ")
+        });
+        await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: bodyPesanan });
+      }
+
+      showAlert('Data berhasil disinkronkan ke Cloud Spreadsheet!', 'success');
     } else {
-      showAlert('💾 Tersimpan lokal (offline). Sync saat online.');
+      showAlert('Tersimpan lokal (offline). Data akan otomatis sinkron saat online.', 'info');
     }
 
-    // Reset form
     document.getElementById('frmUtama').reset();
     document.getElementById('bodyBarang').innerHTML = rowHtml();
     showSec('monitor');
 
   } catch(err){
-    showAlert('❌ Gagal: ' + err.message);
+    showAlert('Gagal menyimpan: ' + err.message, 'error');
   } finally {
     btn.disabled=false;
     btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> SIMPAN & UPLOAD';
@@ -458,7 +505,6 @@ function applyFilter(){
     return true;
   });
   renderTable(hasil);
-  // Tampil panel cetak kalau tepat 1 baris
   if(hasil.length===1){
     localStorage.setItem('smm_siap_cetak', JSON.stringify({
       bundle: hasil[0],
@@ -515,7 +561,7 @@ function bukaBayar(noUrut){
 
 async function submitBayar(){
   const jml = unRp(document.getElementById('inpBayar').value);
-  if(jml<=0) return showAlert('Masukkan nominal yang valid!');
+  if(jml<=0) return showAlert('Masukkan nominal pembayaran yang valid!', 'error');
 
   const idx = dbM.findIndex(r=>String(r.noUrut)===String(aktivNoUrut));
   if(idx===-1) return;
@@ -532,18 +578,19 @@ async function submitBayar(){
         method:'POST', headers:{'Content-Type':'text/plain'},
         body: JSON.stringify({ action:'updatePembayaran', noUrut:d.noUrut, dibayar:d.dibayar, sisa:d.sisa, status:d.status })
       });
-    } catch(e){ /* tetap lanjut walau gagal kirim */ }
+    } catch(e){ }
   }
   closeBayar();
   applyFilter();
-  showAlert('✅ Pembayaran Rp ' + rp(jml) + ' berhasil dicatat!');
+  showAlert('Pembayaran sebesar Rp ' + rp(jml) + ' berhasil dicatat!', 'success');
 }
 
 // ── SINKRONISASI ───────────────────────────────────────────────
 async function syncCloud(){
-  if(!navigator.onLine) return showAlert('❌ Tidak ada koneksi internet!');
-  if(typeof API_URL==='undefined'||!API_URL.startsWith('http')) return showAlert('⚠ API_URL belum diisi di config.js');
-  showAlert('🔄 Sedang sinkronisasi...');
+  if(!navigator.onLine) return showAlert('Tidak ada koneksi internet!', 'error');
+  if(typeof API_URL==='undefined'||!API_URL.startsWith('http')) return showAlert('API_URL belum dikonfigurasi di config.js', 'info');
+  
+  showAlert('Sedang sinkronisasi data dari Cloud...', 'info');
   try {
     const res  = await fetch(API_URL + '?t=' + Date.now());
     if(!res.ok) throw new Error('HTTP ' + res.status);
@@ -553,23 +600,20 @@ async function syncCloud(){
     localStorage.setItem('db_monitor', JSON.stringify(dbM));
     localStorage.setItem('db_pesanan', JSON.stringify(dbP));
     buildFilter(); renderTable(dbM);
-    showAlert('✅ Sinkronisasi berhasil! ' + dbM.length + ' data dimuat.');
+    showAlert('Sinkronisasi berhasil! ' + dbM.length + ' data berhasil dimuat.', 'success');
   } catch(err){
-    showAlert('❌ Gagal sinkronisasi: ' + err.message + '\nPastikan GAS sudah di-deploy & URL benar.');
+    showAlert('Gagal sinkronisasi: Periksa kembali URL Web App atau status deployment.', 'error');
   }
 }
 
-// ── CETAK ──────────────────────────────────────────────────────
 function buka(hal){ window.open(hal+'.html','_blank'); }
 
-// ── INIT ───────────────────────────────────────────────────────
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
 
 document.addEventListener('DOMContentLoaded', () => {
   loadSetting();
   buildFilter();
   renderTable(dbM);
-  // Auto-sync saat online
   if(navigator.onLine && typeof API_URL!=='undefined' && API_URL.startsWith('http')) syncCloud();
 });
 </script>
