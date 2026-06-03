@@ -2,170 +2,156 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Mengunci Zoom agar Aplikasi Presisi Layaknya App Native -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SMM Dapur MBG</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d1527">
+    <meta name="theme-color" content="#e8e4d9">
     <style>
         :root {
-            --bg-color: #0d1527; 
-            --card-bg: #152238; 
-            --btn-color: #223755; 
-            --border-red: #d90429; 
-            --text-color: #f1faee;
-            --cyan-premium: #48cae4;
-            --green-premium: #06d6a0;
-            --soft-shadow: 4px 4px 10px #060a12, -4px -4px 10px #14203c;
-            --inner-shadow: inset 3px 3px 6px #060a12, inset -3px -3px 6px #14203c;
+            /* WARNA UTAMA: Putih Tulang / Cream Hangat */
+            --bg-color: #e8e4d9; 
+            --text-color: #4a4a4a;
+            --text-muted: #8c8c8c;
+            /* TOMBOL: Biru Lembut (Tidak sakit mata) */
+            --btn-blue: #548CA8; 
+            --btn-green: #609966;
+            --btn-red: #d96c6c;
+            
+            /* NEUMORPHISM SHADOWS (Tanpa Border) */
+            /* Timbul Keluar (Embossed) */
+            --shadow-out: 8px 8px 16px #d1cdc0, -8px -8px 16px #ffffff;
+            --shadow-out-sm: 4px 4px 8px #d1cdc0, -4px -4px 8px #ffffff;
+            
+            /* Masuk ke Dalam "Kuburan" (Debossed/Inset) */
+            --shadow-in: inset 6px 6px 12px #d1cdc0, inset -6px -6px 12px #ffffff;
+            --shadow-in-sm: inset 3px 3px 6px #d1cdc0, inset -3px -3px 6px #ffffff;
+
+            /* Efek Tombol Empuk (Clay) */
+            --clay-btn: 6px 6px 12px #d1cdc0, -6px -6px 12px #ffffff, inset 2px 2px 5px rgba(255,255,255,0.3), inset -3px -3px 5px rgba(0,0,0,0.1);
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body { 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
+            background-color: var(--bg-color); color: var(--text-color); 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; 
-            padding: 12px;
+            margin: 0; padding: 15px 15px 90px 15px; /* Padding bawah untuk tempat Nav Bar Melayang */
             font-size: 14px;
         }
 
-        .container { max-width: 1200px; margin: auto; }
+        .container { max-width: 1000px; margin: auto; }
 
-        /* HEADER PRESTIGE - LOGO KANAN ATAS */
+        /* HEADER */
         .kop-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 16px; 
-            margin-bottom: 15px; 
-            border-bottom: 2px solid var(--border-red); 
-            background: var(--card-bg); 
-            border-radius: 12px; 
-            box-shadow: var(--soft-shadow); 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; margin-bottom: 20px; border-radius: 20px; 
+            background: var(--bg-color); box-shadow: var(--shadow-out); border: none;
         }
         .kop-titles { flex: 1; }
-        .kop-title { font-size: 1.15rem; font-weight: 800; color: var(--cyan-premium); letter-spacing: 0.5px; margin: 0; text-transform: uppercase; }
-        .kop-subtitle { font-size: 0.75rem; color: #a8dadc; margin: 2px 0 0 0; opacity: 0.8; }
-        .kop-logo { width: 42px; height: 42px; object-fit: contain; border-radius: 8px; margin-left: 10px; }
+        .kop-title { font-size: 1.2rem; font-weight: 800; color: var(--btn-blue); margin: 0; }
+        .kop-subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 3px 0 0 0; }
+        .kop-logo { width: 45px; height: 45px; object-fit: contain; margin-left: 10px; }
 
-        /* NAVIGATION BAR - RAMPING & SEBARIS */
-        .action-bar { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 8px; 
-            margin-bottom: 15px; 
-        }
-        .action-bar .btn { 
-            padding: 10px 4px; 
-            font-size: 0.8rem; 
-            border-radius: 8px; 
-            white-space: nowrap;
-        }
-
-        /* CARDS REVISI - TIPIS & TEGAS */
+        /* KARTU TIMBUL (Embossed) */
         .card { 
-            background: var(--card-bg); 
-            border-radius: 12px; 
-            padding: 16px; 
-            margin-bottom: 15px; 
-            box-shadow: var(--soft-shadow); 
-            border: 1px solid rgba(217, 4, 41, 0.3);
+            background: var(--bg-color); border-radius: 20px; padding: 20px; 
+            margin-bottom: 25px; box-shadow: var(--shadow-out); border: none; 
         }
         .card h2, .card h3 { 
-            color: var(--cyan-premium); 
-            border-left: 3px solid var(--border-red); 
-            padding-left: 8px; 
-            margin: 0 0 15px 0; 
-            font-size: 1rem; 
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: var(--btn-blue); margin: 0 0 15px 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        /* GRID LAYOUT */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 12px; } }
 
-        @media (max-width: 768px) { 
-            .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 10px; } 
-            .action-bar { grid-template-columns: 1fr 1fr; } 
-        }
-
-        /* KARTU DASHBOARD INDIKATOR */
-        .dash-card { 
-            border-radius: 10px; 
-            padding: 12px; 
-            background: rgba(21, 34, 56, 0.6);
-            box-shadow: var(--inner-shadow); 
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: left;
-            position: relative;
-        }
-        .dash-card::before { content: ''; position: absolute; left: 0; top: 25%; height: 50%; width: 3px; }
-        .dash-card.total-anggaran::before { background: var(--cyan-premium); }
-        .dash-card.terbayar::before { background: var(--green-premium); }
-        .dash-card.utang::before { background: var(--border-red); }
-
-        .dash-card h4 { margin: 0 0 4px 8px; color: #a5a5a5; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-        .dash-card h2 { margin: 0 0 0 8px; color: #fff; font-size: 1.25rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-
-        /* INPUT FORM & DROPDOWN - CLEAN INDENT */
-        label { display: block; margin-bottom: 4px; font-size: 0.75rem; font-weight: 600; color: #94a3b8; }
+        /* INPUT BERLUBANG KEDALAM (Inset) */
+        label { display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: bold; color: var(--text-muted); }
         input, select { 
-            width: 100%; padding: 10px 12px; border-radius: 8px; 
-            border: 1px solid rgba(255,255,255,0.05); background: #090f1c; 
-            color: var(--text-color); box-shadow: var(--inner-shadow); 
-            box-sizing: border-box; margin-bottom: 12px; font-size: 0.85rem; font-weight: bold;
+            width: 100%; padding: 14px; border-radius: 14px; border: none; 
+            background: var(--bg-color); color: var(--text-color); 
+            box-shadow: var(--shadow-in); font-size: 0.95rem; font-weight: bold;
+            transition: all 0.3s ease;
         }
-        input:focus, select:focus { outline: none; border-color: var(--cyan-premium); }
+        input:focus, select:focus { outline: none; box-shadow: var(--shadow-in), 0 0 0 3px rgba(84, 140, 168, 0.2); }
+        /* Hilangkan panah spinner angka */
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* TABEL RESPONSIVE & RAMPING */
-        .table-responsive { overflow-x: auto; border-radius: 8px; box-shadow: var(--inner-shadow); background: #090f1c; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { background: #111b2e; padding: 10px; text-align: left; color: var(--cyan-premium); border-bottom: 2px solid var(--border-red); font-weight: 700; white-space: nowrap; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); color: #cbd5e1; }
+        /* DASHBOARD CARDS BERLUBANG */
+        .dash-card { 
+            border-radius: 16px; padding: 15px; background: var(--bg-color);
+            box-shadow: var(--shadow-in); border: none; text-align: center;
+        }
+        .dash-card h4 { margin: 0 0 5px 0; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+        .dash-card h2 { margin: 0; color: var(--btn-blue); font-size: 1.4rem; font-weight: 800; }
+        .dash-card.terbayar h2 { color: var(--btn-green); }
+        .dash-card.utang h2 { color: var(--btn-red); }
 
-        /* BUTTONS REVISI */
+        /* TOMBOL EMPUK CLAYMORPHISM */
         .btn { 
-            padding: 10px 16px; border: none; border-radius: 8px; 
-            background: var(--btn-color); color: #fff; font-weight: 600; 
-            cursor: pointer; box-shadow: var(--soft-shadow);
-            transition: all 0.15s ease; font-size: 0.85rem;
+            padding: 14px 18px; border: none; border-radius: 14px; background: var(--btn-blue); 
+            color: #fff; font-weight: bold; cursor: pointer; box-shadow: var(--clay-btn);
+            transition: all 0.2s ease; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn:hover { background: #2b456b; }
-        .btn:active { box-shadow: var(--inner-shadow); transform: translateY(1px); }
-        .btn-danger { background: var(--border-red); } .btn-danger:hover { background: #b30322; }
-        .btn-success { background: var(--green-premium); color: #0b132b; } .btn-success:hover { background: #05b386; }
-        .btn-full { width: 100%; padding: 14px; font-size: 0.95rem; margin-top: 10px; }
+        .btn svg { width: 18px; height: 18px; fill: currentColor; }
+        .btn:active { box-shadow: var(--shadow-in-sm); transform: scale(0.97); }
+        .btn-danger { background: var(--btn-red); } 
+        .btn-success { background: var(--btn-green); } 
+        .btn-full { width: 100%; padding: 16px; font-size: 1rem; margin-top: 15px; }
 
-        /* CETAK PANEL */
-        #printPanel { 
-            background: #090f1c; padding: 12px; border-radius: 8px; 
-            border-left: 3px solid var(--green-premium);
-            display: flex; gap: 8px; margin-bottom: 15px; align-items: center;
+        /* TABEL RAPI TANPA GARIS BORDER KAKU */
+        .table-wrapper { overflow-x: auto; border-radius: 16px; box-shadow: var(--shadow-in); padding: 5px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 600px; }
+        th { padding: 12px; text-align: left; color: var(--text-muted); font-weight: bold; white-space: nowrap; border-bottom: 2px solid rgba(0,0,0,0.05); }
+        td { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.03); vertical-align: middle; }
+
+        .badge { padding: 6px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; white-space: nowrap; box-shadow: var(--shadow-in-sm); display: inline-block;}
+        .badge-progress { color: #b37700; }
+        .badge-cicil { color: #005f73; }
+        .badge-lunas { color: var(--btn-green); }
+
+        /* ACTION BAR CETAK */
+        .print-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; padding: 15px; border-radius: 16px; box-shadow: var(--shadow-in); }
+
+        /* CUSTOM MODAL - NEUMORPHISM */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(232, 228, 217, 0.7); backdrop-filter: blur(5px); z-index: 9998; }
+        .modal-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--bg-color); border: none; box-shadow: var(--shadow-out); padding: 25px; border-radius: 20px; z-index: 9999; text-align: center; width: 88%; max-width: 340px; }
+        .modal-box p { color: var(--text-color); font-size: 0.95rem; margin: 0 0 20px 0; line-height: 1.5; font-weight: bold;}
+        .modal-input { margin-bottom: 20px; text-align: center; font-size: 1.2rem; color: var(--btn-blue); box-shadow: var(--shadow-in); background: var(--bg-color); }
+
+        /* ================= BOTTOM NAVIGATION MELAYANG ================= */
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 450px; background: var(--bg-color); border: none;
+            box-shadow: var(--shadow-out); border-radius: 30px;
+            display: flex; justify-content: space-around; align-items: center; padding: 10px 5px; z-index: 9000;
         }
-
-        /* CUSTOM MODAL ALERT & PROMPT */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(6,10,18,0.85); backdrop-filter: blur(4px); z-index: 9998; }
-        .modal-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 1px solid var(--border-red); box-shadow: var(--soft-shadow); padding: 20px; border-radius: 12px; z-index: 9999; text-align: center; width: 88%; max-width: 340px; }
-        .modal-box p { color: var(--text-color); font-size: 0.9rem; margin-top: 0; margin-bottom: 15px; line-height: 1.5; }
-        .modal-input { margin-bottom: 15px; text-align: center; font-size: 1.1rem; color:#06d6a0; }
-
-        .badge { padding: 5px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; white-space: nowrap; }
-        .badge-progress { background: #f4a261; color: #000; }
-        .badge-cicil { background: #e9c46a; color: #000; }
-        .badge-lunas { background: var(--green-premium); color: #0b132b; }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--text-muted); cursor: pointer; transition: 0.3s; padding: 8px; width: 25%;
+        }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 4px; transition: 0.3s; }
+        .nav-item span { font-size: 0.65rem; font-weight: bold; }
+        .nav-item.active { color: var(--btn-blue); }
+        .nav-item.active svg { transform: translateY(-3px); filter: drop-shadow(0px 4px 4px rgba(84, 140, 168, 0.3)); }
     </style>
 </head>
 <body>
 
+<!-- MODAL NOTIFIKASI -->
 <div id="alertOverlay" class="modal-overlay"></div>
 <div id="customAlert" class="modal-box">
     <p id="alertMessage"></p>
-    <button class="btn btn-success btn-full" style="margin-top:0;" onclick="tutupAlert()">Oke, Paham</button>
+    <button class="btn btn-blue btn-full" style="margin-top:0;" onclick="tutupAlert()">Paham</button>
 </div>
 
+<!-- MODAL BAYAR -->
 <div id="promptOverlay" class="modal-overlay"></div>
 <div id="customPrompt" class="modal-box">
-    <h3 style="color:var(--green-premium); border:none; padding:0; margin-bottom:10px;">BAYAR CICILAN</h3>
-    <p id="promptDesc" style="font-size:0.85rem; color:#94a3b8;"></p>
+    <h3 style="color:var(--btn-blue); margin-bottom:10px;">BAYAR CICILAN</h3>
+    <p id="promptDesc" style="font-size:0.85rem; color:var(--text-muted);"></p>
     <input type="text" id="promptInput" class="modal-input" placeholder="Rp 0" oninput="formatRupiahInput(this)">
     <div style="display:flex; gap:10px;">
         <button class="btn btn-success" style="flex:1;" onclick="submitBayar()">Bayar</button>
@@ -174,6 +160,7 @@
 </div>
 
 <div class="container">
+    <!-- HEADER KOP -->
     <div class="kop-header">
         <div class="kop-titles">
             <div class="kop-title">SMM DAPUR MBG</div>
@@ -182,27 +169,24 @@
         <img src="icon.png" class="kop-logo" alt="Logo">
     </div>
 
-    <div class="action-bar">
-        <button class="btn" onclick="showSection('input-section')">📝 Form Input</button>
-        <button class="btn" onclick="showSection('monitoring-section')">📊 Dashboard</button>
-        <button class="btn" onclick="showSection('setting-section')">⚙️ Set Dokumen</button>
-        <button class="btn btn-success" onclick="sinkronisasiDataCloud()" id="btnSync">🔄 Sync Cloud</button>
-    </div>
-
+    <!-- HALAMAN: PENGATURAN -->
     <div id="setting-section" class="card app-section" style="display:none;">
-        <h2>Pengaturan Tanda Tangan & Invoice</h2>
+        <h2>Pengaturan Dokumen</h2>
         <div class="grid-2">
             <div><label>Lokasi TTD</label><input type="text" id="setLokasi"></div>
-            <div><label>Jabatan</label><input type="text" id="setJabatan"></div>
+            <div><label>Jabatan TTD</label><input type="text" id="setJabatan"></div>
             <div><label>Nama Bank</label><input type="text" id="setBank"></div>
             <div><label>No. Rekening</label><input type="text" id="setNoRek"></div>
             <div><label>Atas Nama Rekening</label><input type="text" id="setAtasNama"></div>
         </div>
-        <button class="btn btn-success" onclick="simpanSetting()">💾 Simpan Pengaturan</button>
+        <button class="btn btn-success btn-full" onclick="simpanSetting()">
+            <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Simpan Pengaturan
+        </button>
     </div>
 
+    <!-- HALAMAN: FORM INPUT -->
     <div id="input-section" class="card app-section">
-        <h2>Input Perbaikan Dapur</h2>
+        <h2>Form Perbaikan</h2>
         <form id="formUtama">
             <div class="grid-2">
                 <div><label>Nama Dapur</label><input type="text" id="namaDapur" required></div>
@@ -211,9 +195,9 @@
                 <div><label>Tanggal Selesai</label><input type="date" id="tglSelesai" required></div>
             </div>
 
-            <div class="table-responsive">
+            <div class="table-wrapper" style="margin: 20px 0;">
                 <table id="tabelBarang">
-                    <thead><tr><th width="35%">Nama Barang</th><th width="10%">Qty</th><th width="15%">Satuan</th><th width="20%">Harga (Rp)</th><th width="20%">Total (Rp)</th><th>X</th></tr></thead>
+                    <thead><tr><th>Nama Barang</th><th width="70px">Qty</th><th>Satuan</th><th>Harga (Rp)</th><th>Total (Rp)</th><th>Aksi</th></tr></thead>
                     <tbody id="bodyBarang">
                         <tr>
                             <td><input type="text" class="namaBarang" required></td>
@@ -221,64 +205,83 @@
                             <td><input type="text" class="satuan" required></td>
                             <td><input type="text" class="harga" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td>
                             <td><input type="text" class="total" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td>
-                            <td><button type="button" class="btn btn-danger hapusBaris">X</button></td>
+                            <td><button type="button" class="btn btn-danger hapusBaris"><svg viewBox="0 0 24 24" style="margin:0;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <button type="button" class="btn" id="tambahBaris" style="margin-top:10px;">➕ Tambah Item</button>
+            <button type="button" class="btn" id="tambahBaris">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Tambah Item
+            </button>
 
             <div class="grid-2" style="margin-top:20px;">
-                <div><label>📸 Foto Progress Pekerjaan</label><input type="file" id="fotoKerja" accept="image/*" multiple required></div>
-                <div><label>📸 Foto Nota / Bon</label><input type="file" id="fotoNota" accept="image/*" multiple required></div>
+                <div><label>Foto Pekerjaan (Bisa Kamera)</label><input type="file" id="fotoKerja" accept="image/*" multiple required></div>
+                <div><label>Foto Nota (Bisa Kamera)</label><input type="file" id="fotoNota" accept="image/*" multiple required></div>
             </div>
 
-            <button type="submit" class="btn btn-success btn-full" id="btnSimpan">🚀 SIMPAN KE SPREADSHEET</button>
+            <button type="submit" class="btn btn-success btn-full" id="btnSimpan">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> SIMPAN & UPLOAD
+            </button>
         </form>
     </div>
 
+    <!-- HALAMAN: DASHBOARD -->
     <div id="monitoring-section" class="card app-section" style="display:none;">
-        <h2>Dashboard Laporan & Filter Data</h2>
+        <h2>Dashboard Validasi</h2>
         
         <div class="grid-3" style="margin-bottom: 25px;">
-            <div class="dash-card total-anggaran">
-                <h4>Total Anggaran</h4><h2 id="sumAnggaran">Rp 0</h2>
-            </div>
-            <div class="dash-card terbayar">
-                <h4>Sudah Terbayar</h4><h2 id="sumDibayar">Rp 0</h2>
-            </div>
-            <div class="dash-card utang">
-                <h4>Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2>
-            </div>
+            <div class="dash-card"><h4>Total Anggaran</h4><h2 id="sumAnggaran">Rp 0</h2></div>
+            <div class="dash-card terbayar"><h4>Terbayar</h4><h2 id="sumDibayar">Rp 0</h2></div>
+            <div class="dash-card utang"><h4>Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2></div>
         </div>
 
-        <div class="card" style="padding:16px; border:1px dashed var(--btn-color); margin-bottom: 20px;">
+        <div class="card" style="box-shadow:var(--shadow-in); background:transparent;">
             <div class="grid-3">
                 <div><label>Dari Tgl</label><input type="date" id="fTglMulai"></div>
                 <div><label>Sampai Tgl</label><input type="date" id="fTglAkhir"></div>
                 <div><label>Status</label><select id="fStatus"><option value="Semua">Semua</option><option value="Dalam Pengerjaan">Dalam Pengerjaan</option><option value="Belum Lunas / Dicicil">Belum Lunas / Dicicil</option><option value="Lunas / Selesai">Lunas / Selesai</option></select></div>
                 <div><label>PIC</label><select id="fPIC"><option value="Semua">Semua PIC</option></select></div>
                 <div><label>Dapur</label><select id="fDapur"><option value="Semua">Semua Dapur</option></select></div>
-                <div style="display:flex; gap:8px; align-items:flex-end; margin-bottom:12px;">
-                    <button class="btn btn-success" style="flex:1;" onclick="terapkanFilter()">🔍 Cari</button>
+                <div style="display:flex; gap:10px; align-items:flex-end; margin-bottom:12px;">
+                    <button class="btn btn-success" style="flex:1;" onclick="terapkanFilter()"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg> Cari</button>
                     <button class="btn btn-danger" style="flex:1;" onclick="resetFilter()">Reset</button>
                 </div>
             </div>
         </div>
 
-        <div id="printPanel">
-            <span style="color:var(--green-premium); font-weight:bold; font-size:0.8rem; flex:1;">Data Terpilih:</span>
-            <button class="btn btn-success" onclick="bukaCetak('sp')">🖨️ Cetak SP</button>
-            <button class="btn btn-success" onclick="bukaCetak('invoice')">🧾 Cetak INV</button>
-            <button class="btn btn-success" onclick="bukaCetak('lampiran')">🖼️ Lampiran</button>
+        <div id="printPanel" class="print-bar" style="display:none;">
+            <span style="color:var(--btn-blue); font-weight:bold; font-size:0.85rem; flex:1;">Menu Cetak Spesifik:</span>
+            <button class="btn" onclick="bukaCetak('sp')"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> SP</button>
+            <button class="btn" onclick="bukaCetak('invoice')"><svg viewBox="0 0 24 24"><path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"/></svg> INV</button>
+            <button class="btn" onclick="bukaCetak('lampiran')"><svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg> Foto</button>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-wrapper">
             <table>
-                <thead><tr><th>No</th><th>Tgl</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead>
+                <thead><tr><th>No</th><th>Tanggal</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead>
                 <tbody id="tabelMonitor"></tbody>
             </table>
         </div>
+    </div>
+</div>
+
+<!-- BOTTOM NAVIGATION MELAYANG -->
+<div class="bottom-nav">
+    <div class="nav-item active" id="nav-input" onclick="showSection('input-section')">
+        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.995.995 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        <span>Input Baru</span>
+    </div>
+    <div class="nav-item" id="nav-monitor" onclick="showSection('monitoring-section')">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span>Dashboard</span>
+    </div>
+    <div class="nav-item" id="nav-setting" onclick="showSection('setting-section')">
+        <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+        <span>Set Dokumen</span>
+    </div>
+    <div class="nav-item" onclick="sinkronisasiDataCloud()" id="btnSyncNav">
+        <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        <span>Sinkronisasi</span>
     </div>
 </div>
 
@@ -290,33 +293,29 @@
     let dbMonitor = JSON.parse(localStorage.getItem('cache_monitoring')) || [];
     let aktifNoUrutBayar = null;
 
-    // ================= CUSTOM UI SYSTEM =================
+    // CUSTOM UI ALERT
     function tampilAlert(msg) { document.getElementById('alertMessage').innerText = msg; document.getElementById('alertOverlay').style.display = 'block'; document.getElementById('customAlert').style.display = 'block'; }
     function tutupAlert() { document.getElementById('alertOverlay').style.display = 'none'; document.getElementById('customAlert').style.display = 'none'; }
-    
     function tampilPrompt(noUrut, sisa) { 
         aktifNoUrutBayar = noUrut;
-        document.getElementById('promptDesc').innerHTML = `Sisa Tagihan:<br><b style="font-size:1.1rem; color:#fff;">Rp ${sisa.toLocaleString('id-ID')}</b>`;
+        document.getElementById('promptDesc').innerHTML = `Sisa Tagihan:<br><b style="font-size:1.1rem; color:var(--btn-blue);">Rp ${sisa.toLocaleString('id-ID')}</b>`;
         document.getElementById('promptInput').value = '';
         document.getElementById('promptOverlay').style.display = 'block'; document.getElementById('customPrompt').style.display = 'block'; 
     }
     function tutupPrompt() { document.getElementById('promptOverlay').style.display = 'none'; document.getElementById('customPrompt').style.display = 'none'; }
 
-    // ================= SINKRONISASI CLOUD LENGKAP =================
+    // SINKRONISASI
     async function sinkronisasiDataCloud() {
-        if(!navigator.onLine) return tampilAlert("Gagal: Tidak ada koneksi internet!");
-        const btn = document.getElementById('btnSync'); btn.innerText = "🔄 Sync...";
+        if(!navigator.onLine) return tampilAlert("Tidak ada koneksi internet!");
+        tampilAlert("Sedang menyinkronisasi data...");
         try {
             const response = await fetch(API_URL);
             const data = await response.json();
-            dbPesanan = data.pesanan || [];
-            dbMonitor = data.monitoring || [];
-            localStorage.setItem('cache_pesanan', JSON.stringify(dbPesanan));
-            localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor));
+            dbPesanan = data.pesanan || []; dbMonitor = data.monitoring || [];
+            localStorage.setItem('cache_pesanan', JSON.stringify(dbPesanan)); localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor));
             bangunFilter(); renderTabel(dbMonitor);
-            tampilAlert("Sukses! Data telah tersinkronisasi dari Cloud Spreadsheet.");
-        } catch (e) { tampilAlert("Gagal Sinkronisasi: Pastikan URL API benar dan di-deploy tipe 'Siapa Saja'."); }
-        finally { btn.innerText = "🔄 Sync Cloud"; }
+            tampilAlert("Data sukses tersinkronisasi dari Cloud!");
+        } catch (e) { tutupAlert(); tampilAlert("Gagal Sinkronisasi, pastikan URL valid."); }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -324,16 +323,22 @@
         if(navigator.onLine && API_URL.includes("http")) sinkronisasiDataCloud();
     });
 
+    // NAVIGATION SYSTEM
     function showSection(id) {
         document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
         document.getElementById(id).style.display = 'block';
-        if(id === 'monitoring-section') { bangunFilter(); renderTabel(dbMonitor); }
+        
+        // Update Bottom Nav Status
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        if(id === 'input-section') document.getElementById('nav-input').classList.add('active');
+        if(id === 'monitoring-section') { document.getElementById('nav-monitor').classList.add('active'); bangunFilter(); renderTabel(dbMonitor); }
+        if(id === 'setting-section') document.getElementById('nav-setting').classList.add('active');
     }
 
-    // ================= PENGATURAN =================
+    // SETTING
     function simpanSetting() {
         const conf = { lok: document.getElementById('setLokasi').value, jab: document.getElementById('setJabatan').value, bnk: document.getElementById('setBank').value, rek: document.getElementById('setNoRek').value, an: document.getElementById('setAtasNama').value };
-        localStorage.setItem('smm_setting', JSON.stringify(conf)); tampilAlert("Pengaturan berhasil disimpan.");
+        localStorage.setItem('smm_setting', JSON.stringify(conf)); tampilAlert("Pengaturan disimpan!");
     }
     function muatSetting() {
         const d = JSON.parse(localStorage.getItem('smm_setting')) || {};
@@ -341,33 +346,29 @@
         document.getElementById('setBank').value = d.bnk || ''; document.getElementById('setNoRek').value = d.rek || ''; document.getElementById('setAtasNama').value = d.an || '';
     }
 
-    // ================= FORMAT & KALKULASI RUPIAH =================
+    // RUPIAH & HITUNG
     function formatRupiahStr(angka) {
         let number_string = angka.toString().replace(/[^,\d]/g, ''), split = number_string.split(','), sisa = split[0].length % 3, rupiah = split[0].substr(0, sisa), ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-        if(ribuan){ let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); }
-        return rupiah;
+        if(ribuan){ let separator = sisa ? '.' : ''; rupiah += separator + ribuan.join('.'); } return rupiah;
     }
     function unformat(str) { return parseFloat(str.replace(/\./g, '')) || 0; }
     function formatRupiahInput(elem) { elem.value = formatRupiahStr(elem.value); }
-
     function hitungDuaArah(elem) {
         const r = elem.closest('tr'); const qty = parseFloat(r.querySelector('.qty').value)||0; 
         const hrgElem = r.querySelector('.harga'); const totElem = r.querySelector('.total');
-        if(elem.classList.contains('harga') || elem.classList.contains('qty')) {
-            totElem.value = formatRupiahStr(Math.round(qty * unformat(hrgElem.value)));
-        } else if(elem.classList.contains('total')) {
-            hrgElem.value = formatRupiahStr(qty>0 ? Math.round(unformat(totElem.value)/qty) : 0);
-        }
+        if(elem.classList.contains('harga') || elem.classList.contains('qty')) { totElem.value = formatRupiahStr(Math.round(qty * unformat(hrgElem.value))); } 
+        else if(elem.classList.contains('total')) { hrgElem.value = formatRupiahStr(qty>0 ? Math.round(unformat(totElem.value)/qty) : 0); }
     }
 
+    // TABEL INPUT ITEM
     document.getElementById('tambahBaris').addEventListener('click', () => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" required></td><td><input type="text" class="satuan" required></td><td><input type="text" class="harga" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><input type="text" class="total" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><button type="button" class="btn btn-danger hapusBaris">X</button></td>`;
+        tr.innerHTML = `<td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" required></td><td><input type="text" class="satuan" required></td><td><input type="text" class="harga" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><input type="text" class="total" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><button type="button" class="btn btn-danger hapusBaris"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>`;
         document.getElementById('bodyBarang').appendChild(tr);
     });
-    document.getElementById('bodyBarang').addEventListener('click', e => { if(e.target.classList.contains('hapusBaris')) { if(document.querySelectorAll('#bodyBarang tr').length > 1) e.target.closest('tr').remove(); else tampilAlert("Minimal 1 item!"); }});
+    document.getElementById('bodyBarang').addEventListener('click', e => { if(e.target.closest('button')?.classList.contains('hapusBaris')) { if(document.querySelectorAll('#bodyBarang tr').length > 1) e.target.closest('tr').remove(); else tampilAlert("Minimal 1 item pengeluaran!"); }});
 
-    // ================= KOMPRESOR & SUBMIT =================
+    // SUBMIT 
     function kompresFoto(file) {
         return new Promise((resolve) => {
             const reader = new FileReader(); reader.readAsDataURL(file);
@@ -385,14 +386,13 @@
     }
 
     document.getElementById('formUtama').addEventListener('submit', async (e) => {
-        e.preventDefault(); const btn = document.getElementById('btnSimpan'); btn.innerText = "MENGOMPRES & MENGIRIM..."; btn.disabled = true;
+        e.preventDefault(); const btn = document.getElementById('btnSimpan'); btn.innerText = "MENGIRIM..."; btn.disabled = true;
         try {
             let items = [], tAng = 0;
             document.querySelectorAll('#bodyBarang tr').forEach(r => {
                 let tot = unformat(r.querySelector('.total').value); tAng += tot;
                 items.push({ namaBarang: r.querySelector('.namaBarang').value, qty: r.querySelector('.qty').value, satuan: r.querySelector('.satuan').value, hargaSatuan: unformat(r.querySelector('.harga').value), total: tot });
             });
-
             let arrKerja = [], arrNota = [];
             for(let f of document.getElementById('fotoKerja').files) arrKerja.push(await kompresFoto(f));
             for(let f of document.getElementById('fotoNota').files) arrNota.push(await kompresFoto(f));
@@ -402,21 +402,20 @@
 
             dbMonitor.push({ noUrut: noU, tglMulai: tM, namaDapur: dpr, pic: pic, anggaranAwal: tAng, dibayar: 0, sisa: tAng, status: "Dalam Pengerjaan" });
             items.forEach(it => dbPesanan.push({ noUrut: noU, tglMulai: tM, tglSelesai: tS, namaDapur: dpr, pic: pic, ...it, fotoKerja: arrKerja, fotoNota: arrNota }));
-            
             localStorage.setItem('cache_pesanan', JSON.stringify(dbPesanan)); localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor));
 
             if(navigator.onLine) {
                 await fetch(API_URL, { method: "POST", headers:{"Content-Type": "text/plain"}, body: JSON.stringify({ action: "simpanPesanan", noUrut: noU, namaDapur: dpr, pic: pic, tglMulai: tM, tglSelesai: tS, items, fotoKerjaBase64: arrKerja, fotoNotaBase64: arrNota, anggaranAwal: tAng }) });
-                tampilAlert("Berhasil! Data & Foto telah tersimpan ke Google Sheet.");
-            } else tampilAlert("Disimpan di lokal (Sedang Offline).");
+                tampilAlert("Tersimpan ke Sistem Cloud!");
+            } else tampilAlert("Tersimpan lokal (Offline).");
 
             document.getElementById('formUtama').reset(); 
-            document.getElementById('bodyBarang').innerHTML = `<tr><td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" required></td><td><input type="text" class="satuan" required></td><td><input type="text" class="harga" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><input type="text" class="total" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><button type="button" class="btn btn-danger hapusBaris">X</button></td></tr>`;
+            document.getElementById('bodyBarang').innerHTML = `<tr><td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" required></td><td><input type="text" class="satuan" required></td><td><input type="text" class="harga" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><input type="text" class="total" placeholder="0" oninput="formatRupiahInput(this); hitungDuaArah(this);" required></td><td><button type="button" class="btn btn-danger hapusBaris"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td></tr>`;
             showSection('monitoring-section');
-        } catch(err) { tampilAlert("Gagal: " + err.message); } finally { btn.innerText = "🚀 SIMPAN KE SPREADSHEET"; btn.disabled = false; }
+        } catch(err) { tampilAlert("Gagal: " + err.message); } finally { btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> SIMPAN & UPLOAD`; btn.disabled = false; }
     });
 
-    // ================= DASHBOARD & PEMBAYARAN =================
+    // FILTER & DASHBOARD
     function bangunFilter() {
         const fp = document.getElementById('fPIC'), fd = document.getElementById('fDapur');
         fp.innerHTML = '<option value="Semua">Semua PIC</option>'; fd.innerHTML = '<option value="Semua">Semua Dapur</option>';
@@ -447,40 +446,32 @@
         data.forEach(x => { tA+=Number(x.anggaranAwal)||0; tD+=Number(x.dibayar)||0; tS+=(x.sisa!==undefined?Number(x.sisa):Number(x.anggaranAwal)); });
         document.getElementById('sumAnggaran').innerText = `Rp ${tA.toLocaleString('id-ID')}`; document.getElementById('sumDibayar').innerText = `Rp ${tD.toLocaleString('id-ID')}`; document.getElementById('sumSisa').innerText = `Rp ${tS.toLocaleString('id-ID')}`;
         
-        if(!data.length) return tb.innerHTML = '<tr><td colspan="9" align="center" style="padding:20px;">Belum ada riwayat perbaikan.</td></tr>';
+        if(!data.length) return tb.innerHTML = '<tr><td colspan="9" align="center" style="padding:20px;">Belum ada riwayat.</td></tr>';
         data.forEach(x => {
             let bdg = x.status.includes('Lunas')?'badge-lunas':x.status.includes('Cicil')?'badge-cicil':'badge-progress';
             let printNo = String(x.noUrut).length > 8 ? String(x.noUrut).slice(-4) : x.noUrut;
-            tb.innerHTML += `<tr><td>#${printNo}</td><td>${x.tglMulai}</td><td>${x.namaDapur}</td><td>${x.pic}</td><td>Rp ${(Number(x.anggaranAwal)||0).toLocaleString('id-ID')}</td><td style="color:var(--green-premium); font-weight:bold;">Rp ${(Number(x.dibayar)||0).toLocaleString('id-ID')}</td><td style="color:var(--border-red); font-weight:bold;">Rp ${(x.sisa!==undefined?Number(x.sisa):Number(x.anggaranAwal)).toLocaleString('id-ID')}</td><td><span class="badge ${bdg}">${x.status}</span></td><td><button class="btn btn-success" style="padding:8px 12px;" onclick="persiapanBayar('${x.noUrut}')">Bayar</button></td></tr>`;
+            tb.innerHTML += `<tr><td>#${printNo}</td><td>${x.tglMulai}</td><td>${x.namaDapur}</td><td>${x.pic}</td><td>Rp ${(Number(x.anggaranAwal)||0).toLocaleString('id-ID')}</td><td style="color:var(--btn-green); font-weight:bold;">Rp ${(Number(x.dibayar)||0).toLocaleString('id-ID')}</td><td style="color:var(--btn-red); font-weight:bold;">Rp ${(x.sisa!==undefined?Number(x.sisa):Number(x.anggaranAwal)).toLocaleString('id-ID')}</td><td><span class="badge ${bdg}">${x.status}</span></td><td><button class="btn btn-success" style="padding:6px 12px;" onclick="persiapanBayar('${x.noUrut}')"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> Bayar</button></td></tr>`;
         });
     }
 
+    // PEMBAYARAN
     function persiapanBayar(no) {
-        let idx = dbMonitor.findIndex(x => String(x.noUrut) === String(no)); 
-        if(idx===-1) return;
-        let d = dbMonitor[idx]; 
-        tampilPrompt(d.noUrut, d.sisa !== undefined ? d.sisa : d.anggaranAwal);
+        let idx = dbMonitor.findIndex(x => String(x.noUrut) === String(no)); if(idx===-1) return;
+        let d = dbMonitor[idx]; tampilPrompt(d.noUrut, d.sisa !== undefined ? d.sisa : d.anggaranAwal);
     }
-
     async function submitBayar() {
         let j = unformat(document.getElementById('promptInput').value);
-        if(j <= 0) return tampilAlert("Masukkan angka yang valid!");
+        if(j <= 0) return tampilAlert("Masukkan nominal valid!");
         
-        let idx = dbMonitor.findIndex(x => String(x.noUrut) === String(aktifNoUrutBayar));
-        let d = dbMonitor[idx];
-        
-        d.dibayar = (Number(d.dibayar)||0) + j; 
-        d.sisa = Number(d.anggaranAwal) - d.dibayar;
+        let idx = dbMonitor.findIndex(x => String(x.noUrut) === String(aktifNoUrutBayar)); let d = dbMonitor[idx];
+        d.dibayar = (Number(d.dibayar)||0) + j; d.sisa = Number(d.anggaranAwal) - d.dibayar;
         if(d.sisa<=0){d.sisa=0; d.status="Lunas / Selesai";} else d.status="Belum Lunas / Dicicil";
-        
-        dbMonitor[idx] = d; 
-        localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor)); 
+        dbMonitor[idx] = d; localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor)); 
         
         if(navigator.onLine && API_URL.includes("http")) {
             try { await fetch(API_URL, { method: "POST", headers:{"Content-Type":"text/plain"}, body: JSON.stringify({ action: "updatePembayaran", noUrut: d.noUrut, dibayar: d.dibayar, sisa: d.sisa, status: d.status }) }); } catch(e) {}
         }
-        
-        tutupPrompt(); terapkanFilter(); tampilAlert("Pembayaran sukses dicatat!");
+        tutupPrompt(); terapkanFilter(); tampilAlert("Pembayaran dicatat!");
     }
 
     function bukaCetak(j) { window.open(`${j}.html`, '_blank'); }
