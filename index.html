@@ -3,166 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM Dapur - PWA Dashboard</title>
+    <title>SMM Dapur MBG</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1c2541">
     <style>
         :root {
-            --bg-color: #0b132b; 
-            --card-bg: #1c2541;
-            --btn-color: #3a506b; 
-            --border-red: #ff4d4d;
-            --text-color: #e0e1dd;
+            --bg-color: #0b132b; --card-bg: #1c2541; --btn-color: #3a506b; 
+            --border-red: #ff4d4d; --text-color: #e0e1dd;
             --clay-shadow: 8px 8px 16px #060b19, -8px -8px 16px #101c3d;
             --inset-shadow: inset 4px 4px 8px #060b19, inset -4px -4px 8px #101c3d;
         }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: sans-serif; margin: 0; padding: 20px; }
         .container { max-width: 1100px; margin: auto; }
-
-        .kop-header {
-            text-align: center; padding: 15px; margin-bottom: 30px;
-            border-bottom: 3px double var(--border-red);
-        }
-        .kop-title {
-            font-size: 1.6rem; font-weight: 800; letter-spacing: 1.5px;
-            color: #48cae4; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); margin: 5px 0;
-        }
-        .kop-subtitle { font-size: 0.9rem; color: #94d2bd; letter-spacing: 1px; margin: 0; }
-
-        .card {
-            background: var(--card-bg); border-radius: 16px; padding: 25px; margin-bottom: 25px;
-            box-shadow: var(--clay-shadow); border: 1px solid var(--border-red);
-        }
-
+        
+        .kop-header { text-align: center; padding: 15px; margin-bottom: 30px; border-bottom: 3px double var(--border-red); }
+        .kop-title { font-size: 1.5rem; font-weight: 800; color: #48cae4; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); margin: 5px 0; }
+        
+        .card { background: var(--card-bg); border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: var(--clay-shadow); border: 1px solid var(--border-red); }
         .card h2, .card h3 { color: #48cae4; border-left: 4px solid var(--border-red); padding-left: 10px; margin-top: 0; }
-
+        
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-
         @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
-
-        .form-group { margin-bottom: 15px; }
+        
         label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; color: #a5a5a5; }
-
-        input, select, textarea {
-            width: 100%; padding: 12px; border-radius: 10px; border: none;
-            background: var(--bg-color); color: var(--text-color);
-            box-shadow: var(--inset-shadow); box-sizing: border-box; transition: 0.3s;
-        }
-        input:focus, select:focus { outline: 1px solid #48cae4; }
-
-        .table-responsive { overflow-x: auto; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--bg-color); color: var(--text-color); box-shadow: var(--inset-shadow); box-sizing: border-box; margin-bottom: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
         th { background: rgba(58, 80, 107, 0.4); padding: 12px; text-align: left; color: #48cae4; border-bottom: 2px solid var(--border-red); }
-        td { padding: 10px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
-
-        .btn {
-            padding: 12px 20px; border: none; border-radius: 10px; background: var(--btn-color);
-            color: #fff; font-weight: 700; cursor: pointer;
-            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.15), inset -2px -2px 4px rgba(0,0,0,0.4), 4px 4px 10px rgba(0,0,0,0.4);
-            transition: 0.2s;
-        }
+        td { padding: 10px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        .btn { padding: 12px 20px; border: none; border-radius: 10px; background: var(--btn-color); color: #fff; font-weight: bold; cursor: pointer; box-shadow: inset 2px 2px 4px rgba(255,255,255,0.15), inset -2px -2px 4px rgba(0,0,0,0.4), 4px 4px 10px rgba(0,0,0,0.4); transition: 0.2s; }
         .btn:active { box-shadow: var(--inset-shadow); transform: scale(0.98); }
-        .btn-danger { background: #d90429; }
-        .btn-success { background: #2a9d8f; }
-        .btn-full { width: 100%; font-size: 1.1rem; padding: 15px; margin-top: 15px;}
-
+        .btn-danger { background: #d90429; } .btn-success { background: #2a9d8f; }
+        .btn-full { width: 100%; font-size: 1.1rem; padding: 15px; margin-top: 15px; }
+        
         .badge { padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
         .badge-progress { background: #f4a261; color: #000; }
         .badge-cicil { background: #e9c46a; color: #000; }
         .badge-lunas { background: #2a9d8f; color: #fff; }
-
         .action-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
 
-        /* Custom Notifikasi Tema Dark Claymorphism */
-        #alertOverlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(11, 19, 43, 0.8); backdrop-filter: blur(3px); z-index: 9998;
-        }
-        #customAlert {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: var(--card-bg); border: 1px solid var(--border-red); box-shadow: var(--clay-shadow);
-            padding: 25px; border-radius: 16px; z-index: 9999; text-align: center; width: 85%; max-width: 350px;
-        }
-        #customAlert p { font-size: 1rem; color: var(--text-color); margin-top: 0; margin-bottom: 20px; line-height: 1.5; }
+        /* Custom Modal / Alert */
+        #alertOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,19,43,0.8); backdrop-filter: blur(3px); z-index: 9998; }
+        #customAlert { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 1px solid var(--border-red); box-shadow: var(--clay-shadow); padding: 25px; border-radius: 16px; z-index: 9999; text-align: center; width: 85%; max-width: 350px; }
+        #customAlert p { color: var(--text-color); margin-top: 0; margin-bottom: 20px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-<!-- Elemen Pop-up Notifikasi Custom -->
 <div id="alertOverlay"></div>
-<div id="customAlert">
-    <p id="alertMessage">Pesan Notifikasi</p>
-    <button class="btn btn-success" style="width: 100%;" onclick="tutupAlert()">Oke, Paham</button>
-</div>
+<div id="customAlert"><p id="alertMessage">Pesan</p><button class="btn btn-success" style="width:100%;" onclick="tutupAlert()">Oke, Paham</button></div>
 
 <div class="container">
-    <!-- Header -->
     <div class="kop-header">
         <div id="logoContainer"></div>
         <div class="kop-title">SISTEM MONITORING ANGGARAN & REKONSTRUKSI DAPUR</div>
-        <div class="kop-subtitle">Yayasan MBG - Perbaikan & Maintenance Real-Time System</div>
     </div>
 
-    <!-- Navigasi -->
     <div class="action-bar">
         <button class="btn" onclick="showSection('input-section')">📝 Form Input Baru</button>
-        <button class="btn" onclick="showSection('monitoring-section')">📊 Dashboard Monitoring</button>
-        <button class="btn" onclick="showSection('setting-section')">⚙️ Pengaturan Dokumen</button>
+        <button class="btn" onclick="showSection('monitoring-section')">📊 Dashboard & Cetak</button>
+        <button class="btn" onclick="showSection('setting-section')">⚙️ Pengaturan Rekening</button>
     </div>
 
-    <!-- SECTION 1: SETTING -->
+    <!-- SETTING -->
     <div id="setting-section" class="card app-section" style="display:none;">
-        <h2>Pengaturan Tanda Tangan & Pembayaran Invoice</h2>
-        <form id="formSetting">
-            <div class="grid-2">
-                <div class="form-group"><label>Lokasi Penandatanganan</label><input type="text" id="setLokasi"></div>
-                <div class="form-group"><label>Jabatan Penanggung Jawab</label><input type="text" id="setJabatan"></div>
-                <div class="form-group"><label>Nama Bank Pembayaran</label><input type="text" id="setBank"></div>
-                <div class="form-group"><label>Nomor Rekening</label><input type="text" id="setNoRek"></div>
-                <div class="form-group"><label>Rekening Atas Nama</label><input type="text" id="setAtasNama"></div>
-                <div class="form-group"><label>Link Gambar Kop Surat (Drive)</label><input type="text" id="setKopSurat"></div>
-            </div>
-            <button type="button" class="btn btn-success" onclick="simpanSettingLocal()">💾 Simpan Parameter Sistem</button>
-        </form>
+        <h2>Pengaturan Tanda Tangan & Invoice</h2>
+        <div class="grid-2">
+            <div><label>Lokasi TTD</label><input type="text" id="setLokasi"></div>
+            <div><label>Jabatan</label><input type="text" id="setJabatan"></div>
+            <div><label>Nama Bank</label><input type="text" id="setBank"></div>
+            <div><label>No. Rekening</label><input type="text" id="setNoRek"></div>
+            <div><label>Atas Nama Rekening</label><input type="text" id="setAtasNama"></div>
+        </div>
+        <button class="btn btn-success" onclick="simpanSetting()">💾 Simpan Pengaturan</button>
     </div>
 
-    <!-- SECTION 2: INPUT FORM -->
+    <!-- INPUT UTAMA -->
     <div id="input-section" class="card app-section">
-        <h2>Input Perbaikan & Belanja Barang Dapur</h2>
+        <h2>Input Perbaikan & Belanja</h2>
         <form id="formUtama">
             <div class="grid-2">
-                <div class="form-group"><label>Nama Dapur</label><input type="text" id="namaDapur" required></div>
-                <div class="form-group"><label>Nama PIC / SPPG</label><input type="text" id="pic" required></div>
-                <div class="form-group"><label>Tanggal Mulai</label><input type="date" id="tglMulai" required></div>
-                <div class="form-group"><label>Tanggal Selesai</label><input type="date" id="tglSelesai" required></div>
+                <div><label>Nama Dapur</label><input type="text" id="namaDapur" required></div>
+                <div><label>Nama PIC / SPPG</label><input type="text" id="pic" required></div>
+                <div><label>Tanggal Mulai</label><input type="date" id="tglMulai" required></div>
+                <div><label>Tanggal Selesai</label><input type="date" id="tglSelesai" required></div>
             </div>
 
-            <h3>Rincian Pengeluaran Barang</h3>
-            <div class="table-responsive">
+            <div style="overflow-x:auto;">
                 <table id="tabelBarang">
-                    <thead>
-                        <tr>
-                            <th style="width: 35%;">Nama Barang</th>
-                            <th style="width: 10%;">Qty</th>
-                            <th style="width: 15%;">Satuan</th>
-                            <th style="width: 20%;">Harga Satuan</th>
-                            <th style="width: 20%;">Total</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th width="35%">Nama Barang</th><th width="10%">Qty</th><th width="15%">Satuan</th><th width="20%">Harga</th><th width="20%">Total</th><th>X</th></tr></thead>
                     <tbody id="bodyBarang">
                         <tr>
                             <td><input type="text" class="namaBarang" required></td>
-                            <td><input type="number" class="qty" value="1" min="1" required></td>
+                            <td><input type="number" class="qty" value="1" required></td>
                             <td><input type="text" class="satuan" required></td>
                             <td><input type="number" class="harga" required></td>
                             <td><input type="number" class="total" required></td>
@@ -171,85 +105,52 @@
                     </tbody>
                 </table>
             </div>
-            <button type="button" class="btn" style="margin-top: 10px;" id="tambahBaris">➕ Tambah Item</button>
+            <button type="button" class="btn" id="tambahBaris">➕ Tambah Item</button>
 
-            <h3 style="margin-top:25px;">Lampiran Dokumen Bukti Fisik</h3>
-            <div class="grid-2">
-                <div class="form-group">
-                    <label>Foto Progress Pekerjaan (Pilih banyak)</label>
-                    <input type="file" id="fotoKerja" accept="image/*" multiple required>
-                </div>
-                <div class="form-group">
-                    <label>Foto Nota / Kwitansi (Pilih banyak)</label>
-                    <input type="file" id="fotoNota" accept="image/*" multiple required>
-                </div>
+            <div class="grid-2" style="margin-top:20px;">
+                <div><label>Foto Progress Pekerjaan (Otomatis Dikompres)</label><input type="file" id="fotoKerja" accept="image/*" multiple required></div>
+                <div><label>Foto Nota / Bon (Otomatis Dikompres)</label><input type="file" id="fotoNota" accept="image/*" multiple required></div>
             </div>
 
-            <button type="submit" class="btn btn-success btn-full" id="btnSimpan">🚀 SIMPAN DATA KE SPREADSHEET</button>
+            <button type="submit" class="btn btn-success btn-full" id="btnSimpan">🚀 SIMPAN DATA</button>
         </form>
     </div>
 
-    <!-- SECTION 3: DASHBOARD MONITORING PRO -->
+    <!-- DASHBOARD PRO -->
     <div id="monitoring-section" class="card app-section" style="display:none;">
-        <h2>Dashboard Laporan Bulanan & Validasi Dana</h2>
-
-        <!-- KARTU RINGKASAN ANGGARAN (OTOMATIS DIKALKULASI) -->
+        <h2>Dashboard Laporan & Filter Data</h2>
+        
         <div class="grid-3" style="margin-bottom: 20px;">
-            <div class="card" style="background:#118ab2; padding:15px; margin-bottom:0; box-shadow:none; border:none;">
-                <h4 style="margin:0; color:#fff;">Total Anggaran</h4>
-                <h2 id="sumAnggaran" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2>
-            </div>
-            <div class="card" style="background:#06d6a0; padding:15px; margin-bottom:0; box-shadow:none; border:none;">
-                <h4 style="margin:0; color:#fff;">Sudah Terbayar</h4>
-                <h2 id="sumDibayar" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2>
-            </div>
-            <div class="card" style="background:#ef476f; padding:15px; margin-bottom:0; box-shadow:none; border:none;">
-                <h4 style="margin:0; color:#fff;">Sisa Tagihan / Utang</h4>
-                <h2 id="sumSisa" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2>
-            </div>
+            <div class="card" style="background:#118ab2; padding:15px; margin:0; border:none;"><h4 style="margin:0; color:#fff;">Total Anggaran</h4><h2 id="sumAnggaran" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2></div>
+            <div class="card" style="background:#06d6a0; padding:15px; margin:0; border:none;"><h4 style="margin:0; color:#fff;">Sudah Terbayar</h4><h2 id="sumDibayar" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2></div>
+            <div class="card" style="background:#ef476f; padding:15px; margin:0; border:none;"><h4 style="margin:0; color:#fff;">Sisa Utang</h4><h2 id="sumSisa" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2></div>
         </div>
 
-        <!-- PANEL FILTER FLEKSIBEL -->
         <div class="card" style="padding:15px; border:1px dashed var(--btn-color);">
-            <h3 style="font-size:1rem; margin-top:0;">🔎 Filter Laporan & Rekapitulasi</h3>
             <div class="grid-3">
-                <div class="form-group"><label>Dari Tanggal</label><input type="date" id="fTglMulai"></div>
-                <div class="form-group"><label>Sampai Tanggal</label><input type="date" id="fTglAkhir"></div>
-                <div class="form-group">
-                    <label>Status Pembayaran</label>
-                    <select id="fStatus">
-                        <option value="Semua">Semua Status</option>
-                        <option value="Dalam Pengerjaan">Dalam Pengerjaan</option>
-                        <option value="Belum Lunas / Dicicil">Belum Lunas / Dicicil</option>
-                        <option value="Lunas / Selesai">Lunas / Selesai</option>
-                    </select>
-                </div>
-                <div class="form-group"><label>Pilih PIC</label><select id="fPIC"><option value="Semua">Semua PIC</option></select></div>
-                <div class="form-group"><label>Pilih Dapur</label><select id="fDapur"><option value="Semua">Semua Dapur</option></select></div>
-                <div class="form-group" style="display:flex; align-items:flex-end; gap:10px;">
-                    <button class="btn btn-success" style="flex:1;" onclick="terapkanFilterLaporan()">🔍 Cari</button>
-                    <button class="btn btn-danger" style="flex:1;" onclick="resetFilterLaporan()">Reset</button>
+                <div><label>Dari Tanggal</label><input type="date" id="fTglMulai"></div>
+                <div><label>Sampai Tanggal</label><input type="date" id="fTglAkhir"></div>
+                <div><label>Status</label><select id="fStatus"><option value="Semua">Semua</option><option value="Dalam Pengerjaan">Dalam Pengerjaan</option><option value="Belum Lunas / Dicicil">Belum Lunas / Dicicil</option><option value="Lunas / Selesai">Lunas / Selesai</option></select></div>
+                <div><label>PIC</label><select id="fPIC"><option value="Semua">Semua PIC</option></select></div>
+                <div><label>Dapur</label><select id="fDapur"><option value="Semua">Semua Dapur</option></select></div>
+                <div style="display:flex; gap:10px; align-items:flex-end; margin-bottom:15px;">
+                    <button class="btn btn-success" style="flex:1;" onclick="terapkanFilter()">🔍 Cari</button>
+                    <button class="btn btn-danger" style="flex:1;" onclick="resetFilter()">Reset</button>
                 </div>
             </div>
         </div>
 
-        <!-- PANEL CETAK DOKUMEN -->
-        <div id="printPanel" style="display:none; margin-bottom: 20px; align-items: center;" class="action-bar">
-            <span style="color:#06d6a0; font-size:0.9rem; font-weight:bold;">Data Terpilih:</span>
-            <button class="btn btn-success" onclick="bukaHalamanCetak('sp')">🖨️ Cetak SP</button>
-            <button class="btn btn-success" onclick="bukaHalamanCetak('invoice')">🧾 Cetak Invoice</button>
-            <button class="btn btn-success" onclick="bukaHalamanCetak('lampiran')">🖼️ Cetak Lampiran</button>
+        <div id="printPanel" style="display:none; margin-bottom: 20px;" class="action-bar">
+            <span style="color:#06d6a0; font-weight:bold; align-self:center;">Data Spesifik Terpilih:</span>
+            <button class="btn btn-success" onclick="bukaCetak('sp')">🖨️ Cetak SP</button>
+            <button class="btn btn-success" onclick="bukaCetak('invoice')">🧾 Cetak Invoice</button>
+            <button class="btn btn-success" onclick="bukaCetak('lampiran')">🖼️ Cetak Lampiran Foto</button>
         </div>
 
-        <!-- TABEL DATA -->
-        <div class="table-responsive">
+        <div style="overflow-x:auto;">
             <table>
-                <thead>
-                    <tr>
-                        <th>No</th><th>Tgl Mulai</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelRealtimeMonitoring"></tbody>
+                <thead><tr><th>No</th><th>Tgl</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead>
+                <tbody id="tabelMonitor"></tbody>
             </table>
         </div>
     </div>
@@ -257,309 +158,158 @@
 
 <script src="config.js"></script>
 <script>
-    // Registrasi PWA Service Worker
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
-    }
+    let dbPesanan = JSON.parse(localStorage.getItem('cache_pesanan')) || [];
+    let dbMonitor = JSON.parse(localStorage.getItem('cache_monitoring')) || [];
 
-    // Variabel Penampung Database Lokal
-    let dbPesananGlobal = JSON.parse(localStorage.getItem('cache_pesanan')) || [];
-    let dbMonitoringGlobal = JSON.parse(localStorage.getItem('cache_monitoring')) || [];
+    function tampilAlert(msg) { document.getElementById('alertMessage').innerText = msg; document.getElementById('alertOverlay').style.display = 'block'; document.getElementById('customAlert').style.display = 'block'; }
+    function tutupAlert() { document.getElementById('alertOverlay').style.display = 'none'; document.getElementById('customAlert').style.display = 'none'; }
 
-    // Fungsi Custom Alert / Notifikasi
-    function tampilAlert(pesan) {
-        document.getElementById('alertMessage').innerText = pesan;
-        document.getElementById('alertOverlay').style.display = 'block';
-        document.getElementById('customAlert').style.display = 'block';
-    }
-
-    function tutupAlert() {
-        document.getElementById('alertOverlay').style.display = 'none';
-        document.getElementById('customAlert').style.display = 'none';
-    }
-
-    // Saat Aplikasi Pertama Kali Dibuka
     document.addEventListener("DOMContentLoaded", () => {
-        muatSettingLocal();
-        bangunDropdownFilterLaporan();
-        renderTabelMonitoring();
+        muatSetting();
+        if(typeof KOP_SURAT_URL !== 'undefined' && KOP_SURAT_URL) {
+            document.getElementById('logoContainer').innerHTML = `<img src="${KOP_SURAT_URL}" style="max-height:70px; margin-bottom:10px;">`;
+        }
+        bangunFilter(); renderTabel(dbMonitor);
     });
 
-    // Navigasi Section
     function showSection(id) {
-        document.querySelectorAll('.app-section').forEach(sec => sec.style.display = 'none');
+        document.querySelectorAll('.app-section').forEach(s => s.style.display = 'none');
         document.getElementById(id).style.display = 'block';
-        if(id === 'monitoring-section') {
-            bangunDropdownFilterLaporan();
-            renderTabelMonitoring();
-        }
+        if(id === 'monitoring-section') { bangunFilter(); renderTabel(dbMonitor); }
     }
 
-    // Load & Save Settings
-    function simpanSettingLocal() {
-        const conf = {
-            lokasi: document.getElementById('setLokasi').value, jabatan: document.getElementById('setJabatan').value,
-            bank: document.getElementById('setBank').value, norek: document.getElementById('setNoRek').value,
-            atasnama: document.getElementById('setAtasNama').value, kop: document.getElementById('setKopSurat').value
-        };
-        localStorage.setItem('smm_setting_cetak', JSON.stringify(conf));
-        tampilAlert("Pengaturan berhasil disimpan di memori perangkat!"); 
-        muatSettingLocal();
+    // Setting
+    function simpanSetting() {
+        const conf = { lok: document.getElementById('setLokasi').value, jab: document.getElementById('setJabatan').value, bnk: document.getElementById('setBank').value, rek: document.getElementById('setNoRek').value, an: document.getElementById('setAtasNama').value };
+        localStorage.setItem('smm_setting', JSON.stringify(conf)); tampilAlert("Pengaturan disimpan!");
+    }
+    function muatSetting() {
+        const d = JSON.parse(localStorage.getItem('smm_setting')) || {};
+        document.getElementById('setLokasi').value = d.lok || ''; document.getElementById('setJabatan').value = d.jab || '';
+        document.getElementById('setBank').value = d.bnk || ''; document.getElementById('setNoRek').value = d.rek || ''; document.getElementById('setAtasNama').value = d.an || '';
     }
 
-    function muatSettingLocal() {
-        const cache = localStorage.getItem('smm_setting_cetak');
-        if(cache) {
-            const data = JSON.parse(cache);
-            document.getElementById('setLokasi').value = data.lokasi || '';
-            document.getElementById('setJabatan').value = data.jabatan || '';
-            document.getElementById('setBank').value = data.bank || '';
-            document.getElementById('setNoRek').value = data.norek || '';
-            document.getElementById('setAtasNama').value = data.atasnama || '';
-            document.getElementById('setKopSurat').value = data.kop || '';
-            if(data.kop) document.getElementById('logoContainer').innerHTML = `<img src="${data.kop}" style="max-height:80px; margin-bottom:10px;">`;
-        }
-    }
-
-    // Kalkulasi Harga & Total 2 Arah
-    document.getElementById('bodyBarang').addEventListener('input', function(e) {
-        const row = e.target.closest('tr');
-        const qty = parseFloat(row.querySelector('.qty').value) || 0;
-        const harga = row.querySelector('.harga');
-        const total = row.querySelector('.total');
-
-        if (e.target.classList.contains('harga') || e.target.classList.contains('qty')) {
-            total.value = Math.round(qty * (parseFloat(harga.value) || 0));
-        } else if (e.target.classList.contains('total')) {
-            harga.value = qty > 0 ? Math.round(parseFloat(total.value || 0) / qty) : 0;
-        }
+    // Input 2 Arah & Baris
+    document.getElementById('bodyBarang').addEventListener('input', e => {
+        const r = e.target.closest('tr'); const qty = parseFloat(r.querySelector('.qty').value)||0; const hrg = r.querySelector('.harga'); const tot = r.querySelector('.total');
+        if(e.target.classList.contains('harga') || e.target.classList.contains('qty')) tot.value = Math.round(qty * (parseFloat(hrg.value)||0));
+        else if(e.target.classList.contains('total')) hrg.value = qty>0 ? Math.round(parseFloat(tot.value||0)/qty) : 0;
     });
-
-    // Tambah & Hapus Baris Item Barang
     document.getElementById('tambahBaris').addEventListener('click', () => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><input type="text" class="namaBarang" required></td>
-            <td><input type="number" class="qty" value="1" min="1" required></td>
-            <td><input type="text" class="satuan" required></td>
-            <td><input type="number" class="harga" required></td>
-            <td><input type="number" class="total" required></td>
-            <td><button type="button" class="btn btn-danger hapusBaris">X</button></td>`;
+        tr.innerHTML = `<td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" required></td><td><input type="text" class="satuan" required></td><td><input type="number" class="harga" required></td><td><input type="number" class="total" required></td><td><button type="button" class="btn btn-danger hapusBaris">X</button></td>`;
         document.getElementById('bodyBarang').appendChild(tr);
     });
+    document.getElementById('bodyBarang').addEventListener('click', e => { if(e.target.classList.contains('hapusBaris')) { if(document.querySelectorAll('#bodyBarang tr').length > 1) e.target.closest('tr').remove(); else tampilAlert("Minimal 1 item!"); }});
 
-    document.getElementById('bodyBarang').addEventListener('click', e => {
-        if (e.target.classList.contains('hapusBaris')) {
-            if(document.querySelectorAll('#bodyBarang tr').length > 1) e.target.closest('tr').remove();
-            else tampilAlert("Minimal harus ada satu item pengeluaran!");
-        }
-    });
+    // MESIN KOMPRESOR FOTO (Solusi Quota Exceeded & Timeout Apps Script)
+    function kompresFoto(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800; // Dikompres ke resolusi aman
+                    let width = img.width, height = img.height;
+                    if (width > MAX_WIDTH) { height = Math.round((height * MAX_WIDTH) / width); width = MAX_WIDTH; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.6)); // Kualitas 60%, ukuran jadi hitungan KB
+                };
+            };
+        });
+    }
 
-    // Konversi File ke Base64
-    const fileToBase64 = file => new Promise((res, rej) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => res(reader.result);
-        reader.onerror = err => rej(err);
-    });
-
-    // Submit Form
     document.getElementById('formUtama').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('btnSimpan');
-        btn.innerText = "MENGIRIM DATA..."; btn.disabled = true;
-
+        const btn = document.getElementById('btnSimpan'); btn.innerText = "MENGOMPRES & MENGIRIM..."; btn.disabled = true;
         try {
-            let items = [], totalAnggaran = 0;
-            document.querySelectorAll('#bodyBarang tr').forEach(row => {
-                const tot = parseFloat(row.querySelector('.total').value) || 0;
-                totalAnggaran += tot;
-                items.push({
-                    namaBarang: row.querySelector('.namaBarang').value, qty: row.querySelector('.qty').value,
-                    satuan: row.querySelector('.satuan').value, hargaSatuan: row.querySelector('.harga').value, total: tot
-                });
+            let items = [], tAng = 0;
+            document.querySelectorAll('#bodyBarang tr').forEach(r => {
+                let tot = parseFloat(r.querySelector('.total').value)||0; tAng += tot;
+                items.push({ namaBarang: r.querySelector('.namaBarang').value, qty: r.querySelector('.qty').value, satuan: r.querySelector('.satuan').value, hargaSatuan: r.querySelector('.harga').value, total: tot });
             });
 
-            // Proses Foto
-            const fKerja = document.getElementById('fotoKerja').files;
-            const fNota = document.getElementById('fotoNota').files;
-            let arrFotoKerja = [], arrFotoNota = [];
-            for(let f of fKerja) arrFotoKerja.push(await fileToBase64(f));
-            for(let f of fNota) arrFotoNota.push(await fileToBase64(f));
+            // Proses Kompresi Semua Foto
+            let arrKerja = [], arrNota = [];
+            for(let f of document.getElementById('fotoKerja').files) arrKerja.push(await kompresFoto(f));
+            for(let f of document.getElementById('fotoNota').files) arrNota.push(await kompresFoto(f));
 
-            const pic = document.getElementById('pic').value, dapur = document.getElementById('namaDapur').value;
-            const tglM = document.getElementById('tglMulai').value, tglS = document.getElementById('tglSelesai').value;
+            const pic = document.getElementById('pic').value, dpr = document.getElementById('namaDapur').value, tM = document.getElementById('tglMulai').value, tS = document.getElementById('tglSelesai').value;
+            const noU = dbMonitor.length + 1;
+
+            dbMonitor.push({ noUrut: noU, tglMulai: tM, namaDapur: dpr, pic: pic, anggaranAwal: tAng, dibayar: 0, sisa: tAng, status: "Dalam Pengerjaan" });
             
-            // Penomoran otomatis dari data yang sudah ada
-            const noUrut = dbMonitoringGlobal.length + 1;
-
-            // Simpan Data Bundle ke DB Lokal
-            dbMonitoringGlobal.push({ noUrut, tglMulai: tglM, namaDapur: dapur, pic, anggaranAwal: totalAnggaran, dibayar: 0, sisa: totalAnggaran, status: "Dalam Pengerjaan" });
-
-            // Simpan Rincian Item (Tanpa File Foto untuk Mencegah Quota Exceeded LocalStorage)
-            items.forEach(it => dbPesananGlobal.push({ noUrut, tglMulai: tglM, tglSelesai: tglS, namaDapur: dapur, pic, ...it }));
+            // Karena foto udah dikompres, SEKARANG AMAN disimpan di localStorage buat dicetak di halaman Lampiran!
+            items.forEach(it => dbPesanan.push({ noUrut: noU, tglMulai: tM, tglSelesai: tS, namaDapur: dpr, pic: pic, ...it, fotoKerja: arrKerja, fotoNota: arrNota }));
             
-            // Commit ke LocalStorage
-            localStorage.setItem('cache_pesanan', JSON.stringify(dbPesananGlobal));
-            localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitoringGlobal));
+            localStorage.setItem('cache_pesanan', JSON.stringify(dbPesanan));
+            localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor));
 
-            // Kirim Data Lengkap (Termasuk Foto) ke Google Apps Script (Cloud)
-            if (navigator.onLine && API_URL.includes("http")) {
-                await fetch(API_URL, {
-                    method: "POST",
-                    // mode: "no-cors", => KODE INI TELAH DIHAPUS BIAR TIDAK DIBLOKIR
-                    body: JSON.stringify({ action: "simpanPesanan", noUrut, namaDapur: dapur, pic, tglMulai: tglM, tglSelesai: tglS, items, fotoKerjaBase64: arrFotoKerja, fotoNotaBase64: arrFotoNota, anggaranAwal: totalAnggaran })
-                });
-                tampilAlert("Sinkronisasi Berhasil! Data dan foto telah tersimpan aman ke sistem Cloud Spreadsheet.");
-            } else {
-                tampilAlert("Sistem Offline / API Belum disetel. Data diamankan sementara di penyimpanan perangkat.");
-            }
+            if(navigator.onLine) {
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "simpanPesanan", noUrut: noU, namaDapur: dpr, pic: pic, tglMulai: tM, tglSelesai: tS, items, fotoKerjaBase64: arrKerja, fotoNotaBase64: arrNota, anggaranAwal: tAng }) });
+                tampilAlert("Sukses! Data & Foto berhasil masuk Google Sheet.");
+            } else tampilAlert("Disimpan lokal karena offline.");
 
-            // Bersihkan Form dan Balik ke Dashboard
-            document.getElementById('formUtama').reset();
-            document.getElementById('bodyBarang').innerHTML = `<tr><td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" min="1" required></td><td><input type="text" class="satuan" required></td><td><input type="number" class="harga" required></td><td><input type="number" class="total" required></td><td><button type="button" class="btn btn-danger hapusBaris">X</button></td></tr>`;
-            
-            bangunDropdownFilterLaporan(); 
+            document.getElementById('formUtama').reset(); document.getElementById('bodyBarang').innerHTML = `<tr><td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" required></td><td><input type="text" class="satuan" required></td><td><input type="number" class="harga" required></td><td><input type="number" class="total" required></td><td><button type="button" class="btn btn-danger hapusBaris">X</button></td></tr>`;
             showSection('monitoring-section');
-        } catch (err) { 
-            tampilAlert("Terjadi Kesalahan: " + err.message); 
-        } finally { 
-            btn.innerText = "🚀 SIMPAN DATA KE SPREADSHEET"; btn.disabled = false; 
-        }
+        } catch(err) { tampilAlert("Error: " + err.message); } finally { btn.innerText = "🚀 SIMPAN DATA"; btn.disabled = false; }
     });
 
-    // ---------------- LOGIKA FILTER DASHBOARD & TABEL ----------------
-
-    function bangunDropdownFilterLaporan() {
-        const fPIC = document.getElementById('fPIC');
-        const fDapur = document.getElementById('fDapur');
-        fPIC.innerHTML = '<option value="Semua">Semua PIC</option>';
-        fDapur.innerHTML = '<option value="Semua">Semua Dapur</option>';
-        
-        [...new Set(dbMonitoringGlobal.map(i => i.pic))].forEach(p => fPIC.innerHTML += `<option value="${p}">${p}</option>`);
-        [...new Set(dbMonitoringGlobal.map(i => i.namaDapur))].forEach(d => fDapur.innerHTML += `<option value="${d}">${d}</option>`);
+    // Dashboard & Filter
+    function bangunFilter() {
+        const fp = document.getElementById('fPIC'), fd = document.getElementById('fDapur');
+        fp.innerHTML = '<option value="Semua">Semua PIC</option>'; fd.innerHTML = '<option value="Semua">Semua Dapur</option>';
+        [...new Set(dbMonitor.map(i=>i.pic))].forEach(p => fp.innerHTML += `<option value="${p}">${p}</option>`);
+        [...new Set(dbMonitor.map(i=>i.namaDapur))].forEach(d => fd.innerHTML += `<option value="${d}">${d}</option>`);
     }
 
-    function terapkanFilterLaporan() {
-        let tglAwal = document.getElementById('fTglMulai').value;
-        let tglAkhir = document.getElementById('fTglAkhir').value;
-        let status = document.getElementById('fStatus').value;
-        let pic = document.getElementById('fPIC').value;
-        let dapur = document.getElementById('fDapur').value;
-
-        let hasilFilter = dbMonitoringGlobal.filter(item => {
-            let cocok = true;
-            if (pic !== "Semua" && item.pic !== pic) cocok = false;
-            if (dapur !== "Semua" && item.namaDapur !== dapur) cocok = false;
-            if (status !== "Semua" && item.status !== status) cocok = false;
-            if (tglAwal && item.tglMulai < tglAwal) cocok = false;
-            if (tglAkhir && item.tglMulai > tglAkhir) cocok = false;
-            return cocok;
+    function terapkanFilter() {
+        let tM = document.getElementById('fTglMulai').value, tA = document.getElementById('fTglAkhir').value, st = document.getElementById('fStatus').value, p = document.getElementById('fPIC').value, d = document.getElementById('fDapur').value;
+        let hasil = dbMonitor.filter(i => {
+            let ok = true;
+            if(p !== "Semua" && i.pic !== p) ok = false; if(d !== "Semua" && i.namaDapur !== d) ok = false; if(st !== "Semua" && i.status !== st) ok = false;
+            if(tM && i.tglMulai < tM) ok = false; if(tA && i.tglMulai > tA) ok = false;
+            return ok;
         });
-
-        renderTabelMonitoring(hasilFilter);
-
-        // Munculkan Tombol Cetak jika filter mengerucut ke 1 data spesifik
-        if (hasilFilter.length === 1 && pic !== "Semua" && dapur !== "Semua") {
-            const items = dbPesananGlobal.filter(x => x.noUrut === hasilFilter[0].noUrut);
-            localStorage.setItem('smm_siap_cetak', JSON.stringify({ bundle: hasilFilter[0], items: items }));
+        renderTabel(hasil);
+        
+        if(hasil.length === 1 && p !== "Semua" && d !== "Semua") {
+            localStorage.setItem('smm_siap_cetak', JSON.stringify({ bundle: hasil[0], items: dbPesanan.filter(x => x.noUrut === hasil[0].noUrut) }));
             document.getElementById('printPanel').style.display = 'flex';
-        } else {
-            document.getElementById('printPanel').style.display = 'none';
-        }
+        } else document.getElementById('printPanel').style.display = 'none';
     }
 
-    function resetFilterLaporan() {
-        document.getElementById('fTglMulai').value = '';
-        document.getElementById('fTglAkhir').value = '';
-        document.getElementById('fStatus').value = 'Semua';
-        document.getElementById('fPIC').value = 'Semua';
-        document.getElementById('fDapur').value = 'Semua';
-        document.getElementById('printPanel').style.display = 'none';
-        renderTabelMonitoring(dbMonitoringGlobal);
-    }
+    function resetFilter() { document.getElementById('fTglMulai').value=''; document.getElementById('fTglAkhir').value=''; document.getElementById('fStatus').value='Semua'; document.getElementById('fPIC').value='Semua'; document.getElementById('fDapur').value='Semua'; document.getElementById('printPanel').style.display='none'; renderTabel(dbMonitor); }
 
-    function hitungRingkasan(dataAray) {
-        let tAnggaran = 0, tDibayar = 0, tSisa = 0;
-        dataAray.forEach(x => {
-            tAnggaran += x.anggaranAwal;
-            tDibayar += (x.dibayar || 0);
-            tSisa += (x.sisa !== undefined ? x.sisa : x.anggaranAwal);
-        });
-        document.getElementById('sumAnggaran').innerText = `Rp ${tAnggaran.toLocaleString('id-ID')}`;
-        document.getElementById('sumDibayar').innerText = `Rp ${tDibayar.toLocaleString('id-ID')}`;
-        document.getElementById('sumSisa').innerText = `Rp ${tSisa.toLocaleString('id-ID')}`;
-    }
-
-    function renderTabelMonitoring(dataRender = dbMonitoringGlobal) {
-        const tbody = document.getElementById('tabelRealtimeMonitoring');
-        tbody.innerHTML = '';
+    function renderTabel(data) {
+        let tA=0, tD=0, tS=0; const tb = document.getElementById('tabelMonitor'); tb.innerHTML = '';
+        data.forEach(x => { tA+=x.anggaranAwal; tD+=(x.dibayar||0); tS+=(x.sisa!==undefined?x.sisa:x.anggaranAwal); });
+        document.getElementById('sumAnggaran').innerText = `Rp ${tA.toLocaleString('id-ID')}`; document.getElementById('sumDibayar').innerText = `Rp ${tD.toLocaleString('id-ID')}`; document.getElementById('sumSisa').innerText = `Rp ${tS.toLocaleString('id-ID')}`;
         
-        // Kalkulasi Rekapitulasi (Anggaran, Terbayar, Sisa)
-        hitungRingkasan(dataRender);
-
-        if(!dataRender.length) {
-            return tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Data tidak ditemukan.</td></tr>';
-        }
-        
-        dataRender.forEach(x => {
-            let badge = x.status.includes('Lunas') ? 'badge-lunas' : x.status.includes('Dicicil') ? 'badge-cicil' : 'badge-progress';
-            tbody.innerHTML += `<tr>
-                <td>#${x.noUrut}</td>
-                <td>${x.tglMulai}</td>
-                <td>${x.namaDapur}</td>
-                <td>${x.pic}</td>
-                <td>Rp ${x.anggaranAwal.toLocaleString('id-ID')}</td>
-                <td style="color:#06d6a0; font-weight:bold;">Rp ${(x.dibayar||0).toLocaleString('id-ID')}</td>
-                <td style="color:#ef476f; font-weight:bold;">Rp ${(x.sisa !== undefined ? x.sisa : x.anggaranAwal).toLocaleString('id-ID')}</td>
-                <td><span class="badge ${badge}">${x.status}</span></td>
-                <td><button class="btn btn-success" style="padding:6px 12px; font-size:0.8rem;" onclick="bayarCicilan(${x.noUrut})">💳 Bayar</button></td>
-            </tr>`;
+        if(!data.length) return tb.innerHTML = '<tr><td colspan="9" align="center">Kosong.</td></tr>';
+        data.forEach(x => {
+            let bdg = x.status.includes('Lunas')?'badge-lunas':x.status.includes('Cicil')?'badge-cicil':'badge-progress';
+            tb.innerHTML += `<tr><td>#${x.noUrut}</td><td>${x.tglMulai}</td><td>${x.namaDapur}</td><td>${x.pic}</td><td>Rp ${x.anggaranAwal.toLocaleString('id-ID')}</td><td style="color:#06d6a0;">Rp ${(x.dibayar||0).toLocaleString('id-ID')}</td><td style="color:#ef476f;">Rp ${(x.sisa!==undefined?x.sisa:x.anggaranAwal).toLocaleString('id-ID')}</td><td><span class="badge ${bdg}">${x.status}</span></td><td><button class="btn btn-success" style="padding:5px;" onclick="bayar(${x.noUrut})">Bayar</button></td></tr>`;
         });
     }
 
-    // Fungsi Input Pembayaran / Cicilan
-    function bayarCicilan(noUrut) {
-        const dataIndex = dbMonitoringGlobal.findIndex(x => x.noUrut === noUrut);
-        if(dataIndex === -1) return;
-        
-        let data = dbMonitoringGlobal[dataIndex];
-        
-        // Menggunakan prompt standar untuk input angka pembayaran
-        let nominalBaru = prompt(`PENCATATAN PEMBAYARAN\n----------------------------------\nDapur: ${data.namaDapur}\nPIC: ${data.pic}\nSISA TAGIHAN SAAT INI: Rp ${(data.sisa !== undefined ? data.sisa : data.anggaranAwal).toLocaleString('id-ID')}\n\nMasukkan nominal uang yang dibayarkan sekarang:`, "0");
-        
-        if (nominalBaru !== null && nominalBaru !== "") {
-            let jumlahBayar = parseFloat(nominalBaru.replace(/[^0-9]/g, '')); // Bersihkan dari titik/koma
-            
-            if (isNaN(jumlahBayar) || jumlahBayar <= 0) {
-                return tampilAlert("Nominal pembayaran tidak valid! Masukkan angka saja.");
-            }
-            
-            // Kalkulasi uang
-            data.dibayar = (data.dibayar || 0) + jumlahBayar;
-            data.sisa = data.anggaranAwal - data.dibayar;
-            
-            // Update Status Otomatis
-            if (data.sisa <= 0) {
-                data.sisa = 0;
-                data.status = "Lunas / Selesai";
-            } else {
-                data.status = "Belum Lunas / Dicicil";
-            }
-
-            // Simpan Perubahan ke Storage
-            dbMonitoringGlobal[dataIndex] = data;
-            localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitoringGlobal));
-            
-            tampilAlert(`Pembayaran sebesar Rp ${jumlahBayar.toLocaleString('id-ID')} berhasil dicatat! Status diperbarui.`);
-            terapkanFilterLaporan(); // Render ulang tabel sesuai kondisi filter saat ini
+    function bayar(no) {
+        let idx = dbMonitor.findIndex(x => x.noUrut === no); if(idx===-1) return;
+        let d = dbMonitor[idx]; let nom = prompt(`BAYAR CICILAN\nSisa: Rp ${(d.sisa!==undefined?d.sisa:d.anggaranAwal).toLocaleString('id-ID')}\nMasukkan nominal (Angka saja):`, "0");
+        if(nom) {
+            let j = parseFloat(nom.replace(/[^0-9]/g, '')); if(isNaN(j)||j<=0) return tampilAlert("Invalid!");
+            d.dibayar = (d.dibayar||0) + j; d.sisa = d.anggaranAwal - d.dibayar;
+            if(d.sisa<=0){d.sisa=0; d.status="Lunas / Selesai";} else d.status="Belum Lunas / Dicicil";
+            dbMonitor[idx] = d; localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor)); terapkanFilter(); tampilAlert("Sukses bayar!");
         }
     }
 
-    // Fungsi Buka Tab Cetak
-    function bukaHalamanCetak(jenis) { 
-        window.open(`${jenis}.html`, '_blank'); 
-    }
+    function bukaCetak(j) { window.open(`${j}.html`, '_blank'); }
 </script>
 </body>
 </html>
