@@ -2,55 +2,56 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8"><title>Surat Pesanan</title>
+    <script src="config.js"></script>
     <style>
         @page { size: A4; margin: 18mm 15mm; }
         body { font-family: 'Times New Roman', serif; margin: 0; font-size: 11pt; }
-        .kop { text-align: center; border-bottom: 3px double #000; padding-bottom: 5px; margin-bottom: 20px; }
-        .kop img { max-height: 70px; }
-        .kop-text { font-size: 16pt; font-weight: bold; }
+        /* Kop gambar dibikin full width 100% dan ada garis batas di bawahnya */
+        .kop { margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 5px; }
+        .kop img { width: 100%; height: auto; display: block; }
+
         table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        th, td { border: 1px solid #000; padding: 7px; }
-        th { background: #f2f2f2; text-align: center; }
-        .ttd-container { margin-top: 50px; display: flex; justify-content: space-between; text-align: center; }
+        th, td { border: 1px solid #000; padding: 7px; } th { background: #f2f2f2; }
+        .ttd { margin-top: 50px; display: flex; justify-content: space-between; text-align: center; }
     </style>
 </head>
 <body>
-    <div class="kop"><div id="kopImage"></div><div class="kop-text">YAYASAN KEMBAR JAYA</div></div>
+    <div class="kop" id="kopImage"></div>
+
     <div style="text-align:center; font-size:14pt; font-weight:bold;">MAP - SURAT PESANAN (SP)</div>
     <div style="text-align:center; margin-bottom:20px;">Nomor: <span id="noDoc"></span></div>
 
-    <p>Instruksi pemesanan material & perbaikan diarahkan kepada:</p>
+    <p>Instruksi pemesanan material diarahkan kepada:</p>
     <p><b>PIC:</b> <span id="lblPIC"></span> | <b>Dapur:</b> <span id="lblDapur"></span> | <b>Tgl:</b> <span id="lblTgl"></span></p>
 
-    <table>
-        <thead><tr><th>No</th><th>Nama Barang</th><th>Qty</th><th>Satuan</th><th>Estimasi Total</th></tr></thead>
-        <tbody id="spItems"></tbody>
-    </table>
+    <table><thead><tr><th>No</th><th>Nama Barang</th><th>Qty</th><th>Satuan</th><th>Estimasi Total</th></tr></thead><tbody id="spItems"></tbody></table>
 
-    <div class="ttd-container">
+    <div class="ttd">
         <div>Menyetujui,<br><span id="setJabatan"></span><br><br><br><b>_________________</b></div>
         <div><span id="setLokasi"></span>, <span id="ttdTgl"></span><br>Pelaksana Lapangan<br><br><br><b><u><span id="setNama"></span></u></b></div>
     </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const data = JSON.parse(localStorage.getItem('smm_siap_cetak')), setting = JSON.parse(localStorage.getItem('smm_setting_cetak')) || {};
-        if(!data) return;
+        const d = JSON.parse(localStorage.getItem('smm_siap_cetak')), set = JSON.parse(localStorage.getItem('smm_setting')) || {};
+        if(!d) return;
+        
+        // Cek link Kop dari config.js
+        if(typeof KOP_SURAT_URL !== 'undefined' && KOP_SURAT_URL) {
+            document.getElementById('kopImage').innerHTML = `<img src="${KOP_SURAT_URL}" alt="Kop Surat">`;
+        } else {
+            document.getElementById('kopImage').innerHTML = `<h2 style="text-align:center; margin:0;">YAYASAN KEMBAR JAYA</h2>`;
+        }
+        
+        let NoUrutPendek = String(d.bundle.noUrut).length > 8 ? String(d.bundle.noUrut).slice(-4) : d.bundle.noUrut;
 
-        if(setting.kop) document.getElementById('kopImage').innerHTML = `<img src="${setting.kop}">`;
-        document.getElementById('lblPIC').innerText = data.bundle.pic;
-        document.getElementById('lblDapur').innerText = data.bundle.namaDapur;
-        document.getElementById('lblTgl').innerText = data.bundle.tglMulai;
-        document.getElementById('noDoc').innerText = `MAP-SP/${String(data.bundle.noUrut).padStart(3, '0')}/MBG/${new Date().getFullYear()}`;
-
-        const tbody = document.getElementById('spItems');
-        data.items.forEach((it, idx) => tbody.innerHTML += `<tr><td align="center">${idx+1}</td><td>${it.namaBarang}</td><td align="center">${it.qty}</td><td>${it.satuan}</td><td>Rp ${(it.total||0).toLocaleString('id-ID')}</td></tr>`);
-
-        document.getElementById('setJabatan').innerText = setting.jabatan || '-';
-        document.getElementById('setLokasi').innerText = setting.lokasi || '-';
-        document.getElementById('ttdTgl').innerText = data.bundle.tglMulai;
-        document.getElementById('setNama').innerText = data.bundle.pic;
-        setTimeout(() => window.print(), 500);
+        document.getElementById('lblPIC').innerText = d.bundle.pic; document.getElementById('lblDapur').innerText = d.bundle.namaDapur; document.getElementById('lblTgl').innerText = d.bundle.tglMulai;
+        document.getElementById('noDoc').innerText = `MAP-SP/${String(NoUrutPendek).padStart(3, '0')}/MBG/${new Date().getFullYear()}`;
+        
+        let tb = ''; d.items.forEach((it, i) => tb+=`<tr><td align="center">${i+1}</td><td>${it.namaBarang}</td><td align="center">${it.qty}</td><td>${it.satuan}</td><td>Rp ${(Number(it.total)||0).toLocaleString('id-ID')}</td></tr>`);
+        document.getElementById('spItems').innerHTML = tb;
+        
+        document.getElementById('setJabatan').innerText = set.jab || '-'; document.getElementById('setLokasi').innerText = set.lok || '-'; document.getElementById('ttdTgl').innerText = d.bundle.tglMulai; document.getElementById('setNama').innerText = d.bundle.pic;
+        setTimeout(() => window.print(), 800);
     });
 </script>
 </body>
