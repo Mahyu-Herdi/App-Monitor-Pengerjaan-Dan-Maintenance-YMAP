@@ -1,3 +1,5 @@
-// Pusat Konfigurasi API Jembatan Google Sheets
-// Ganti dengan URL Web App Apps Script hasil deploy kamu
-const API_URL = "https://script.google.com/macros/s/AKfycbxeMxWVI7JqpEtSa0OWTe1Lt_jpm9gYBGmIYcR7rqn1XZBQbgCkn-TN9OOvjZDnMI8U/exec";
+// PUSAT PENGATURAN APLIKASI
+const API_URL = "PASTE_URL_APPS_SCRIPT_KAMU_DISINI_YANG_AKHIRANNYA_EXEC";
+
+// Masukkan link gambar logo/Kop Surat (bisa dari Google Drive atau link gambar lain)
+const KOP_SURAT_URL = "PASTE_LINK_LOGO_YAYASAN_KAMU_DISINI";
