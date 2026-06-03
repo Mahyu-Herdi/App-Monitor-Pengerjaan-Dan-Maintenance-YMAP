@@ -5,60 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMM Dapur MBG</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0b132b">
+    <meta name="theme-color" content="#0d1527">
     <style>
         :root {
-            --bg-color: #0b132b; --card-bg: #1c2541; --btn-color: #3a506b; 
-            --border-red: #ff4d4d; --text-color: #e0e1dd;
-            --clay-shadow: 8px 8px 16px #060b19, -8px -8px 16px #101c3d;
-            --inset-shadow: inset 4px 4px 8px #060b19, inset -4px -4px 8px #101c3d;
+            --bg-color: #0d1527; 
+            --card-bg: #152238; 
+            --btn-color: #223755; 
+            --border-red: #d90429; 
+            --text-color: #f1faee;
+            --cyan-premium: #48cae4;
+            --green-premium: #06d6a0;
+            --soft-shadow: 4px 4px 10px #060a12, -4px -4px 10px #14203c;
+            --inner-shadow: inset 3px 3px 6px #060a12, inset -3px -3px 6px #14203c;
         }
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            padding: 12px;
+            font-size: 14px;
+        }
+
         .container { max-width: 1200px; margin: auto; }
-        
-        /* HEADER PREMIUM - LOGO KANAN ATAS */
-        .kop-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; margin-bottom: 30px; border-bottom: 3px double var(--border-red); background: var(--card-bg); border-radius: 16px; box-shadow: var(--clay-shadow); }
+
+        /* HEADER PRESTIGE - LOGO KANAN ATAS */
+        .kop-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 16px; 
+            margin-bottom: 15px; 
+            border-bottom: 2px solid var(--border-red); 
+            background: var(--card-bg); 
+            border-radius: 12px; 
+            box-shadow: var(--soft-shadow); 
+        }
         .kop-titles { flex: 1; }
-        .kop-title { font-size: 1.4rem; font-weight: 900; color: #48cae4; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin: 0 0 5px 0; }
-        .kop-subtitle { font-size: 0.85rem; color: #94d2bd; letter-spacing: 1px; margin: 0; }
-        .kop-logo { width: 60px; height: 60px; object-fit: contain; margin-left: 15px; border-radius: 10px; box-shadow: var(--clay-shadow); }
+        .kop-title { font-size: 1.15rem; font-weight: 800; color: var(--cyan-premium); letter-spacing: 0.5px; margin: 0; text-transform: uppercase; }
+        .kop-subtitle { font-size: 0.75rem; color: #a8dadc; margin: 2px 0 0 0; opacity: 0.8; }
+        .kop-logo { width: 42px; height: 42px; object-fit: contain; border-radius: 8px; margin-left: 10px; }
 
-        .card { background: var(--card-bg); border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: var(--clay-shadow); border: 1px solid var(--border-red); }
-        .card h2, .card h3 { color: #48cae4; border-left: 4px solid var(--border-red); padding-left: 12px; margin-top: 0; font-size:1.2rem; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } .kop-title { font-size: 1.1rem; } .kop-logo { width: 45px; height: 45px;} }
-        
-        label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: bold; color: #a5a5a5; }
-        input, select { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--bg-color); color: var(--text-color); box-shadow: var(--inset-shadow); box-sizing: border-box; margin-bottom: 15px; font-size:0.95rem; font-weight:bold; transition:0.3s;}
-        input:focus, select:focus { outline: 1px solid #48cae4; }
-        
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        th { background: rgba(58, 80, 107, 0.4); padding: 15px; text-align: left; color: #48cae4; border-bottom: 2px solid var(--border-red); font-size:0.9rem;}
-        td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
-        .btn { padding: 14px 20px; border: none; border-radius: 10px; background: var(--btn-color); color: #fff; font-weight: bold; cursor: pointer; box-shadow: inset 2px 2px 4px rgba(255,255,255,0.15), inset -2px -2px 4px rgba(0,0,0,0.4), 4px 4px 10px rgba(0,0,0,0.4); transition: 0.2s; font-size:0.95rem;}
-        .btn:active { box-shadow: var(--inset-shadow); transform: scale(0.95); }
-        .btn-danger { background: #d90429; } .btn-success { background: #2a9d8f; }
-        .btn-full { width: 100%; font-size: 1.1rem; padding: 18px; margin-top: 15px; }
-        
-        .badge { padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
-        .badge-progress { background: #f4a261; color: #000; }
-        .badge-cicil { background: #e9c46a; color: #000; }
-        .badge-lunas { background: #2a9d8f; color: #fff; }
-        .action-bar { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        /* NAVIGATION BAR - RAMPING & SEBARIS */
+        .action-bar { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 8px; 
+            margin-bottom: 15px; 
+        }
+        .action-bar .btn { 
+            padding: 10px 4px; 
+            font-size: 0.8rem; 
+            border-radius: 8px; 
+            white-space: nowrap;
+        }
 
-        /* KARTU DASHBOARD CLAYMORPHISM SERAGAM */
-        .dash-card { border-radius:16px; padding:20px; box-shadow:var(--clay-shadow); border:1px solid var(--border-red); text-align:center;}
-        .dash-card h4 { margin:0 0 10px 0; color:#a5a5a5; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;}
-        .dash-card h2 { margin:0; color:#fff; font-size:1.6rem; text-shadow:2px 2px 5px rgba(0,0,0,0.5);}
+        /* CARDS REVISI - TIPIS & TEGAS */
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 12px; 
+            padding: 16px; 
+            margin-bottom: 15px; 
+            box-shadow: var(--soft-shadow); 
+            border: 1px solid rgba(217, 4, 41, 0.3);
+        }
+        .card h2, .card h3 { 
+            color: var(--cyan-premium); 
+            border-left: 3px solid var(--border-red); 
+            padding-left: 8px; 
+            margin: 0 0 15px 0; 
+            font-size: 1rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+        @media (max-width: 768px) { 
+            .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 10px; } 
+            .action-bar { grid-template-columns: 1fr 1fr; } 
+        }
+
+        /* KARTU DASHBOARD INDIKATOR */
+        .dash-card { 
+            border-radius: 10px; 
+            padding: 12px; 
+            background: rgba(21, 34, 56, 0.6);
+            box-shadow: var(--inner-shadow); 
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: left;
+            position: relative;
+        }
+        .dash-card::before { content: ''; position: absolute; left: 0; top: 25%; height: 50%; width: 3px; }
+        .dash-card.total-anggaran::before { background: var(--cyan-premium); }
+        .dash-card.terbayar::before { background: var(--green-premium); }
+        .dash-card.utang::before { background: var(--border-red); }
+
+        .dash-card h4 { margin: 0 0 4px 8px; color: #a5a5a5; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .dash-card h2 { margin: 0 0 0 8px; color: #fff; font-size: 1.25rem; font-weight: 700; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+
+        /* INPUT FORM & DROPDOWN - CLEAN INDENT */
+        label { display: block; margin-bottom: 4px; font-size: 0.75rem; font-weight: 600; color: #94a3b8; }
+        input, select { 
+            width: 100%; padding: 10px 12px; border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.05); background: #090f1c; 
+            color: var(--text-color); box-shadow: var(--inner-shadow); 
+            box-sizing: border-box; margin-bottom: 12px; font-size: 0.85rem; font-weight: bold;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--cyan-premium); }
+
+        /* TABEL RESPONSIVE & RAMPING */
+        .table-responsive { overflow-x: auto; border-radius: 8px; box-shadow: var(--inner-shadow); background: #090f1c; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background: #111b2e; padding: 10px; text-align: left; color: var(--cyan-premium); border-bottom: 2px solid var(--border-red); font-weight: 700; white-space: nowrap; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); color: #cbd5e1; }
+
+        /* BUTTONS REVISI */
+        .btn { 
+            padding: 10px 16px; border: none; border-radius: 8px; 
+            background: var(--btn-color); color: #fff; font-weight: 600; 
+            cursor: pointer; box-shadow: var(--soft-shadow);
+            transition: all 0.15s ease; font-size: 0.85rem;
+        }
+        .btn:hover { background: #2b456b; }
+        .btn:active { box-shadow: var(--inner-shadow); transform: translateY(1px); }
+        .btn-danger { background: var(--border-red); } .btn-danger:hover { background: #b30322; }
+        .btn-success { background: var(--green-premium); color: #0b132b; } .btn-success:hover { background: #05b386; }
+        .btn-full { width: 100%; padding: 14px; font-size: 0.95rem; margin-top: 10px; }
+
+        /* CETAK PANEL */
+        #printPanel { 
+            background: #090f1c; padding: 12px; border-radius: 8px; 
+            border-left: 3px solid var(--green-premium);
+            display: flex; gap: 8px; margin-bottom: 15px; align-items: center;
+        }
 
         /* CUSTOM MODAL ALERT & PROMPT */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,19,43,0.85); backdrop-filter: blur(5px); z-index: 9998; }
-        .modal-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 1px solid var(--border-red); box-shadow: var(--clay-shadow); padding: 30px; border-radius: 20px; z-index: 9999; text-align: center; width: 90%; max-width: 400px; }
-        .modal-box p { color: var(--text-color); font-size: 1rem; margin-top: 0; margin-bottom: 20px; line-height: 1.5; }
-        .modal-input { margin-bottom: 20px; text-align: center; font-size: 1.2rem; color:#06d6a0;}
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(6,10,18,0.85); backdrop-filter: blur(4px); z-index: 9998; }
+        .modal-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border: 1px solid var(--border-red); box-shadow: var(--soft-shadow); padding: 20px; border-radius: 12px; z-index: 9999; text-align: center; width: 88%; max-width: 340px; }
+        .modal-box p { color: var(--text-color); font-size: 0.9rem; margin-top: 0; margin-bottom: 15px; line-height: 1.5; }
+        .modal-input { margin-bottom: 15px; text-align: center; font-size: 1.1rem; color:#06d6a0; }
+
+        .badge { padding: 5px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; white-space: nowrap; }
+        .badge-progress { background: #f4a261; color: #000; }
+        .badge-cicil { background: #e9c46a; color: #000; }
+        .badge-lunas { background: var(--green-premium); color: #0b132b; }
     </style>
 </head>
 <body>
@@ -71,8 +164,8 @@
 
 <div id="promptOverlay" class="modal-overlay"></div>
 <div id="customPrompt" class="modal-box">
-    <h3 style="color:#06d6a0; border:none; padding:0; margin-bottom:10px;">BAYAR CICILAN</h3>
-    <p id="promptDesc" style="font-size:0.9rem; color:#a5a5a5;"></p>
+    <h3 style="color:var(--green-premium); border:none; padding:0; margin-bottom:10px;">BAYAR CICILAN</h3>
+    <p id="promptDesc" style="font-size:0.85rem; color:#94a3b8;"></p>
     <input type="text" id="promptInput" class="modal-input" placeholder="Rp 0" oninput="formatRupiahInput(this)">
     <div style="display:flex; gap:10px;">
         <button class="btn btn-success" style="flex:1;" onclick="submitBayar()">Bayar</button>
@@ -91,9 +184,9 @@
 
     <div class="action-bar">
         <button class="btn" onclick="showSection('input-section')">📝 Form Input</button>
-        <button class="btn" onclick="showSection('monitoring-section')">📊 Dashboard & Cetak</button>
-        <button class="btn" onclick="showSection('setting-section')">⚙️ Pengaturan</button>
-        <button class="btn btn-success" onclick="sinkronisasiDataCloud()" id="btnSync">🔄 Sinkron Cloud</button>
+        <button class="btn" onclick="showSection('monitoring-section')">📊 Dashboard</button>
+        <button class="btn" onclick="showSection('setting-section')">⚙️ Set Dokumen</button>
+        <button class="btn btn-success" onclick="sinkronisasiDataCloud()" id="btnSync">🔄 Sync Cloud</button>
     </div>
 
     <div id="setting-section" class="card app-section" style="display:none;">
@@ -118,7 +211,7 @@
                 <div><label>Tanggal Selesai</label><input type="date" id="tglSelesai" required></div>
             </div>
 
-            <div style="overflow-x:auto;">
+            <div class="table-responsive">
                 <table id="tabelBarang">
                     <thead><tr><th width="35%">Nama Barang</th><th width="10%">Qty</th><th width="15%">Satuan</th><th width="20%">Harga (Rp)</th><th width="20%">Total (Rp)</th><th>X</th></tr></thead>
                     <tbody id="bodyBarang">
@@ -133,7 +226,7 @@
                     </tbody>
                 </table>
             </div>
-            <button type="button" class="btn" id="tambahBaris">➕ Tambah Item</button>
+            <button type="button" class="btn" id="tambahBaris" style="margin-top:10px;">➕ Tambah Item</button>
 
             <div class="grid-2" style="margin-top:20px;">
                 <div><label>📸 Foto Progress Pekerjaan</label><input type="file" id="fotoKerja" accept="image/*" multiple required></div>
@@ -148,38 +241,39 @@
         <h2>Dashboard Laporan & Filter Data</h2>
         
         <div class="grid-3" style="margin-bottom: 25px;">
-            <div class="dash-card" style="background:var(--card-bg); border-color:#48cae4;">
-                <h4 style="color:#48cae4;">Total Anggaran</h4><h2 id="sumAnggaran">Rp 0</h2>
+            <div class="dash-card total-anggaran">
+                <h4>Total Anggaran</h4><h2 id="sumAnggaran">Rp 0</h2>
             </div>
-            <div class="dash-card" style="background:var(--card-bg); border-color:#06d6a0;">
-                <h4 style="color:#06d6a0;">Sudah Terbayar</h4><h2 id="sumDibayar">Rp 0</h2>
+            <div class="dash-card terbayar">
+                <h4>Sudah Terbayar</h4><h2 id="sumDibayar">Rp 0</h2>
             </div>
-            <div class="dash-card" style="background:var(--card-bg); border-color:#ef476f;">
-                <h4 style="color:#ef476f;">Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2>
+            <div class="dash-card utang">
+                <h4>Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2>
             </div>
         </div>
 
-        <div class="card" style="padding:20px; border:1px dashed var(--btn-color);">
+        <div class="card" style="padding:16px; border:1px dashed var(--btn-color); margin-bottom: 20px;">
             <div class="grid-3">
                 <div><label>Dari Tgl</label><input type="date" id="fTglMulai"></div>
                 <div><label>Sampai Tgl</label><input type="date" id="fTglAkhir"></div>
                 <div><label>Status</label><select id="fStatus"><option value="Semua">Semua</option><option value="Dalam Pengerjaan">Dalam Pengerjaan</option><option value="Belum Lunas / Dicicil">Belum Lunas / Dicicil</option><option value="Lunas / Selesai">Lunas / Selesai</option></select></div>
                 <div><label>PIC</label><select id="fPIC"><option value="Semua">Semua PIC</option></select></div>
                 <div><label>Dapur</label><select id="fDapur"><option value="Semua">Semua Dapur</option></select></div>
-                <div style="display:flex; gap:10px; align-items:flex-end; margin-bottom:15px;">
+                <div style="display:flex; gap:8px; align-items:flex-end; margin-bottom:12px;">
                     <button class="btn btn-success" style="flex:1;" onclick="terapkanFilter()">🔍 Cari</button>
                     <button class="btn btn-danger" style="flex:1;" onclick="resetFilter()">Reset</button>
                 </div>
             </div>
         </div>
 
-        <div id="printPanel" style="display:none; margin-bottom: 20px;" class="action-bar">
+        <div id="printPanel">
+            <span style="color:var(--green-premium); font-weight:bold; font-size:0.8rem; flex:1;">Data Terpilih:</span>
             <button class="btn btn-success" onclick="bukaCetak('sp')">🖨️ Cetak SP</button>
-            <button class="btn btn-success" onclick="bukaCetak('invoice')">🧾 Cetak Invoice</button>
-            <button class="btn btn-success" onclick="bukaCetak('lampiran')">🖼️ Cetak Lampiran Foto</button>
+            <button class="btn btn-success" onclick="bukaCetak('invoice')">🧾 Cetak INV</button>
+            <button class="btn btn-success" onclick="bukaCetak('lampiran')">🖼️ Lampiran</button>
         </div>
 
-        <div style="overflow-x:auto;">
+        <div class="table-responsive">
             <table>
                 <thead><tr><th>No</th><th>Tgl</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead>
                 <tbody id="tabelMonitor"></tbody>
@@ -194,7 +288,7 @@
 
     let dbPesanan = JSON.parse(localStorage.getItem('cache_pesanan')) || [];
     let dbMonitor = JSON.parse(localStorage.getItem('cache_monitoring')) || [];
-    let aktifNoUrutBayar = null; // Menyimpan ID data yg sedang mau dibayar
+    let aktifNoUrutBayar = null;
 
     // ================= CUSTOM UI SYSTEM =================
     function tampilAlert(msg) { document.getElementById('alertMessage').innerText = msg; document.getElementById('alertOverlay').style.display = 'block'; document.getElementById('customAlert').style.display = 'block'; }
@@ -202,7 +296,7 @@
     
     function tampilPrompt(noUrut, sisa) { 
         aktifNoUrutBayar = noUrut;
-        document.getElementById('promptDesc').innerHTML = `Nominal Sisa Tagihan:<br><b style="font-size:1.1rem; color:#fff;">Rp ${sisa.toLocaleString('id-ID')}</b>`;
+        document.getElementById('promptDesc').innerHTML = `Sisa Tagihan:<br><b style="font-size:1.1rem; color:#fff;">Rp ${sisa.toLocaleString('id-ID')}</b>`;
         document.getElementById('promptInput').value = '';
         document.getElementById('promptOverlay').style.display = 'block'; document.getElementById('customPrompt').style.display = 'block'; 
     }
@@ -211,7 +305,7 @@
     // ================= SINKRONISASI CLOUD LENGKAP =================
     async function sinkronisasiDataCloud() {
         if(!navigator.onLine) return tampilAlert("Gagal: Tidak ada koneksi internet!");
-        const btn = document.getElementById('btnSync'); btn.innerText = "🔄 Menarik Data...";
+        const btn = document.getElementById('btnSync'); btn.innerText = "🔄 Sync...";
         try {
             const response = await fetch(API_URL);
             const data = await response.json();
@@ -222,12 +316,11 @@
             bangunFilter(); renderTabel(dbMonitor);
             tampilAlert("Sukses! Data telah tersinkronisasi dari Cloud Spreadsheet.");
         } catch (e) { tampilAlert("Gagal Sinkronisasi: Pastikan URL API benar dan di-deploy tipe 'Siapa Saja'."); }
-        finally { btn.innerText = "🔄 Sinkron Cloud"; }
+        finally { btn.innerText = "🔄 Sync Cloud"; }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
         muatSetting(); bangunFilter(); renderTabel(dbMonitor);
-        // Otomatis tarik data diam-diam di background kalau online
         if(navigator.onLine && API_URL.includes("http")) sinkronisasiDataCloud();
     });
 
@@ -255,7 +348,6 @@
         return rupiah;
     }
     function unformat(str) { return parseFloat(str.replace(/\./g, '')) || 0; }
-    
     function formatRupiahInput(elem) { elem.value = formatRupiahStr(elem.value); }
 
     function hitungDuaArah(elem) {
@@ -306,8 +398,6 @@
             for(let f of document.getElementById('fotoNota').files) arrNota.push(await kompresFoto(f));
 
             const pic = document.getElementById('pic').value, dpr = document.getElementById('namaDapur').value, tM = document.getElementById('tglMulai').value, tS = document.getElementById('tglSelesai').value;
-            
-            // PENTING: Bikin NoUrut berdasarkan Timestamp agar Unik buat semua Device
             const noU = new Date().getTime(); 
 
             dbMonitor.push({ noUrut: noU, tglMulai: tM, namaDapur: dpr, pic: pic, anggaranAwal: tAng, dibayar: 0, sisa: tAng, status: "Dalam Pengerjaan" });
@@ -316,7 +406,6 @@
             localStorage.setItem('cache_pesanan', JSON.stringify(dbPesanan)); localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor));
 
             if(navigator.onLine) {
-                // Hapus mode no-cors, gunakan text/plain agar tembus Google API
                 await fetch(API_URL, { method: "POST", headers:{"Content-Type": "text/plain"}, body: JSON.stringify({ action: "simpanPesanan", noUrut: noU, namaDapur: dpr, pic: pic, tglMulai: tM, tglSelesai: tS, items, fotoKerjaBase64: arrKerja, fotoNotaBase64: arrNota, anggaranAwal: tAng }) });
                 tampilAlert("Berhasil! Data & Foto telah tersimpan ke Google Sheet.");
             } else tampilAlert("Disimpan di lokal (Sedang Offline).");
@@ -358,12 +447,11 @@
         data.forEach(x => { tA+=Number(x.anggaranAwal)||0; tD+=Number(x.dibayar)||0; tS+=(x.sisa!==undefined?Number(x.sisa):Number(x.anggaranAwal)); });
         document.getElementById('sumAnggaran').innerText = `Rp ${tA.toLocaleString('id-ID')}`; document.getElementById('sumDibayar').innerText = `Rp ${tD.toLocaleString('id-ID')}`; document.getElementById('sumSisa').innerText = `Rp ${tS.toLocaleString('id-ID')}`;
         
-        if(!data.length) return tb.innerHTML = '<tr><td colspan="9" align="center">Belum ada riwayat.</td></tr>';
+        if(!data.length) return tb.innerHTML = '<tr><td colspan="9" align="center" style="padding:20px;">Belum ada riwayat perbaikan.</td></tr>';
         data.forEach(x => {
             let bdg = x.status.includes('Lunas')?'badge-lunas':x.status.includes('Cicil')?'badge-cicil':'badge-progress';
-            // Cek No urut panjang (timestamp) di slice aja buat UI
             let printNo = String(x.noUrut).length > 8 ? String(x.noUrut).slice(-4) : x.noUrut;
-            tb.innerHTML += `<tr><td>#${printNo}</td><td>${x.tglMulai}</td><td>${x.namaDapur}</td><td>${x.pic}</td><td>Rp ${(Number(x.anggaranAwal)||0).toLocaleString('id-ID')}</td><td style="color:#06d6a0;">Rp ${(Number(x.dibayar)||0).toLocaleString('id-ID')}</td><td style="color:#ef476f;">Rp ${(x.sisa!==undefined?Number(x.sisa):Number(x.anggaranAwal)).toLocaleString('id-ID')}</td><td><span class="badge ${bdg}">${x.status}</span></td><td><button class="btn btn-success" style="padding:8px;" onclick="persiapanBayar('${x.noUrut}')">Bayar</button></td></tr>`;
+            tb.innerHTML += `<tr><td>#${printNo}</td><td>${x.tglMulai}</td><td>${x.namaDapur}</td><td>${x.pic}</td><td>Rp ${(Number(x.anggaranAwal)||0).toLocaleString('id-ID')}</td><td style="color:var(--green-premium); font-weight:bold;">Rp ${(Number(x.dibayar)||0).toLocaleString('id-ID')}</td><td style="color:var(--border-red); font-weight:bold;">Rp ${(x.sisa!==undefined?Number(x.sisa):Number(x.anggaranAwal)).toLocaleString('id-ID')}</td><td><span class="badge ${bdg}">${x.status}</span></td><td><button class="btn btn-success" style="padding:8px 12px;" onclick="persiapanBayar('${x.noUrut}')">Bayar</button></td></tr>`;
         });
     }
 
@@ -388,11 +476,8 @@
         dbMonitor[idx] = d; 
         localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitor)); 
         
-        // Push Ke Cloud
         if(navigator.onLine && API_URL.includes("http")) {
-            try {
-                await fetch(API_URL, { method: "POST", headers:{"Content-Type":"text/plain"}, body: JSON.stringify({ action: "updatePembayaran", noUrut: d.noUrut, dibayar: d.dibayar, sisa: d.sisa, status: d.status }) });
-            } catch(e) {}
+            try { await fetch(API_URL, { method: "POST", headers:{"Content-Type":"text/plain"}, body: JSON.stringify({ action: "updatePembayaran", noUrut: d.noUrut, dibayar: d.dibayar, sisa: d.sisa, status: d.status }) }); } catch(e) {}
         }
         
         tutupPrompt(); terapkanFilter(); tampilAlert("Pembayaran sukses dicatat!");
