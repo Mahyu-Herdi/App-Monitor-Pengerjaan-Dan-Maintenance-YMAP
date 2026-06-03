@@ -1,24 +1,14 @@
 {
-  "name": "Sistem Monitoring Anggaran & Rekonstruksi Dapur",
+  "name": "SMM Dapur MBG",
   "short_name": "SMM Dapur",
-  "description": "Aplikasi Perbaikan, Maintenance, dan Tracking Anggaran Dapur MBG",
+  "description": "Sistem Monitoring & Maintenance Dapur MBG",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b132b",
-  "theme_color": "#1c2541",
+  "background_color": "#e8e4d9",
+  "theme_color": "#548CA8",
   "orientation": "portrait-primary",
   "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
