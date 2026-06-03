@@ -2,68 +2,81 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8"><title>Invoice Pembayaran</title>
-    <script src="config.js"></script>
     <style>
-        @page { size: A4; margin: 18mm 15mm; }
+        @page { size: A4; margin: 15mm; }
         body { font-family: 'Times New Roman', serif; margin: 0; font-size: 11pt; }
-        /* Kop gambar dibikin full width 100% dan ada garis batas di bawahnya */
+        
+        /* Kop Surat Menggunakan Trik Root File */
         .kop { margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 5px; }
         .kop img { width: 100%; height: auto; display: block; }
         
         table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        th, td { border: 1px solid #000; padding: 7px; } th { background: #f2f2f2; }
+        th, td { border: 1px solid #000; padding: 7px; } 
+        th { background: #f2f2f2; text-align: center; }
         .terbilang-box { background: #fafafa; padding: 10px; font-style: italic; font-weight: bold; margin-bottom: 20px; border: 1px solid #ddd; }
         .payment-info { border: 1px dashed #000; padding: 10px; font-size: 10pt; }
-        .ttd-box { float: right; width: 45%; text-align: center; margin-top: 40px; }
+        .ttd-box { float: right; width: 40%; text-align: center; margin-top: 40px; }
     </style>
 </head>
 <body>
-    <div class="kop" id="kopImage"></div>
+    <div class="kop"><img src="kop.png" alt="Kop Surat"></div>
     
     <div style="text-align: center; font-size: 14pt; font-weight: bold; text-decoration: underline;">INVOICE TAGIHAN MAINTENANCE</div>
     <div style="text-align: center; margin-bottom: 25px;">Nomor: <span id="noDoc"></span></div>
 
     <table style="border:none; margin-bottom:20px;">
-        <tr style="border:none;"><td style="border:none; width:20%;">Dapur</td><td style="border:none;">: <span id="lblDapur"></span></td><td style="border:none; width:20%;">Tgl Cetak</td><td style="border:none;">: <span id="lblTanggal"></span></td></tr>
+        <tr style="border:none;"><td style="border:none; width:15%;">Dapur</td><td style="border:none;">: <span id="lblDapur"></span></td><td style="border:none; width:20%;">Tgl Cetak</td><td style="border:none;">: <span id="lblTanggal"></span></td></tr>
         <tr style="border:none;"><td style="border:none;">PIC</td><td style="border:none;">: <span id="lblPIC"></span></td><td style="border:none;">Periode</td><td style="border:none;">: <span id="lblPeriode"></span></td></tr>
     </table>
 
     <table>
         <thead><tr><th>No</th><th>Barang/Pekerjaan</th><th>Qty</th><th>Satuan</th><th>Harga</th><th>Total</th></tr></thead>
         <tbody id="invoiceItems"></tbody>
-        <tfoot><tr><td colspan="5" align="right"><b>TOTAL BIAYA:</b></td><td id="lblGrandTotal"><b></b></td></tr></tfoot>
+        <tfoot><tr><td colspan="5" align="right"><b>TOTAL BIAYA:</b></td><td id="lblGrandTotal" align="right"><b></b></td></tr></tfoot>
     </table>
     
-    <div><b>Terbilang:</b></div><div class="terbilang-box" id="lblTerbilang"></div>
-    <div class="payment-info"><b>INSTRUKSI TRANSFER:</b><br><span id="pilihBank"></span> | No. Rek: <span id="pilihNoRek"></span><br>A/N: <span id="pilihAtasNama"></span></div>
-    <div class="ttd-box"><span id="ttdLokasi"></span>, <span id="ttdTanggal"></span><br><span id="ttdJabatan"></span><br><br><br><b><u><span id="ttdNama"></span></u></b></div>
+    <div><b>Terbilang:</b></div>
+    <div class="terbilang-box" id="lblTerbilang"></div>
+    
+    <div class="payment-info">
+        <b>INSTRUKSI TRANSFER:</b><br>
+        <span id="pilihBank"></span> | No. Rek: <span id="pilihNoRek"></span><br>
+        A/N: <span id="pilihAtasNama"></span>
+    </div>
+
+    <div class="ttd-box">
+        <span id="ttdLokasi"></span>, <span id="ttdTanggal"></span><br>
+        <span id="ttdJabatan"></span><br><br><br><br>
+        <b><u><span id="ttdNama"></span></u></b>
+    </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const d = JSON.parse(localStorage.getItem('smm_siap_cetak')), set = JSON.parse(localStorage.getItem('smm_setting')) || {};
         if(!d) return;
         
-        // Cek link Kop dari config.js
-        if(typeof KOP_SURAT_URL !== 'undefined' && KOP_SURAT_URL) {
-            document.getElementById('kopImage').innerHTML = `<img src="${KOP_SURAT_URL}" alt="Kop Surat">`;
-        } else {
-            // Kalau link kop kosong, tampilin teks cadangan
-            document.getElementById('kopImage').innerHTML = `<h2 style="text-align:center; margin:0;">YAYASAN KEMBAR JAYA</h2>`;
-        }
-        
         let NoUrutPendek = String(d.bundle.noUrut).length > 8 ? String(d.bundle.noUrut).slice(-4) : d.bundle.noUrut;
         
-        document.getElementById('lblDapur').innerText = d.bundle.namaDapur; document.getElementById('lblPIC').innerText = d.bundle.pic;
-        document.getElementById('lblTanggal').innerText = d.bundle.tglMulai; document.getElementById('lblPeriode').innerText = `${d.bundle.tglMulai} s/d ${d.items[0].tglSelesai}`;
+        document.getElementById('lblDapur').innerText = d.bundle.namaDapur; 
+        document.getElementById('lblPIC').innerText = d.bundle.pic;
+        document.getElementById('lblTanggal').innerText = d.bundle.tglMulai; 
+        document.getElementById('lblPeriode').innerText = `${d.bundle.tglMulai} s/d ${d.items[0].tglSelesai}`;
         document.getElementById('noDoc').innerText = `INV/${String(NoUrutPendek).padStart(3, '0')}/MBG/${new Date().getFullYear()}`;
         
-        let tb = ''; d.items.forEach((it, i) => tb+=`<tr><td align="center">${i+1}</td><td>${it.namaBarang}</td><td align="center">${it.qty}</td><td>${it.satuan}</td><td>Rp ${(Number(it.hargaSatuan)||0).toLocaleString('id-ID')}</td><td>Rp ${(Number(it.total)||0).toLocaleString('id-ID')}</td></tr>`);
+        let tb = ''; d.items.forEach((it, i) => tb+=`<tr><td align="center">${i+1}</td><td>${it.namaBarang}</td><td align="center">${it.qty}</td><td>${it.satuan}</td><td align="right">Rp ${(Number(it.hargaSatuan)||0).toLocaleString('id-ID')}</td><td align="right">Rp ${(Number(it.total)||0).toLocaleString('id-ID')}</td></tr>`);
         document.getElementById('invoiceItems').innerHTML = tb;
         
-        let tot = Number(d.bundle.anggaranAwal); document.getElementById('lblGrandTotal').innerText = `Rp ${tot.toLocaleString('id-ID')}`; document.getElementById('lblTerbilang').innerText = `# ${terbilang(tot)} Rupiah #`;
+        let tot = Number(d.bundle.anggaranAwal); 
+        document.getElementById('lblGrandTotal').innerText = `Rp ${tot.toLocaleString('id-ID')}`; 
+        document.getElementById('lblTerbilang').innerText = `# ${terbilang(tot)} Rupiah #`;
         
-        document.getElementById('pilihBank').innerText = set.bnk || '-'; document.getElementById('pilihNoRek').innerText = set.rek || '-'; document.getElementById('pilihAtasNama').innerText = set.an || '-';
-        document.getElementById('ttdLokasi').innerText = set.lok || 'Jakarta'; document.getElementById('ttdTanggal').innerText = d.bundle.tglMulai; document.getElementById('ttdJabatan').innerText = set.jab || 'Penanggung Jawab'; document.getElementById('ttdNama').innerText = d.bundle.pic;
+        document.getElementById('pilihBank').innerText = set.bnk || '-'; 
+        document.getElementById('pilihNoRek').innerText = set.rek || '-'; 
+        document.getElementById('pilihAtasNama').innerText = set.an || '-';
+        document.getElementById('ttdLokasi').innerText = set.lok || 'Jakarta'; 
+        document.getElementById('ttdTanggal').innerText = d.bundle.tglMulai; 
+        document.getElementById('ttdJabatan').innerText = set.jab || 'Penanggung Jawab'; 
+        document.getElementById('ttdNama').innerText = d.bundle.pic;
         setTimeout(() => window.print(), 800);
     });
 
