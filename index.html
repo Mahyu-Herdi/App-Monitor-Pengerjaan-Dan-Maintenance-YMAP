@@ -62,7 +62,7 @@
         .table-responsive { overflow-x: auto; margin-top: 15px; }
         table { width: 100%; border-collapse: collapse; }
         th { background: rgba(58, 80, 107, 0.4); padding: 12px; text-align: left; color: #48cae4; border-bottom: 2px solid var(--border-red); }
-        td { padding: 10px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        td { padding: 10px 6px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
 
         .btn {
             padding: 12px 20px; border: none; border-radius: 10px; background: var(--btn-color);
@@ -81,23 +81,45 @@
         .badge-lunas { background: #2a9d8f; color: #fff; }
 
         .action-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+
+        /* Custom Notifikasi Tema Dark Claymorphism */
+        #alertOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 19, 43, 0.8); backdrop-filter: blur(3px); z-index: 9998;
+        }
+        #customAlert {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--card-bg); border: 1px solid var(--border-red); box-shadow: var(--clay-shadow);
+            padding: 25px; border-radius: 16px; z-index: 9999; text-align: center; width: 85%; max-width: 350px;
+        }
+        #customAlert p { font-size: 1rem; color: var(--text-color); margin-top: 0; margin-bottom: 20px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
+<!-- Elemen Pop-up Notifikasi Custom -->
+<div id="alertOverlay"></div>
+<div id="customAlert">
+    <p id="alertMessage">Pesan Notifikasi</p>
+    <button class="btn btn-success" style="width: 100%;" onclick="tutupAlert()">Oke, Paham</button>
+</div>
+
 <div class="container">
+    <!-- Header -->
     <div class="kop-header">
         <div id="logoContainer"></div>
         <div class="kop-title">SISTEM MONITORING ANGGARAN & REKONSTRUKSI DAPUR</div>
-        <div class="kop-subtitle">Yayasan Mbg Perbaikan & Maintenance Real-Time System</div>
+        <div class="kop-subtitle">Yayasan MBG - Perbaikan & Maintenance Real-Time System</div>
     </div>
 
+    <!-- Navigasi -->
     <div class="action-bar">
         <button class="btn" onclick="showSection('input-section')">📝 Form Input Baru</button>
         <button class="btn" onclick="showSection('monitoring-section')">📊 Dashboard Monitoring</button>
         <button class="btn" onclick="showSection('setting-section')">⚙️ Pengaturan Dokumen</button>
     </div>
 
+    <!-- SECTION 1: SETTING -->
     <div id="setting-section" class="card app-section" style="display:none;">
         <h2>Pengaturan Tanda Tangan & Pembayaran Invoice</h2>
         <form id="formSetting">
@@ -113,6 +135,7 @@
         </form>
     </div>
 
+    <!-- SECTION 2: INPUT FORM -->
     <div id="input-section" class="card app-section">
         <h2>Input Perbaikan & Belanja Barang Dapur</h2>
         <form id="formUtama">
@@ -166,35 +189,64 @@
         </form>
     </div>
 
+    <!-- SECTION 3: DASHBOARD MONITORING PRO -->
     <div id="monitoring-section" class="card app-section" style="display:none;">
-        <h2>Dashboard Laporan Bulanan & Cetak Dokumen</h2>
-        
+        <h2>Dashboard Laporan Bulanan & Validasi Dana</h2>
+
+        <!-- KARTU RINGKASAN ANGGARAN (OTOMATIS DIKALKULASI) -->
         <div class="grid-3" style="margin-bottom: 20px;">
-            <div class="form-group">
-                <label>Pilih PIC</label>
-                <select id="dropPIC" onchange="filterDapurDropdown()"><option value="">-- Pilih PIC --</option></select>
+            <div class="card" style="background:#118ab2; padding:15px; margin-bottom:0; box-shadow:none; border:none;">
+                <h4 style="margin:0; color:#fff;">Total Anggaran</h4>
+                <h2 id="sumAnggaran" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2>
             </div>
-            <div class="form-group">
-                <label>Pilih Dapur</label>
-                <select id="dropDapur" onchange="filterTanggalDropdown()" disabled><option value="">-- Pilih Dapur --</option></select>
+            <div class="card" style="background:#06d6a0; padding:15px; margin-bottom:0; box-shadow:none; border:none;">
+                <h4 style="margin:0; color:#fff;">Sudah Terbayar</h4>
+                <h2 id="sumDibayar" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2>
             </div>
-            <div class="form-group">
-                <label>Pilih Tanggal</label>
-                <select id="dropTanggal" onchange="muatDataTerpilih()" disabled><option value="">-- Pilih Tanggal --</option></select>
+            <div class="card" style="background:#ef476f; padding:15px; margin-bottom:0; box-shadow:none; border:none;">
+                <h4 style="margin:0; color:#fff;">Sisa Tagihan / Utang</h4>
+                <h2 id="sumSisa" style="margin:5px 0 0 0; color:#fff;">Rp 0</h2>
             </div>
         </div>
-        
-        <div id="printPanel" style="display:none; margin-bottom: 20px;" class="action-bar">
+
+        <!-- PANEL FILTER FLEKSIBEL -->
+        <div class="card" style="padding:15px; border:1px dashed var(--btn-color);">
+            <h3 style="font-size:1rem; margin-top:0;">🔎 Filter Laporan & Rekapitulasi</h3>
+            <div class="grid-3">
+                <div class="form-group"><label>Dari Tanggal</label><input type="date" id="fTglMulai"></div>
+                <div class="form-group"><label>Sampai Tanggal</label><input type="date" id="fTglAkhir"></div>
+                <div class="form-group">
+                    <label>Status Pembayaran</label>
+                    <select id="fStatus">
+                        <option value="Semua">Semua Status</option>
+                        <option value="Dalam Pengerjaan">Dalam Pengerjaan</option>
+                        <option value="Belum Lunas / Dicicil">Belum Lunas / Dicicil</option>
+                        <option value="Lunas / Selesai">Lunas / Selesai</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Pilih PIC</label><select id="fPIC"><option value="Semua">Semua PIC</option></select></div>
+                <div class="form-group"><label>Pilih Dapur</label><select id="fDapur"><option value="Semua">Semua Dapur</option></select></div>
+                <div class="form-group" style="display:flex; align-items:flex-end; gap:10px;">
+                    <button class="btn btn-success" style="flex:1;" onclick="terapkanFilterLaporan()">🔍 Cari</button>
+                    <button class="btn btn-danger" style="flex:1;" onclick="resetFilterLaporan()">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL CETAK DOKUMEN -->
+        <div id="printPanel" style="display:none; margin-bottom: 20px; align-items: center;" class="action-bar">
+            <span style="color:#06d6a0; font-size:0.9rem; font-weight:bold;">Data Terpilih:</span>
             <button class="btn btn-success" onclick="bukaHalamanCetak('sp')">🖨️ Cetak SP</button>
             <button class="btn btn-success" onclick="bukaHalamanCetak('invoice')">🧾 Cetak Invoice</button>
             <button class="btn btn-success" onclick="bukaHalamanCetak('lampiran')">🖼️ Cetak Lampiran</button>
         </div>
 
+        <!-- TABEL DATA -->
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>No</th><th>Tgl Mulai</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th>
+                        <th>No</th><th>Tgl Mulai</th><th>Dapur</th><th>PIC</th><th>Anggaran</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="tabelRealtimeMonitoring"></tbody>
@@ -205,24 +257,45 @@
 
 <script src="config.js"></script>
 <script>
+    // Registrasi PWA Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
     }
 
+    // Variabel Penampung Database Lokal
     let dbPesananGlobal = JSON.parse(localStorage.getItem('cache_pesanan')) || [];
     let dbMonitoringGlobal = JSON.parse(localStorage.getItem('cache_monitoring')) || [];
 
+    // Fungsi Custom Alert / Notifikasi
+    function tampilAlert(pesan) {
+        document.getElementById('alertMessage').innerText = pesan;
+        document.getElementById('alertOverlay').style.display = 'block';
+        document.getElementById('customAlert').style.display = 'block';
+    }
+
+    function tutupAlert() {
+        document.getElementById('alertOverlay').style.display = 'none';
+        document.getElementById('customAlert').style.display = 'none';
+    }
+
+    // Saat Aplikasi Pertama Kali Dibuka
     document.addEventListener("DOMContentLoaded", () => {
         muatSettingLocal();
-        bangunCascadingDropdown();
+        bangunDropdownFilterLaporan();
         renderTabelMonitoring();
     });
 
+    // Navigasi Section
     function showSection(id) {
         document.querySelectorAll('.app-section').forEach(sec => sec.style.display = 'none');
         document.getElementById(id).style.display = 'block';
+        if(id === 'monitoring-section') {
+            bangunDropdownFilterLaporan();
+            renderTabelMonitoring();
+        }
     }
 
+    // Load & Save Settings
     function simpanSettingLocal() {
         const conf = {
             lokasi: document.getElementById('setLokasi').value, jabatan: document.getElementById('setJabatan').value,
@@ -230,7 +303,8 @@
             atasnama: document.getElementById('setAtasNama').value, kop: document.getElementById('setKopSurat').value
         };
         localStorage.setItem('smm_setting_cetak', JSON.stringify(conf));
-        alert("Pengaturan disimpan!"); muatSettingLocal();
+        tampilAlert("Pengaturan berhasil disimpan di memori perangkat!"); 
+        muatSettingLocal();
     }
 
     function muatSettingLocal() {
@@ -261,6 +335,7 @@
         }
     });
 
+    // Tambah & Hapus Baris Item Barang
     document.getElementById('tambahBaris').addEventListener('click', () => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -276,9 +351,11 @@
     document.getElementById('bodyBarang').addEventListener('click', e => {
         if (e.target.classList.contains('hapusBaris')) {
             if(document.querySelectorAll('#bodyBarang tr').length > 1) e.target.closest('tr').remove();
+            else tampilAlert("Minimal harus ada satu item pengeluaran!");
         }
     });
 
+    // Konversi File ke Base64
     const fileToBase64 = file => new Promise((res, rej) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -286,10 +363,11 @@
         reader.onerror = err => rej(err);
     });
 
+    // Submit Form
     document.getElementById('formUtama').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('btnSimpan');
-        btn.innerText = "MENGIRIM..."; btn.disabled = true;
+        btn.innerText = "MENGIRIM DATA..."; btn.disabled = true;
 
         try {
             let items = [], totalAnggaran = 0;
@@ -302,6 +380,7 @@
                 });
             });
 
+            // Proses Foto
             const fKerja = document.getElementById('fotoKerja').files;
             const fNota = document.getElementById('fotoNota').files;
             let arrFotoKerja = [], arrFotoNota = [];
@@ -310,88 +389,176 @@
 
             const pic = document.getElementById('pic').value, dapur = document.getElementById('namaDapur').value;
             const tglM = document.getElementById('tglMulai').value, tglS = document.getElementById('tglSelesai').value;
-            const noUrut = dbMonitoringGlobal.length + 1;
-dbMonitoringGlobal.push({ noUrut, tglMulai: tglM, namaDapur: dapur, pic, anggaranAwal: totalAnggaran, dibayar: 0, sisa: totalAnggaran, status: "Dalam Pengerjaan" });
-
-// Foto kita hilangkan dari penyimpanan lokal browser biar memori nggak jebol
-items.forEach(it => dbPesananGlobal.push({ noUrut, tglMulai: tglM, tglSelesai: tglS, namaDapur: dapur, pic, ...it }));
             
-localStorage.setItem('cache_pesanan', JSON.stringify(dbPesananGlobal));
-    
+            // Penomoran otomatis dari data yang sudah ada
+            const noUrut = dbMonitoringGlobal.length + 1;
+
+            // Simpan Data Bundle ke DB Lokal
+            dbMonitoringGlobal.push({ noUrut, tglMulai: tglM, namaDapur: dapur, pic, anggaranAwal: totalAnggaran, dibayar: 0, sisa: totalAnggaran, status: "Dalam Pengerjaan" });
+
+            // Simpan Rincian Item (Tanpa File Foto untuk Mencegah Quota Exceeded LocalStorage)
+            items.forEach(it => dbPesananGlobal.push({ noUrut, tglMulai: tglM, tglSelesai: tglS, namaDapur: dapur, pic, ...it }));
+            
+            // Commit ke LocalStorage
+            localStorage.setItem('cache_pesanan', JSON.stringify(dbPesananGlobal));
             localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitoringGlobal));
 
+            // Kirim Data Lengkap (Termasuk Foto) ke Google Apps Script (Cloud)
             if (navigator.onLine && API_URL.includes("http")) {
                 await fetch(API_URL, {
-                    method: "POST", mode: "no-cors",
+                    method: "POST",
+                    // mode: "no-cors", => KODE INI TELAH DIHAPUS BIAR TIDAK DIBLOKIR
                     body: JSON.stringify({ action: "simpanPesanan", noUrut, namaDapur: dapur, pic, tglMulai: tglM, tglSelesai: tglS, items, fotoKerjaBase64: arrFotoKerja, fotoNotaBase64: arrFotoNota, anggaranAwal: totalAnggaran })
                 });
-                alert("Data berhasil tersimpan ke sistem Cloud!");
+                tampilAlert("Sinkronisasi Berhasil! Data dan foto telah tersimpan aman ke sistem Cloud Spreadsheet.");
             } else {
-                alert("Tersimpan sementara di lokal (Offline / API belum diatur).");
+                tampilAlert("Sistem Offline / API Belum disetel. Data diamankan sementara di penyimpanan perangkat.");
             }
 
+            // Bersihkan Form dan Balik ke Dashboard
             document.getElementById('formUtama').reset();
-            bangunCascadingDropdown(); renderTabelMonitoring(); showSection('monitoring-section');
-        } catch (err) { alert("Error: " + err.message); } 
-        finally { btn.innerText = "🚀 SIMPAN DATA"; btn.disabled = false; }
+            document.getElementById('bodyBarang').innerHTML = `<tr><td><input type="text" class="namaBarang" required></td><td><input type="number" class="qty" value="1" min="1" required></td><td><input type="text" class="satuan" required></td><td><input type="number" class="harga" required></td><td><input type="number" class="total" required></td><td><button type="button" class="btn btn-danger hapusBaris">X</button></td></tr>`;
+            
+            bangunDropdownFilterLaporan(); 
+            showSection('monitoring-section');
+        } catch (err) { 
+            tampilAlert("Terjadi Kesalahan: " + err.message); 
+        } finally { 
+            btn.innerText = "🚀 SIMPAN DATA KE SPREADSHEET"; btn.disabled = false; 
+        }
     });
 
-    function bangunCascadingDropdown() {
-        const dropPIC = document.getElementById('dropPIC');
-        dropPIC.innerHTML = '<option value="">-- Pilih PIC --</option>';
-        [...new Set(dbMonitoringGlobal.map(i => i.pic))].forEach(p => dropPIC.innerHTML += `<option value="${p}">${p}</option>`);
+    // ---------------- LOGIKA FILTER DASHBOARD & TABEL ----------------
+
+    function bangunDropdownFilterLaporan() {
+        const fPIC = document.getElementById('fPIC');
+        const fDapur = document.getElementById('fDapur');
+        fPIC.innerHTML = '<option value="Semua">Semua PIC</option>';
+        fDapur.innerHTML = '<option value="Semua">Semua Dapur</option>';
+        
+        [...new Set(dbMonitoringGlobal.map(i => i.pic))].forEach(p => fPIC.innerHTML += `<option value="${p}">${p}</option>`);
+        [...new Set(dbMonitoringGlobal.map(i => i.namaDapur))].forEach(d => fDapur.innerHTML += `<option value="${d}">${d}</option>`);
     }
 
-    function filterDapurDropdown() {
-        const selPIC = document.getElementById('dropPIC').value;
-        const dropDapur = document.getElementById('dropDapur');
-        dropDapur.innerHTML = '<option value="">-- Pilih Dapur --</option>';
-        document.getElementById('dropTanggal').innerHTML = '<option value="">-- Pilih Tanggal --</option>';
-        document.getElementById('printPanel').style.display = 'none';
+    function terapkanFilterLaporan() {
+        let tglAwal = document.getElementById('fTglMulai').value;
+        let tglAkhir = document.getElementById('fTglAkhir').value;
+        let status = document.getElementById('fStatus').value;
+        let pic = document.getElementById('fPIC').value;
+        let dapur = document.getElementById('fDapur').value;
 
-        if(!selPIC) { dropDapur.disabled = true; document.getElementById('dropTanggal').disabled = true; return; }
+        let hasilFilter = dbMonitoringGlobal.filter(item => {
+            let cocok = true;
+            if (pic !== "Semua" && item.pic !== pic) cocok = false;
+            if (dapur !== "Semua" && item.namaDapur !== dapur) cocok = false;
+            if (status !== "Semua" && item.status !== status) cocok = false;
+            if (tglAwal && item.tglMulai < tglAwal) cocok = false;
+            if (tglAkhir && item.tglMulai > tglAkhir) cocok = false;
+            return cocok;
+        });
 
-        [...new Set(dbMonitoringGlobal.filter(x => x.pic === selPIC).map(x => x.namaDapur))].forEach(d => dropDapur.innerHTML += `<option value="${d}">${d}</option>`);
-        dropDapur.disabled = false;
-    }
+        renderTabelMonitoring(hasilFilter);
 
-    function filterTanggalDropdown() {
-        const selPIC = document.getElementById('dropPIC').value, selDapur = document.getElementById('dropDapur').value;
-        const dropTanggal = document.getElementById('dropTanggal');
-        dropTanggal.innerHTML = '<option value="">-- Pilih Tanggal --</option>';
-        document.getElementById('printPanel').style.display = 'none';
-
-        if(!selDapur) { dropTanggal.disabled = true; return; }
-
-        dbMonitoringGlobal.filter(x => x.pic === selPIC && x.namaDapur === selDapur).forEach(t => dropTanggal.innerHTML += `<option value="${t.tglMulai}">${t.tglMulai}</option>`);
-        dropTanggal.disabled = false;
-    }
-
-    function muatDataTerpilih() {
-        const pic = document.getElementById('dropPIC').value, dapur = document.getElementById('dropDapur').value, tgl = document.getElementById('dropTanggal').value;
-        if(pic && dapur && tgl) {
-            const bundle = dbMonitoringGlobal.find(x => x.pic === pic && x.namaDapur === dapur && x.tglMulai === tgl);
-            const items = dbPesananGlobal.filter(x => x.pic === pic && x.namaDapur === dapur && x.tglMulai === tgl);
-            localStorage.setItem('smm_siap_cetak', JSON.stringify({ bundle, items }));
+        // Munculkan Tombol Cetak jika filter mengerucut ke 1 data spesifik
+        if (hasilFilter.length === 1 && pic !== "Semua" && dapur !== "Semua") {
+            const items = dbPesananGlobal.filter(x => x.noUrut === hasilFilter[0].noUrut);
+            localStorage.setItem('smm_siap_cetak', JSON.stringify({ bundle: hasilFilter[0], items: items }));
             document.getElementById('printPanel').style.display = 'flex';
+        } else {
+            document.getElementById('printPanel').style.display = 'none';
         }
     }
 
-    function bukaHalamanCetak(jenis) { window.open(`${jenis}.html`, '_blank'); }
+    function resetFilterLaporan() {
+        document.getElementById('fTglMulai').value = '';
+        document.getElementById('fTglAkhir').value = '';
+        document.getElementById('fStatus').value = 'Semua';
+        document.getElementById('fPIC').value = 'Semua';
+        document.getElementById('fDapur').value = 'Semua';
+        document.getElementById('printPanel').style.display = 'none';
+        renderTabelMonitoring(dbMonitoringGlobal);
+    }
 
-    function renderTabelMonitoring() {
+    function hitungRingkasan(dataAray) {
+        let tAnggaran = 0, tDibayar = 0, tSisa = 0;
+        dataAray.forEach(x => {
+            tAnggaran += x.anggaranAwal;
+            tDibayar += (x.dibayar || 0);
+            tSisa += (x.sisa !== undefined ? x.sisa : x.anggaranAwal);
+        });
+        document.getElementById('sumAnggaran').innerText = `Rp ${tAnggaran.toLocaleString('id-ID')}`;
+        document.getElementById('sumDibayar').innerText = `Rp ${tDibayar.toLocaleString('id-ID')}`;
+        document.getElementById('sumSisa').innerText = `Rp ${tSisa.toLocaleString('id-ID')}`;
+    }
+
+    function renderTabelMonitoring(dataRender = dbMonitoringGlobal) {
         const tbody = document.getElementById('tabelRealtimeMonitoring');
         tbody.innerHTML = '';
-        if(!dbMonitoringGlobal.length) return tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Data kosong.</td></tr>';
         
-        dbMonitoringGlobal.forEach(x => {
-            let badge = x.status.includes('Lunas') ? 'badge-lunas' : x.status.includes('Cicil') ? 'badge-cicil' : 'badge-progress';
+        // Kalkulasi Rekapitulasi (Anggaran, Terbayar, Sisa)
+        hitungRingkasan(dataRender);
+
+        if(!dataRender.length) {
+            return tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Data tidak ditemukan.</td></tr>';
+        }
+        
+        dataRender.forEach(x => {
+            let badge = x.status.includes('Lunas') ? 'badge-lunas' : x.status.includes('Dicicil') ? 'badge-cicil' : 'badge-progress';
             tbody.innerHTML += `<tr>
-                <td>#${x.noUrut}</td><td>${x.tglMulai}</td><td>${x.namaDapur}</td><td>${x.pic}</td>
-                <td>Rp ${x.anggaranAwal.toLocaleString('id-ID')}</td><td>Rp ${(x.dibayar||0).toLocaleString('id-ID')}</td>
-                <td>Rp ${(x.sisa||x.anggaranAwal).toLocaleString('id-ID')}</td><td><span class="badge ${badge}">${x.status}</span></td>
+                <td>#${x.noUrut}</td>
+                <td>${x.tglMulai}</td>
+                <td>${x.namaDapur}</td>
+                <td>${x.pic}</td>
+                <td>Rp ${x.anggaranAwal.toLocaleString('id-ID')}</td>
+                <td style="color:#06d6a0; font-weight:bold;">Rp ${(x.dibayar||0).toLocaleString('id-ID')}</td>
+                <td style="color:#ef476f; font-weight:bold;">Rp ${(x.sisa !== undefined ? x.sisa : x.anggaranAwal).toLocaleString('id-ID')}</td>
+                <td><span class="badge ${badge}">${x.status}</span></td>
+                <td><button class="btn btn-success" style="padding:6px 12px; font-size:0.8rem;" onclick="bayarCicilan(${x.noUrut})">💳 Bayar</button></td>
             </tr>`;
         });
+    }
+
+    // Fungsi Input Pembayaran / Cicilan
+    function bayarCicilan(noUrut) {
+        const dataIndex = dbMonitoringGlobal.findIndex(x => x.noUrut === noUrut);
+        if(dataIndex === -1) return;
+        
+        let data = dbMonitoringGlobal[dataIndex];
+        
+        // Menggunakan prompt standar untuk input angka pembayaran
+        let nominalBaru = prompt(`PENCATATAN PEMBAYARAN\n----------------------------------\nDapur: ${data.namaDapur}\nPIC: ${data.pic}\nSISA TAGIHAN SAAT INI: Rp ${(data.sisa !== undefined ? data.sisa : data.anggaranAwal).toLocaleString('id-ID')}\n\nMasukkan nominal uang yang dibayarkan sekarang:`, "0");
+        
+        if (nominalBaru !== null && nominalBaru !== "") {
+            let jumlahBayar = parseFloat(nominalBaru.replace(/[^0-9]/g, '')); // Bersihkan dari titik/koma
+            
+            if (isNaN(jumlahBayar) || jumlahBayar <= 0) {
+                return tampilAlert("Nominal pembayaran tidak valid! Masukkan angka saja.");
+            }
+            
+            // Kalkulasi uang
+            data.dibayar = (data.dibayar || 0) + jumlahBayar;
+            data.sisa = data.anggaranAwal - data.dibayar;
+            
+            // Update Status Otomatis
+            if (data.sisa <= 0) {
+                data.sisa = 0;
+                data.status = "Lunas / Selesai";
+            } else {
+                data.status = "Belum Lunas / Dicicil";
+            }
+
+            // Simpan Perubahan ke Storage
+            dbMonitoringGlobal[dataIndex] = data;
+            localStorage.setItem('cache_monitoring', JSON.stringify(dbMonitoringGlobal));
+            
+            tampilAlert(`Pembayaran sebesar Rp ${jumlahBayar.toLocaleString('id-ID')} berhasil dicatat! Status diperbarui.`);
+            terapkanFilterLaporan(); // Render ulang tabel sesuai kondisi filter saat ini
+        }
+    }
+
+    // Fungsi Buka Tab Cetak
+    function bukaHalamanCetak(jenis) { 
+        window.open(`${jenis}.html`, '_blank'); 
     }
 </script>
 </body>
