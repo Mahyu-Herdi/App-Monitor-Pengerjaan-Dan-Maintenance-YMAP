@@ -11,4 +11,4 @@
 //  4. Tempel di sini, ganti yang di bawah ini
 // ============================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbyluWt2FBI6oeJxpFOFQArBuYHzQw_8mDC0For8u5hPPe2FFiyG_c465mhp3w_N-pY/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwzyeIuERUrkV-Wbnld-3GLhqkiTy24bgbs0hU0sJBCZ6kRPRlr430kpIAGSddy4mE6yw/exec";
