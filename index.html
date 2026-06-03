@@ -20,6 +20,7 @@
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:15px 15px 90px;font-size:14px}
     
+    /* MODIFIKASI: Container dibuat full screen / 100% */
     .container{width:100%;max-width:100%;margin:auto}
 
     /* HEADER */
@@ -99,7 +100,7 @@
 <div id="ovBayar" class="overlay"></div>
 <div id="mdBayar" class="modal">
   <div class="modal-icon-wrap" style="color:var(--blue)">
-    <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+    <svg viewBox="0 0 24 24" style="fill:currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
   </div>
   <h3 style="color:var(--blue);margin-bottom:10px">CATAT PEMBAYARAN</h3>
   <p id="mdBayarDesc" style="font-size:.85rem;color:var(--muted)"></p>
@@ -288,14 +289,14 @@ function hitungBaris(el){
   }
 }
 
-// ── STRUKTUR STRlNG SVG NOTIFIKASI ──
+// ── KUMPULAN SVG ICON UNTUK ALERT ──────────────────────────────
 const SVG_ICONS = {
   success: `<svg viewBox="0 0 24 24" style="fill:var(--green)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
   error: `<svg viewBox="0 0 24 24" style="fill:var(--red)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
   info: `<svg viewBox="0 0 24 24" style="fill:var(--blue)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`
 };
 
-// MODIFIKASI: Fungsi alert menerima parameter tipe (success / error / info)
+// ── ALERT / MODAL ──────────────────────────────────────────────
 function showAlert(msg, type = 'info'){
   document.getElementById('mdIcon').innerHTML = SVG_ICONS[type] || SVG_ICONS.info;
   document.getElementById('mdMsg').innerText = msg;
@@ -367,9 +368,10 @@ document.getElementById('btnTambah').onclick = () => {
   document.getElementById('bodyBarang').insertAdjacentHTML('beforeend', rowHtml());
 };
 function hapusBaris(btn){
-  if(document.querySelectorAll('#bodyBarang tr').length <= 1) return showAlert('Minimal harus ada 1 item barang!', 'error');
+  if(document.querySelectorAll('#bodyBarang tr').length <= 1) return showAlert('Minimal 1 item!', 'error');
   btn.closest('tr').remove();
 }
+// Hitung juga saat qty berubah
 document.getElementById('bodyBarang').addEventListener('input', e => {
   if(e.target.classList.contains('qty')) hitungBaris(e.target);
 });
@@ -396,7 +398,8 @@ function kompres(file){
 document.getElementById('frmUtama').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = document.getElementById('btnSimpan');
-  btn.disabled = true; btn.innerHTML = '⏳ Mengirim...';
+  btn.disabled = true; 
+  btn.innerHTML = `<svg style="width:18px;height:18px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> Mengirim...`;
 
   try {
     const tglMulai   = document.getElementById('fTglMulai').value;
@@ -405,6 +408,7 @@ document.getElementById('frmUtama').addEventListener('submit', async e => {
     const pic        = document.getElementById('fPIC').value.trim();
     const noUrut     = Date.now();
 
+    // Kumpulkan items
     let items=[], totalAng=0;
     document.querySelectorAll('#bodyBarang tr').forEach(tr => {
       const tot = unRp(tr.querySelector('.tot').value);
@@ -418,62 +422,41 @@ document.getElementById('frmUtama').addEventListener('submit', async e => {
       });
     });
 
+    // Kompres foto
     const fk = document.getElementById('fFotoKerja').files;
     const fn = document.getElementById('fFotoNota').files;
     const fotoKerja = fk.length ? await Promise.all([...fk].map(kompres)) : [];
     const fotoNota  = fn.length ? await Promise.all([...fn].map(kompres)) : [];
 
+    // Simpan lokal
     const monRow = { noUrut, tglMulai, namaDapur:dapur, pic, anggaranAwal:totalAng, dibayar:0, sisa:totalAng, status:'Dalam Pengerjaan' };
     items.forEach(it => dbP.push({ noUrut, tglMulai, tglSelesai, namaDapur:dapur, pic, ...it, fotoKerja, fotoNota }));
     dbM.push(monRow);
     localStorage.setItem('db_monitor',  JSON.stringify(dbM));
     localStorage.setItem('db_pesanan',  JSON.stringify(dbP));
 
+    // Kirim ke GAS
     if(navigator.onLine && typeof API_URL !== 'undefined' && API_URL.startsWith('http')){
-      
-      const bodyMonitor = JSON.stringify({
-        "jenis_data": "Monitoring",
-        "noUrut": noUrut,
-        "tglMulai": tglMulai,
-        "namaDapur": dapur,
-        "pic": pic,
-        "anggaranAwal": totalAng,
-        "dibayar": 0,
-        "sisa": totalAng,
-        "status": 'Dalam Pengerjaan'
+      const body = JSON.stringify({
+        action:'simpanPesanan', noUrut, namaDapur:dapur, pic,
+        tglMulai, tglSelesai, items,
+        fotoKerjaBase64: fotoKerja, fotoNotaBase64: fotoNota,
+        anggaranAwal: totalAng
       });
-      await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: bodyMonitor });
-
-      for (let it of items) {
-        const bodyPesanan = JSON.stringify({
-          "jenis_data": "Pesanan",
-          "noUrut": noUrut,
-          "tglMulai": tglMulai,
-          "tglSelesai": tglSelesai,
-          "namaDapur": dapur,
-          "pic": pic,
-          "namaBarang": it.namaBarang,
-          "qty": it.qty,
-          "satuan": it.satuan,
-          "hargaSatuan": it.hargaSatuan,
-          "total": it.total,
-          "fotoKerjaBase64": fotoKerja.join(" | "),
-          "fotoNotaBase64": fotoNota.join(" | ")
-        });
-        await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: bodyPesanan });
-      }
-
-      showAlert('Data berhasil disinkronkan ke Cloud Spreadsheet!', 'success');
+      const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body });
+      if(!res.ok) throw new Error('Server error ' + res.status);
+      showAlert('Data berhasil disimpan ke Cloud!', 'success');
     } else {
-      showAlert('Tersimpan lokal (offline). Data akan otomatis sinkron saat online.', 'info');
+      showAlert('Tersimpan lokal (offline). Sync saat online.', 'info');
     }
 
+    // Reset form
     document.getElementById('frmUtama').reset();
     document.getElementById('bodyBarang').innerHTML = rowHtml();
     showSec('monitor');
 
   } catch(err){
-    showAlert('Gagal menyimpan: ' + err.message, 'error');
+    showAlert('Gagal: ' + err.message, 'error');
   } finally {
     btn.disabled=false;
     btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> SIMPAN & UPLOAD';
@@ -505,6 +488,7 @@ function applyFilter(){
     return true;
   });
   renderTable(hasil);
+  // Tampil panel cetak kalau tepat 1 baris
   if(hasil.length===1){
     localStorage.setItem('smm_siap_cetak', JSON.stringify({
       bundle: hasil[0],
@@ -561,7 +545,7 @@ function bukaBayar(noUrut){
 
 async function submitBayar(){
   const jml = unRp(document.getElementById('inpBayar').value);
-  if(jml<=0) return showAlert('Masukkan nominal pembayaran yang valid!', 'error');
+  if(jml<=0) return showAlert('Masukkan nominal yang valid!', 'error');
 
   const idx = dbM.findIndex(r=>String(r.noUrut)===String(aktivNoUrut));
   if(idx===-1) return;
@@ -578,19 +562,18 @@ async function submitBayar(){
         method:'POST', headers:{'Content-Type':'text/plain'},
         body: JSON.stringify({ action:'updatePembayaran', noUrut:d.noUrut, dibayar:d.dibayar, sisa:d.sisa, status:d.status })
       });
-    } catch(e){ }
+    } catch(e){ /* tetap lanjut walau gagal kirim */ }
   }
   closeBayar();
   applyFilter();
-  showAlert('Pembayaran sebesar Rp ' + rp(jml) + ' berhasil dicatat!', 'success');
+  showAlert('Pembayaran Rp ' + rp(jml) + ' berhasil dicatat!', 'success');
 }
 
 // ── SINKRONISASI ───────────────────────────────────────────────
 async function syncCloud(){
   if(!navigator.onLine) return showAlert('Tidak ada koneksi internet!', 'error');
-  if(typeof API_URL==='undefined'||!API_URL.startsWith('http')) return showAlert('API_URL belum dikonfigurasi di config.js', 'info');
-  
-  showAlert('Sedang sinkronisasi data dari Cloud...', 'info');
+  if(typeof API_URL==='undefined'||!API_URL.startsWith('http')) return showAlert('API_URL belum diisi di config.js', 'info');
+  showAlert('Sedang sinkronisasi...', 'info');
   try {
     const res  = await fetch(API_URL + '?t=' + Date.now());
     if(!res.ok) throw new Error('HTTP ' + res.status);
@@ -600,20 +583,23 @@ async function syncCloud(){
     localStorage.setItem('db_monitor', JSON.stringify(dbM));
     localStorage.setItem('db_pesanan', JSON.stringify(dbP));
     buildFilter(); renderTable(dbM);
-    showAlert('Sinkronisasi berhasil! ' + dbM.length + ' data berhasil dimuat.', 'success');
+    showAlert('Sinkronisasi berhasil! ' + dbM.length + ' data dimuat.', 'success');
   } catch(err){
-    showAlert('Gagal sinkronisasi: Periksa kembali URL Web App atau status deployment.', 'error');
+    showAlert('Gagal sinkronisasi: ' + err.message + '\nPastikan GAS sudah di-deploy & URL benar.', 'error');
   }
 }
 
+// ── CETAK ──────────────────────────────────────────────────────
 function buka(hal){ window.open(hal+'.html','_blank'); }
 
+// ── INIT ───────────────────────────────────────────────────────
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
 
 document.addEventListener('DOMContentLoaded', () => {
   loadSetting();
   buildFilter();
   renderTable(dbM);
+  // Auto-sync saat online
   if(navigator.onLine && typeof API_URL!=='undefined' && API_URL.startsWith('http')) syncCloud();
 });
 </script>
