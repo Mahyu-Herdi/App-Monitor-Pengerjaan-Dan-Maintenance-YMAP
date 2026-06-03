@@ -11,7 +11,4 @@
 //  4. Tempel di sini, ganti yang di bawah ini
 // ============================================================
 
-const API_URL = "https://script.google.com/macros/s/AKfycbyzRRcINCrBqq5b6L_cLB7MQCXOc_eKLVfYabELvKlX5otMFmzK-PH0JFhPUtZNH13v/exec";
-
-// Masukkan link gambar logo/Kop Surat (bisa dari Google Drive atau link gambar lain)
-const KOP_SURAT_URL = "Kop.png";
+const API_URL = "https://script.google.com/macros/s/AKfycbwkpyS2X9ZGqjAt2HJgoQDm6D7aZwIdHzJwSPKHZV9UPNd-mDB3ARP1L0I0Cvm6rRd_/exec";
