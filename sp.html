@@ -1,379 +1,193 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Surat Pesanan — SMM Dapur MBG</title>
-    <script src="config.js"></script>
-    <style>
-        @page {
-            size: A4;
-            margin: 15mm 18mm;
-        }
+  <meta charset="UTF-8"><title>Surat Pesanan — SMM Dapur MBG</title>
+  <script src="config.js"></script>
+  <style>
+    @page { size: A4; margin: 15mm 18mm; }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#111; background:#fff; line-height:1.5; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    .kop{ margin-bottom:12px; border-bottom:3px double #000; padding-bottom:8px; }
+    .kop img{ width:100%; height:auto; display:block; }
+    .kop-txt{ text-align:center; padding:6px 0; }
+    .kop-txt h1{ font-size:14pt; font-weight:bold; }
+    .kop-txt p{ font-size:9pt; color:#444; }
 
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 11pt;
-            color: #1a1a1a;
-            background: #fff;
-            line-height: 1.5;
-        }
+    .doc-title{ text-align:center; margin:14px 0 4px; }
+    .doc-title h2{ font-size:13pt; font-weight:bold; letter-spacing:1px; border-bottom:1.5px solid #000; display:inline-block; padding-bottom:2px; }
+    .doc-no{ text-align:center; font-size:10pt; color:#444; margin-bottom:14px; }
 
-        /* ── KOP SURAT ── */
-        .kop {
-            margin-bottom: 12px;
-            border-bottom: 3px double #000;
-            padding-bottom: 8px;
-        }
-        .kop img { width: 100%; height: auto; display: block; }
-        .kop-teks {
-            text-align: center;
-            padding: 6px 0;
-        }
-        .kop-teks h1 { font-size: 15pt; font-weight: bold; letter-spacing: 1px; }
-        .kop-teks p  { font-size: 9pt; color: #333; }
+    .info{ border:1px solid #bbb; border-radius:3px; padding:8px 12px; margin-bottom:14px; background:#fafafa; font-size:10.5pt; }
+    .info table{ border:none; margin:0; width:100%; }
+    .info td{ border:none; padding:2px 8px 2px 0; vertical-align:top; }
+    .info td:nth-child(odd){ font-weight:bold; width:130px; color:#333; }
 
-        /* ── JUDUL DOKUMEN ── */
-        .doc-title {
-            text-align: center;
-            margin: 14px 0 4px;
-        }
-        .doc-title h2 {
-            font-size: 13pt;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            border-bottom: 1.5px solid #000;
-            display: inline-block;
-            padding-bottom: 2px;
-        }
-        .doc-nomor {
-            text-align: center;
-            font-size: 10pt;
-            color: #444;
-            margin-bottom: 14px;
-        }
+    table.items{ width:100%; border-collapse:collapse; margin-bottom:6px; font-size:10.5pt; }
+    table.items th{ background:#2c3e50; color:#fff; padding:7px 8px; text-align:center; font-weight:bold; border:1px solid #2c3e50; font-size:10pt; }
+    table.items td{ border:1px solid #bbb; padding:6px 8px; vertical-align:middle; }
+    table.items tbody tr:nth-child(even){ background:#f8f8f8; }
+    table.items tfoot td{ border:1px solid #888; padding:7px 8px; background:#eef2f5; font-weight:bold; }
+    .tc{ text-align:center; } .tr{ text-align:right; }
 
-        /* ── INFO BOX (PIC, Dapur, Tanggal) ── */
-        .info-box {
-            border: 1px solid #bbb;
-            border-radius: 4px;
-            padding: 8px 12px;
-            margin-bottom: 14px;
-            background: #fafafa;
-            font-size: 10.5pt;
-        }
-        .info-box table { border: none; margin: 0; width: 100%; }
-        .info-box td   { border: none; padding: 2px 8px 2px 0; vertical-align: top; }
-        .info-box td:nth-child(odd)  { font-weight: bold; width: 120px; color: #333; }
+    .note{ margin:10px 0 18px; padding:7px 10px; border-left:3px solid #2c3e50; font-size:9.5pt; color:#444; background:#f5f8fa; }
 
-        /* ── TABEL BARANG ── */
-        .tabel-barang {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 6px;
-            font-size: 10.5pt;
-        }
-        .tabel-barang th {
-            background: #2c3e50;
-            color: #fff;
-            padding: 7px 8px;
-            text-align: center;
-            font-weight: bold;
-            border: 1px solid #2c3e50;
-            font-size: 10pt;
-        }
-        .tabel-barang td {
-            border: 1px solid #bbb;
-            padding: 6px 8px;
-            vertical-align: middle;
-        }
-        .tabel-barang tbody tr:nth-child(even) { background: #f8f8f8; }
-        .tabel-barang tfoot td {
-            border: 1px solid #888;
-            padding: 7px 8px;
-            background: #eef2f5;
-            font-weight: bold;
-        }
-        .text-center { text-align: center; }
-        .text-right  { text-align: right; }
+    .ttd{ display:flex; justify-content:space-between; margin-top:40px; gap:20px; }
+    .ttd-box{ flex:1; text-align:center; font-size:10.5pt; }
+    .ttd-box .jab{ font-weight:bold; font-size:10pt; color:#333; min-height:18px; }
+    .ttd-box .ruang{ height:55px; border-bottom:1px solid #555; margin:8px 20px; }
+    .ttd-box .nama{ font-weight:bold; text-decoration:underline; min-height:18px; }
+    .ttd-box .sub{ font-size:9.5pt; color:#555; margin-top:2px; }
 
-        /* ── CATATAN / NOTE ── */
-        .catatan {
-            margin: 10px 0 18px;
-            padding: 7px 10px;
-            border-left: 3px solid #2c3e50;
-            font-size: 9.5pt;
-            color: #444;
-            background: #f5f8fa;
-        }
-        .catatan b { color: #1a1a1a; }
+    .footer{ margin-top:28px; border-top:1px solid #ccc; padding-top:6px; font-size:8.5pt; color:#999; display:flex; justify-content:space-between; }
 
-        /* ── TANDA TANGAN ── */
-        .ttd-section {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-            gap: 20px;
-        }
-        .ttd-box {
-            flex: 1;
-            text-align: center;
-            font-size: 10.5pt;
-        }
-        .ttd-box .jabatan {
-            font-weight: bold;
-            font-size: 10pt;
-            color: #333;
-            min-height: 18px;
-        }
-        .ttd-box .ruang-ttd {
-            height: 55px;
-            border-bottom: 1px solid #555;
-            margin: 8px 20px;
-        }
-        .ttd-box .nama-ttd {
-            font-weight: bold;
-            font-size: 10.5pt;
-            text-decoration: underline;
-            min-height: 18px;
-        }
-        .ttd-box .nip-ttd {
-            font-size: 9.5pt;
-            color: #555;
-            margin-top: 2px;
-        }
-
-        /* ── FOOTER HALAMAN ── */
-        .footer-doc {
-            margin-top: 30px;
-            border-top: 1px solid #ccc;
-            padding-top: 6px;
-            font-size: 8.5pt;
-            color: #888;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* ── PRINT HIDE ── */
-        @media print {
-            .no-print { display: none !important; }
-            body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-        }
-
-        /* ── TOMBOL CETAK (hanya tampil di layar) ── */
-        .no-print {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 999;
-        }
-        .btn-print, .btn-tutup {
-            padding: 10px 22px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .btn-print { background: #2c3e50; color: #fff; }
-        .btn-tutup { background: #e74c3c; color: #fff; }
-    </style>
+    @media print{
+      .no-print{ display:none!important; }
+      body{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+    }
+    .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
+    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.2); }
+    .btnP.blue{ background:#2c3e50; color:#fff; }
+    .btnP.red{ background:#e74c3c; color:#fff; }
+  </style>
 </head>
 <body>
 
-    <!-- KOP SURAT -->
-    <div class="kop" id="kopImage"></div>
+<div class="kop" id="kopEl"></div>
 
-    <!-- JUDUL -->
-    <div class="doc-title"><h2>Surat Pesanan (SP)</h2></div>
-    <div class="doc-nomor">Nomor: <b id="noDoc">—</b></div>
+<div class="doc-title"><h2>SURAT PESANAN (SP)</h2></div>
+<div class="doc-no">Nomor: <b id="noDoc">—</b></div>
 
-    <!-- INFO BOX -->
-    <div class="info-box">
-        <table>
-            <tr>
-                <td>PIC / SPPG</td>
-                <td>: <span id="lblPIC"></span></td>
-                <td>Nama Dapur</td>
-                <td>: <span id="lblDapur"></span></td>
-            </tr>
-            <tr>
-                <td>Tgl. Mulai</td>
-                <td>: <span id="lblTglMulai"></span></td>
-                <td>Tgl. Selesai</td>
-                <td>: <span id="lblTglSelesai"></span></td>
-            </tr>
-            <tr>
-                <td>Tgl. Cetak</td>
-                <td>: <span id="lblTglCetak"></span></td>
-                <td>Status</td>
-                <td>: <span id="lblStatus"></span></td>
-            </tr>
-        </table>
-    </div>
+<div class="info">
+  <table>
+    <tr>
+      <td>PIC / SPPG</td><td>: <span id="iPIC"></span></td>
+      <td>Nama Dapur</td><td>: <span id="iDapur"></span></td>
+    </tr>
+    <tr>
+      <td>Tgl. Mulai</td><td>: <span id="iTglMulai"></span></td>
+      <td>Tgl. Selesai</td><td>: <span id="iTglSelesai"></span></td>
+    </tr>
+    <tr>
+      <td>Tgl. Cetak</td><td>: <span id="iTglCetak"></span></td>
+      <td>Status</td><td>: <span id="iStatus"></span></td>
+    </tr>
+  </table>
+</div>
 
-    <p style="margin-bottom:8px; font-size:10.5pt;">
-        Dengan hormat, diperintahkan untuk melaksanakan pengadaan/perbaikan material sesuai rincian di bawah ini:
-    </p>
+<p style="margin-bottom:8px;font-size:10.5pt">
+  Diperintahkan untuk melaksanakan pengadaan/perbaikan material sesuai rincian berikut:
+</p>
 
-    <!-- TABEL BARANG -->
-    <table class="tabel-barang">
-        <thead>
-            <tr>
-                <th style="width:32px;">No</th>
-                <th>Nama Barang / Pekerjaan</th>
-                <th style="width:45px;">Qty</th>
-                <th style="width:70px;">Satuan</th>
-                <th style="width:110px;">Harga Satuan</th>
-                <th style="width:115px;">Total (Rp)</th>
-            </tr>
-        </thead>
-        <tbody id="spItems"></tbody>
-        <tfoot>
-            <tr>
-                <td colspan="5" class="text-right">TOTAL ESTIMASI ANGGARAN</td>
-                <td class="text-right" id="lblTotal">Rp 0</td>
-            </tr>
-        </tfoot>
-    </table>
+<table class="items">
+  <thead>
+    <tr>
+      <th style="width:32px">No</th>
+      <th>Nama Barang / Pekerjaan</th>
+      <th style="width:45px">Qty</th>
+      <th style="width:70px">Satuan</th>
+      <th style="width:115px">Harga Satuan</th>
+      <th style="width:115px">Total (Rp)</th>
+    </tr>
+  </thead>
+  <tbody id="spBody"></tbody>
+  <tfoot>
+    <tr>
+      <td colspan="5" class="tr">TOTAL ESTIMASI ANGGARAN</td>
+      <td class="tr" id="spTotal">Rp 0</td>
+    </tr>
+  </tfoot>
+</table>
 
-    <!-- CATATAN -->
-    <div class="catatan">
-        <b>Catatan:</b> Surat Pesanan ini merupakan otorisasi resmi pengadaan material. Bukti pembelian (nota/kwitansi) wajib dilampirkan untuk proses pembayaran selanjutnya.
-    </div>
+<div class="note">
+  <b>Catatan:</b> SP ini merupakan otorisasi resmi pengadaan. Nota/kwitansi pembelian wajib dilampirkan untuk proses reimbursement.
+</div>
 
-    <!-- TANDA TANGAN -->
-    <div class="ttd-section">
-        <div class="ttd-box">
-            <div>Menyetujui,</div>
-            <div class="jabatan" id="ttdJabatan1">—</div>
-            <div class="ruang-ttd"></div>
-            <div class="nama-ttd" id="ttdNama1">—</div>
-            <div class="nip-ttd" id="ttdLokasi1"></div>
-        </div>
-        <div class="ttd-box">
-            <div id="ttdKota">—</div>
-            <div class="jabatan">Pelaksana Lapangan</div>
-            <div class="ruang-ttd"></div>
-            <div class="nama-ttd" id="ttdNamaPIC">—</div>
-            <div class="nip-ttd">PIC / SPPG</div>
-        </div>
-    </div>
+<div class="ttd">
+  <div class="ttd-box">
+    <div>Menyetujui,</div>
+    <div class="jab" id="tJab">—</div>
+    <div class="ruang"></div>
+    <div class="nama" id="tNama1">—</div>
+    <div class="sub" id="tLok1"></div>
+  </div>
+  <div class="ttd-box">
+    <div id="tKota">—</div>
+    <div class="jab">Pelaksana Lapangan</div>
+    <div class="ruang"></div>
+    <div class="nama" id="tNamaPIC">—</div>
+    <div class="sub">PIC / SPPG</div>
+  </div>
+</div>
 
-    <!-- FOOTER DOC -->
-    <div class="footer-doc">
-        <span>Dok: MAP-SP | SMM Dapur MBG</span>
-        <span>Dicetak: <span id="footerTgl"></span></span>
-    </div>
+<div class="footer">
+  <span>Dok: MAP-SP | SMM Dapur MBG</span>
+  <span>Dicetak: <span id="fCetak"></span></span>
+</div>
 
-    <!-- TOMBOL LAYAR -->
-    <div class="no-print">
-        <button class="btn-print" onclick="window.print()">🖨 Cetak</button>
-        <button class="btn-tutup" onclick="window.close()">✕ Tutup</button>
-    </div>
+<div class="no-print">
+  <button class="btnP blue" onclick="window.print()">🖨 Cetak</button>
+  <button class="btnP red" onclick="window.close()">✕ Tutup</button>
+</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const d   = JSON.parse(localStorage.getItem('smm_siap_cetak') || 'null');
-    const set = JSON.parse(localStorage.getItem('smm_setting')    || '{}');
+document.addEventListener('DOMContentLoaded', () => {
+  const raw = localStorage.getItem('smm_siap_cetak');
+  const set = JSON.parse(localStorage.getItem('smm_setting') || '{}');
+  if(!raw){
+    document.body.innerHTML='<div style="text-align:center;padding:80px;font-family:sans-serif"><h2 style="color:#e74c3c">Data tidak ditemukan</h2><p style="color:#666;margin-top:12px">Buka dari Dashboard → filter 1 data → klik <b>Surat Pesanan</b></p><button onclick="window.close()" style="margin-top:20px;padding:10px 24px;background:#2c3e50;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px">Tutup</button></div>';
+    return;
+  }
+  const d = JSON.parse(raw);
+  const b = d.bundle, items = d.items||[];
 
-    // ── Fallback jika tidak ada data ──
-    if (!d || !d.bundle) {
-        document.body.innerHTML = `
-            <div style="text-align:center;padding:80px 20px;font-family:sans-serif;">
-                <h2 style="color:#e74c3c;">Data tidak ditemukan</h2>
-                <p style="color:#666;margin-top:12px;">Silakan buka dari halaman Dashboard → pilih data → klik tombol <b>SP</b>.</p>
-                <button onclick="window.close()" style="margin-top:20px;padding:10px 24px;background:#2c3e50;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;">Tutup</button>
-            </div>`;
-        return;
-    }
+  // KOP
+  const kopEl = document.getElementById('kopEl');
+  // Prioritas: setting kop → config.js KOP_SURAT_URL → Kop.png lokal → teks
+  const kopUrl = set.kop || (typeof KOP_SURAT_URL!=='undefined' ? KOP_SURAT_URL : '');
+  if(kopUrl && kopUrl!=='Kop.png'){
+    kopEl.innerHTML=`<img src="${kopUrl}" alt="Kop Surat">`;
+  } else {
+    const img=new Image();
+    img.onload=()=>kopEl.innerHTML=`<img src="Kop.png" alt="Kop Surat">`;
+    img.onerror=()=>kopEl.innerHTML=`<div class="kop-txt"><h1>SMM DAPUR MBG</h1><p>Sistem Monitoring & Maintenance</p></div>`;
+    img.src='Kop.png';
+  }
 
-    const bundle = d.bundle;
-    const items  = d.items || [];
+  // Nomor Dokumen
+  const noP = String(b.noUrut).length>8 ? String(b.noUrut).slice(-4) : b.noUrut;
+  document.getElementById('noDoc').innerText = `MAP-SP/${String(noP).padStart(3,'0')}/MBG/${new Date().getFullYear()}`;
 
-    // ── Kop Surat ──
-    const kopEl = document.getElementById('kopImage');
-    if (typeof KOP_SURAT_URL !== 'undefined' && KOP_SURAT_URL && KOP_SURAT_URL !== 'Kop.png') {
-        kopEl.innerHTML = `<img src="${KOP_SURAT_URL}" alt="Kop Surat">`;
-    } else {
-        // Coba load Kop.png lokal, fallback ke teks jika gagal
-        const imgTest = new Image();
-        imgTest.onload  = () => kopEl.innerHTML = `<img src="Kop.png" alt="Kop Surat">`;
-        imgTest.onerror = () => kopEl.innerHTML = `
-            <div class="kop-teks">
-                <h1>SMM DAPUR MBG</h1>
-                <p>Sistem Monitoring & Maintenance | Yayasan MBG</p>
-            </div>`;
-        imgTest.src = 'Kop.png';
-    }
+  // Format tanggal
+  const fmtTgl = s => { if(!s) return '—'; const[y,m,dd]=s.split('-'); const bln=['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; return `${dd} ${bln[+m]} ${y}`; };
+  const tglCetak = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
 
-    // ── Nomor Dokumen ──
-    const noUrutPendek = String(bundle.noUrut).length > 8
-        ? String(bundle.noUrut).slice(-4)
-        : bundle.noUrut;
-    const tahun = new Date().getFullYear();
-    document.getElementById('noDoc').innerText =
-        `MAP-SP/${String(noUrutPendek).padStart(3, '0')}/MBG/${tahun}`;
+  document.getElementById('iPIC').innerText      = b.pic||'—';
+  document.getElementById('iDapur').innerText    = b.namaDapur||'—';
+  document.getElementById('iTglMulai').innerText = fmtTgl(b.tglMulai);
+  document.getElementById('iTglSelesai').innerText = fmtTgl(items[0]?.tglSelesai||'');
+  document.getElementById('iTglCetak').innerText = tglCetak;
+  document.getElementById('iStatus').innerText   = b.status||'—';
 
-    // ── Tanggal ──
-    const tglCetak = new Date().toLocaleDateString('id-ID', {
-        day: '2-digit', month: 'long', year: 'numeric'
-    });
-    const formatTgl = (str) => {
-        if (!str) return '—';
-        const [y, m, d] = str.split('-');
-        const bln = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-        return `${d} ${bln[parseInt(m)]} ${y}`;
-    };
+  // Tabel Items
+  const rp = n => (Number(n)||0).toLocaleString('id-ID');
+  let total=0, html='';
+  items.forEach((it,i)=>{
+    total += Number(it.total)||0;
+    html+=`<tr><td class="tc">${i+1}</td><td>${it.namaBarang||'—'}</td><td class="tc">${it.qty||0}</td><td>${it.satuan||'—'}</td><td class="tr">Rp ${rp(it.hargaSatuan)}</td><td class="tr">Rp ${rp(it.total)}</td></tr>`;
+  });
+  document.getElementById('spBody').innerHTML = html||'<tr><td colspan="6" class="tc" style="color:#888;padding:12px">Tidak ada item</td></tr>';
+  document.getElementById('spTotal').innerText = 'Rp ' + rp(total);
 
-    // ── Isi Info Box ──
-    document.getElementById('lblPIC').innerText       = bundle.pic        || '—';
-    document.getElementById('lblDapur').innerText     = bundle.namaDapur  || '—';
-    document.getElementById('lblTglMulai').innerText  = formatTgl(bundle.tglMulai);
-    document.getElementById('lblTglSelesai').innerText = formatTgl(items[0]?.tglSelesai || '');
-    document.getElementById('lblTglCetak').innerText  = tglCetak;
-    document.getElementById('lblStatus').innerText    = bundle.status     || '—';
+  // TTD
+  document.getElementById('tJab').innerText   = set.jab||'Penanggung Jawab';
+  document.getElementById('tNama1').innerText = set.jab||'—';
+  document.getElementById('tLok1').innerText  = set.lok||'';
+  document.getElementById('tKota').innerText  = `${set.lok||'Lokasi'}, ${tglCetak}`;
+  document.getElementById('tNamaPIC').innerText = b.pic||'—';
+  document.getElementById('fCetak').innerText = tglCetak;
 
-    // ── Tabel Item ──
-    let totalAnggaran = 0;
-    let tbHtml = '';
-    items.forEach((it, i) => {
-        const total = Number(it.total) || 0;
-        const harga = Number(it.hargaSatuan) || 0;
-        totalAnggaran += total;
-        tbHtml += `
-            <tr>
-                <td class="text-center">${i + 1}</td>
-                <td>${it.namaBarang || '—'}</td>
-                <td class="text-center">${it.qty || 0}</td>
-                <td>${it.satuan || '—'}</td>
-                <td class="text-right">Rp ${harga.toLocaleString('id-ID')}</td>
-                <td class="text-right">Rp ${total.toLocaleString('id-ID')}</td>
-            </tr>`;
-    });
-    document.getElementById('spItems').innerHTML = tbHtml ||
-        `<tr><td colspan="6" class="text-center" style="color:#888;padding:14px;">Tidak ada item</td></tr>`;
-    document.getElementById('lblTotal').innerText = `Rp ${totalAnggaran.toLocaleString('id-ID')}`;
-
-    // ── Tanda Tangan ──
-    document.getElementById('ttdJabatan1').innerText = set.jab  || 'Penanggung Jawab';
-    document.getElementById('ttdNama1').innerText    = set.lok  || '—';   // lokasi sebagai nama kota TTD kiri
-    document.getElementById('ttdLokasi1').innerText  = set.lok  || '';
-
-    const ttdKota = `${set.lok || 'Lokasi'}, ${tglCetak}`;
-    document.getElementById('ttdKota').innerText  = ttdKota;
-    document.getElementById('ttdNamaPIC').innerText = bundle.pic || '—';
-
-    // ── Footer ──
-    document.getElementById('footerTgl').innerText = tglCetak;
-
-    // ── Auto Print (delay agar render selesai) ──
-    setTimeout(() => window.print(), 900);
+  setTimeout(()=>window.print(), 900);
 });
 </script>
 </body>
