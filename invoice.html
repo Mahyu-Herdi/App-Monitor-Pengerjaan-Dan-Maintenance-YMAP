@@ -1,73 +1,207 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8"><title>Invoice Pembayaran</title>
-    <script src="config.js"></script>
-    <style>
-        @page { size: A4; margin: 18mm 15mm; }
-        body { font-family: 'Times New Roman', serif; margin: 0; font-size: 11pt; }
-        /* Kop gambar dibikin full width 100% dan ada garis batas di bawahnya */
-        .kop { margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 5px; }
-        .kop img { width: 100%; height: auto; display: block; }
-        
-        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        th, td { border: 1px solid #000; padding: 7px; } th { background: #f2f2f2; }
-        .terbilang-box { background: #fafafa; padding: 10px; font-style: italic; font-weight: bold; margin-bottom: 20px; border: 1px solid #ddd; }
-        .payment-info { border: 1px dashed #000; padding: 10px; font-size: 10pt; }
-        .ttd-box { float: right; width: 45%; text-align: center; margin-top: 40px; }
-    </style>
+  <meta charset="UTF-8"><title>Invoice — SMM Dapur MBG</title>
+  <script src="config.js"></script>
+  <style>
+    @page { size: A4; margin: 15mm 18mm; }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#111; background:#fff; line-height:1.5; }
+
+    .kop{ margin-bottom:12px; border-bottom:3px double #000; padding-bottom:8px; }
+    .kop img{ width:100%; height:auto; display:block; }
+    .kop-txt{ text-align:center; padding:6px 0; }
+    .kop-txt h1{ font-size:14pt; font-weight:bold; }
+
+    .doc-title{ text-align:center; margin:14px 0 4px; }
+    .doc-title h2{ font-size:13pt; font-weight:bold; text-decoration:underline; letter-spacing:1px; }
+    .doc-no{ text-align:center; font-size:10pt; color:#444; margin-bottom:18px; }
+
+    .info{ width:100%; border-collapse:collapse; margin-bottom:18px; font-size:10.5pt; }
+    .info td{ border:none; padding:2px 6px 2px 0; vertical-align:top; }
+    .info td:nth-child(odd){ font-weight:bold; width:110px; }
+
+    table.items{ width:100%; border-collapse:collapse; margin-bottom:8px; font-size:10.5pt; }
+    table.items th{ background:#2c3e50; color:#fff; padding:7px 8px; text-align:center; border:1px solid #2c3e50; font-size:10pt; }
+    table.items td{ border:1px solid #bbb; padding:6px 8px; vertical-align:middle; }
+    table.items tbody tr:nth-child(even){ background:#f8f8f8; }
+    table.items tfoot td{ border:1px solid #888; padding:7px 8px; background:#eef2f5; font-weight:bold; }
+    .tc{ text-align:center; } .tr{ text-align:right; }
+
+    .terbilang{ background:#fafafa; padding:9px 12px; font-style:italic; font-weight:bold; margin-bottom:18px; border:1px solid #ddd; font-size:10.5pt; }
+    .transfer{ border:1px dashed #333; padding:10px 14px; font-size:10pt; margin-bottom:20px; }
+    .transfer b{ color:#111; }
+
+    .ttd{ display:flex; justify-content:flex-end; }
+    .ttd-box{ width:46%; text-align:center; font-size:10.5pt; }
+    .ttd-box .ruang{ height:55px; border-bottom:1px solid #555; margin:8px 20px; }
+    .ttd-box .nama{ font-weight:bold; text-decoration:underline; }
+    .ttd-box .sub{ font-size:9.5pt; color:#555; margin-top:2px; }
+
+    .footer{ margin-top:28px; border-top:1px solid #ccc; padding-top:6px; font-size:8.5pt; color:#999; display:flex; justify-content:space-between; }
+
+    @media print{ .no-print{ display:none!important; } body{ print-color-adjust:exact; -webkit-print-color-adjust:exact; } }
+    .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
+    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.2); }
+    .btnP.blue{ background:#2c3e50; color:#fff; }.btnP.red{ background:#e74c3c; color:#fff; }
+  </style>
 </head>
 <body>
-    <div class="kop" id="kopImage"></div>
-    
-    <div style="text-align: center; font-size: 14pt; font-weight: bold; text-decoration: underline;">INVOICE TAGIHAN MAINTENANCE</div>
-    <div style="text-align: center; margin-bottom: 25px;">Nomor: <span id="noDoc"></span></div>
 
-    <table style="border:none; margin-bottom:20px;">
-        <tr style="border:none;"><td style="border:none; width:20%;">Dapur</td><td style="border:none;">: <span id="lblDapur"></span></td><td style="border:none; width:20%;">Tgl Cetak</td><td style="border:none;">: <span id="lblTanggal"></span></td></tr>
-        <tr style="border:none;"><td style="border:none;">PIC</td><td style="border:none;">: <span id="lblPIC"></span></td><td style="border:none;">Periode</td><td style="border:none;">: <span id="lblPeriode"></span></td></tr>
-    </table>
+<div class="kop" id="kopEl"></div>
 
-    <table>
-        <thead><tr><th>No</th><th>Barang/Pekerjaan</th><th>Qty</th><th>Satuan</th><th>Harga</th><th>Total</th></tr></thead>
-        <tbody id="invoiceItems"></tbody>
-        <tfoot><tr><td colspan="5" align="right"><b>TOTAL BIAYA:</b></td><td id="lblGrandTotal"><b></b></td></tr></tfoot>
-    </table>
-    
-    <div><b>Terbilang:</b></div><div class="terbilang-box" id="lblTerbilang"></div>
-    <div class="payment-info"><b>INSTRUKSI TRANSFER:</b><br><span id="pilihBank"></span> | No. Rek: <span id="pilihNoRek"></span><br>A/N: <span id="pilihAtasNama"></span></div>
-    <div class="ttd-box"><span id="ttdLokasi"></span>, <span id="ttdTanggal"></span><br><span id="ttdJabatan"></span><br><br><br><b><u><span id="ttdNama"></span></u></b></div>
+<div class="doc-title"><h2>INVOICE TAGIHAN MAINTENANCE</h2></div>
+<div class="doc-no">Nomor: <b id="noDoc">—</b></div>
+
+<table class="info">
+  <tr>
+    <td>Nama Dapur</td><td>: <span id="iDapur"></span></td>
+    <td>Tgl. Cetak</td><td>: <span id="iTglCetak"></span></td>
+  </tr>
+  <tr>
+    <td>PIC / SPPG</td><td>: <span id="iPIC"></span></td>
+    <td>Periode</td><td>: <span id="iPeriode"></span></td>
+  </tr>
+  <tr>
+    <td>Status</td><td>: <span id="iStatus"></span></td>
+    <td>Sisa Tagihan</td><td>: <b id="iSisa" style="color:#c0392b"></b></td>
+  </tr>
+</table>
+
+<table class="items">
+  <thead>
+    <tr>
+      <th style="width:32px">No</th>
+      <th>Barang / Pekerjaan</th>
+      <th style="width:45px">Qty</th>
+      <th style="width:70px">Satuan</th>
+      <th style="width:110px">Harga Satuan</th>
+      <th style="width:115px">Total (Rp)</th>
+    </tr>
+  </thead>
+  <tbody id="invBody"></tbody>
+  <tfoot>
+    <tr>
+      <td colspan="5" class="tr">TOTAL BIAYA</td>
+      <td class="tr" id="invTotal">Rp 0</td>
+    </tr>
+    <tr>
+      <td colspan="5" class="tr">Sudah Dibayar</td>
+      <td class="tr" id="invBayar" style="color:#27ae60">Rp 0</td>
+    </tr>
+    <tr>
+      <td colspan="5" class="tr">Sisa Tagihan</td>
+      <td class="tr" id="invSisa" style="color:#c0392b;font-size:11.5pt">Rp 0</td>
+    </tr>
+  </tfoot>
+</table>
+
+<div><b>Terbilang:</b></div>
+<div class="terbilang" id="terbilang">—</div>
+
+<div class="transfer">
+  <b>INSTRUKSI TRANSFER:</b><br>
+  Bank <span id="tBank">—</span> &nbsp;|&nbsp; No. Rek: <span id="tRek">—</span><br>
+  Atas Nama: <span id="tAN">—</span>
+</div>
+
+<div class="ttd">
+  <div class="ttd-box">
+    <div id="tKota">—</div>
+    <div style="font-weight:bold" id="tJab">Penanggung Jawab</div>
+    <div class="ruang"></div>
+    <div class="nama" id="tNama">—</div>
+    <div class="sub" id="tSub"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Dok: INV | SMM Dapur MBG</span>
+  <span>Dicetak: <span id="fCetak"></span></span>
+</div>
+
+<div class="no-print">
+  <button class="btnP blue" onclick="window.print()">🖨 Cetak</button>
+  <button class="btnP red" onclick="window.close()">✕ Tutup</button>
+</div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const d = JSON.parse(localStorage.getItem('smm_siap_cetak')), set = JSON.parse(localStorage.getItem('smm_setting')) || {};
-        if(!d) return;
-        
-        // Cek link Kop dari config.js
-        if(typeof KOP_SURAT_URL !== 'undefined' && KOP_SURAT_URL) {
-            document.getElementById('kopImage').innerHTML = `<img src="${KOP_SURAT_URL}" alt="Kop Surat">`;
-        } else {
-            // Kalau link kop kosong, tampilin teks cadangan
-            document.getElementById('kopImage').innerHTML = `<h2 style="text-align:center; margin:0;">YAYASAN KEMBAR JAYA</h2>`;
-        }
-        
-        let NoUrutPendek = String(d.bundle.noUrut).length > 8 ? String(d.bundle.noUrut).slice(-4) : d.bundle.noUrut;
-        
-        document.getElementById('lblDapur').innerText = d.bundle.namaDapur; document.getElementById('lblPIC').innerText = d.bundle.pic;
-        document.getElementById('lblTanggal').innerText = d.bundle.tglMulai; document.getElementById('lblPeriode').innerText = `${d.bundle.tglMulai} s/d ${d.items[0].tglSelesai}`;
-        document.getElementById('noDoc').innerText = `INV/${String(NoUrutPendek).padStart(3, '0')}/MBG/${new Date().getFullYear()}`;
-        
-        let tb = ''; d.items.forEach((it, i) => tb+=`<tr><td align="center">${i+1}</td><td>${it.namaBarang}</td><td align="center">${it.qty}</td><td>${it.satuan}</td><td>Rp ${(Number(it.hargaSatuan)||0).toLocaleString('id-ID')}</td><td>Rp ${(Number(it.total)||0).toLocaleString('id-ID')}</td></tr>`);
-        document.getElementById('invoiceItems').innerHTML = tb;
-        
-        let tot = Number(d.bundle.anggaranAwal); document.getElementById('lblGrandTotal').innerText = `Rp ${tot.toLocaleString('id-ID')}`; document.getElementById('lblTerbilang').innerText = `# ${terbilang(tot)} Rupiah #`;
-        
-        document.getElementById('pilihBank').innerText = set.bnk || '-'; document.getElementById('pilihNoRek').innerText = set.rek || '-'; document.getElementById('pilihAtasNama').innerText = set.an || '-';
-        document.getElementById('ttdLokasi').innerText = set.lok || 'Jakarta'; document.getElementById('ttdTanggal').innerText = d.bundle.tglMulai; document.getElementById('ttdJabatan').innerText = set.jab || 'Penanggung Jawab'; document.getElementById('ttdNama').innerText = d.bundle.pic;
-        setTimeout(() => window.print(), 800);
-    });
+function terbilang(a){
+  const b=['','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan','Sepuluh','Sebelas'];
+  let t='';
+  if(a<12) t=' '+b[a];
+  else if(a<20) t=terbilang(a-10)+' Belas';
+  else if(a<100) t=terbilang(Math.floor(a/10))+' Puluh'+terbilang(a%10);
+  else if(a<200) t=' Seratus'+terbilang(a-100);
+  else if(a<1000) t=terbilang(Math.floor(a/100))+' Ratus'+terbilang(a%100);
+  else if(a<2000) t=' Seribu'+terbilang(a-1000);
+  else if(a<1000000) t=terbilang(Math.floor(a/1000))+' Ribu'+terbilang(a%1000);
+  else if(a<1000000000) t=terbilang(Math.floor(a/1000000))+' Juta'+terbilang(a%1000000);
+  return t.trim();
+}
 
-    function terbilang(a){let b=["","Satu","Dua","Tiga","Empat","Lima","Enam","Tujuh","Delapan","Sembilan","Sepuluh","Sebelas"],t="";if(a<12)t=" "+b[a];else if(a<20)t=terbilang(a-10)+" Belas";else if(a<100)t=terbilang(Math.floor(a/10))+" Puluh"+terbilang(a%10);else if(a<200)t=" Seratus"+terbilang(a-100);else if(a<1000)t=terbilang(Math.floor(a/100))+" Ratus"+terbilang(a%100);else if(a<2000)t=" Seribu"+terbilang(a-1000);else if(a<1000000)t=terbilang(Math.floor(a/1000))+" Ribu"+terbilang(a%1000);else if(a<1000000000)t=terbilang(Math.floor(a/1000000))+" Juta"+terbilang(a%1000000);return t.trim();}
+document.addEventListener('DOMContentLoaded', () => {
+  const raw = localStorage.getItem('smm_siap_cetak');
+  const set = JSON.parse(localStorage.getItem('smm_setting')||'{}');
+  if(!raw){
+    document.body.innerHTML='<div style="text-align:center;padding:80px;font-family:sans-serif"><h2 style="color:#e74c3c">Data tidak ditemukan</h2><p style="color:#666;margin-top:12px">Buka dari Dashboard → filter 1 data → klik <b>Invoice</b></p><button onclick="window.close()" style="margin-top:20px;padding:10px 24px;background:#2c3e50;color:#fff;border:none;border-radius:6px;cursor:pointer">Tutup</button></div>';
+    return;
+  }
+  const d=JSON.parse(raw), b=d.bundle, items=d.items||[];
+
+  // KOP
+  const kopEl=document.getElementById('kopEl');
+  const kopUrl=set.kop||(typeof KOP_SURAT_URL!=='undefined'?KOP_SURAT_URL:'');
+  if(kopUrl&&kopUrl!=='Kop.png'){
+    kopEl.innerHTML=`<img src="${kopUrl}" alt="Kop">`;
+  } else {
+    const img=new Image();
+    img.onload=()=>kopEl.innerHTML=`<img src="Kop.png" alt="Kop">`;
+    img.onerror=()=>kopEl.innerHTML=`<div class="kop-txt"><h1>SMM DAPUR MBG</h1></div>`;
+    img.src='Kop.png';
+  }
+
+  // Nomor
+  const noP=String(b.noUrut).length>8?String(b.noUrut).slice(-4):b.noUrut;
+  document.getElementById('noDoc').innerText=`INV/${String(noP).padStart(3,'0')}/MBG/${new Date().getFullYear()}`;
+
+  const fmtTgl=s=>{if(!s)return'—';const[y,m,dd]=s.split('-');const bln=['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];return`${dd} ${bln[+m]} ${y}`;};
+  const rp=n=>(Number(n)||0).toLocaleString('id-ID');
+  const tglCetak=new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+
+  document.getElementById('iDapur').innerText   = b.namaDapur||'—';
+  document.getElementById('iPIC').innerText     = b.pic||'—';
+  document.getElementById('iTglCetak').innerText= tglCetak;
+  document.getElementById('iPeriode').innerText = fmtTgl(b.tglMulai)+(items[0]?.tglSelesai?' s/d '+fmtTgl(items[0].tglSelesai):'');
+  document.getElementById('iStatus').innerText  = b.status||'—';
+  document.getElementById('iSisa').innerText    = 'Rp '+rp(b.sisa!==undefined?b.sisa:b.anggaranAwal);
+
+  // Tabel items
+  let total=0,html='';
+  items.forEach((it,i)=>{
+    total+=Number(it.total)||0;
+    html+=`<tr><td class="tc">${i+1}</td><td>${it.namaBarang||'—'}</td><td class="tc">${it.qty||0}</td><td>${it.satuan||'—'}</td><td class="tr">Rp ${rp(it.hargaSatuan)}</td><td class="tr">Rp ${rp(it.total)}</td></tr>`;
+  });
+  document.getElementById('invBody').innerHTML=html||'<tr><td colspan="6" class="tc" style="color:#888;padding:12px">Tidak ada item</td></tr>';
+  document.getElementById('invTotal').innerText='Rp '+rp(b.anggaranAwal);
+  document.getElementById('invBayar').innerText='Rp '+rp(b.dibayar);
+  document.getElementById('invSisa').innerText ='Rp '+rp(b.sisa!==undefined?b.sisa:b.anggaranAwal);
+  document.getElementById('terbilang').innerText='# '+terbilang(Number(b.anggaranAwal)||0)+' Rupiah #';
+
+  // Transfer
+  document.getElementById('tBank').innerText = set.bnk||'—';
+  document.getElementById('tRek').innerText  = set.rek||'—';
+  document.getElementById('tAN').innerText   = set.an||'—';
+
+  // TTD
+  document.getElementById('tKota').innerText = `${set.lok||'Lokasi'}, ${tglCetak}`;
+  document.getElementById('tJab').innerText  = set.jab||'Penanggung Jawab';
+  document.getElementById('tNama').innerText = set.jab||'—';
+  document.getElementById('tSub').innerText  = set.lok||'';
+  document.getElementById('fCetak').innerText= tglCetak;
+
+  setTimeout(()=>window.print(),900);
+});
 </script>
 </body>
 </html>
