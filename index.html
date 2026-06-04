@@ -229,8 +229,8 @@
       <div class="file-input-wrapper"><label>5. Foto Kwitansi Tukang</label><input type="file" id="fKwitansi" accept="image/*" multiple></div>
       
       <div style="display:flex;gap:10px;margin-top:20px">
-        <button type="submit" class="btn grn" style="flex:1" id="btnUploadValidasi">Simpan Dokumen</button>
-        <button type="button" class="btn red" style="flex:1" onclick="closeValidasi()">Tutup</button>
+        <button type="submit" class="btn grn" style="flex:1" id="btnUploadValidasi">Upload ke Drive</button>
+        <button type="button" class="btn red" style="flex:1" onclick="closeValidasi()">Batal</button>
       </div>
     </form>
   </div>
@@ -252,7 +252,7 @@
         <label>Foto Struk Pembayaran (Opsional)</label><input type="file" id="inpStrukBayar" accept="image/*">
       </div>
       <div style="display:flex;gap:10px">
-        <button type="submit" class="btn grn" style="flex:1" id="btnProsesBayar">Simpan Pembayaran</button>
+        <button type="submit" class="btn grn" style="flex:1" id="btnProsesBayar">Simpan & Upload</button>
         <button type="button" class="btn red" style="flex:1" onclick="closeBayar()">Batal</button>
       </div>
     </form>
@@ -523,7 +523,7 @@ function applyFilter(){
   } else { document.getElementById('pnlCetak').style.display='none'; }
 }
 
-// ================= FASE 4: VALIDASI DOKUMEN & LIHAT RIWAYAT =================
+// ================= FASE 4: VALIDASI DOKUMEN & UPLOAD KE DRIVE (MEMORI HP AMAN) =================
 function bukaValidasi(noUrut){
   activeNoUrut = noUrut;
   document.getElementById('frmValidasi').reset();
@@ -534,7 +534,13 @@ function closeValidasi(){ document.getElementById('ovValidasi').style.display='n
 
 document.getElementById('frmValidasi').addEventListener('submit', async e => {
   e.preventDefault();
-  const btn = document.getElementById('btnUploadValidasi'); btn.disabled=true; btn.innerText='Mengompres & Upload...';
+  
+  if(!navigator.onLine) {
+      return showAlert('Koneksi internet wajib untuk upload foto ke Drive!', 'error');
+  }
+  
+  const btn = document.getElementById('btnUploadValidasi'); 
+  btn.disabled=true; btn.innerText='Mengompres & Upload ke Drive...';
   
   try {
     const fA = document.getElementById('fAwal').files, fSe = document.getElementById('fSedang').files, fSl = document.getElementById('fSelesai').files, fB = document.getElementById('fBon').files, fK = document.getElementById('fKwitansi').files;
@@ -545,32 +551,33 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
     const pB = fB.length ? await Promise.all([...fB].map(kompres)) : [];
     const pK = fK.length ? await Promise.all([...fK].map(kompres)) : [];
 
-    const idx = dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
+    // Langsung kirim foto Base64 ke server.
+    // DILARANG simpan pA/pB ke dbM lokal agar HP tidak ngehang/penuh!
+    await fetch(API_URL, { 
+        method:'POST', mode: 'no-cors',
+        headers:{'Content-Type':'text/plain'}, 
+        body: JSON.stringify({ action:'uploadValidasi', noUrut:activeNoUrut, fAwal:pA, fSedang:pSe, fSelesai:pSl, fBon:pB, fKwitansi:pK }) 
+    });
+
+    btn.innerText='Menyinkronkan Link...';
+    // Beri waktu 4 detik agar Script & Drive punya waktu untuk bikin URL File
+    await new Promise(r => setTimeout(r, 4000));
     
-    if(pA.length) dbM[idx].fotoAwal = (dbM[idx].fotoAwal || []).concat(pA);
-    if(pSe.length) dbM[idx].fotoSedang = (dbM[idx].fotoSedang || []).concat(pSe);
-    if(pSl.length) dbM[idx].fotoSelesai = (dbM[idx].fotoSelesai || []).concat(pSl);
-    if(pB.length) dbM[idx].fotoBon = (dbM[idx].fotoBon || []).concat(pB);
-    if(pK.length) dbM[idx].fotoKwitansi = (dbM[idx].fotoKwitansi || []).concat(pK);
-    
-    localStorage.setItem('db_monitor', JSON.stringify(dbM));
-    
-    if(navigator.onLine){
-      fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ action:'uploadValidasi', noUrut:activeNoUrut, fAwal:pA, fSedang:pSe, fSelesai:pSl, fBon:pB, fKwitansi:pK }) }).catch(()=>{});
-    }
+    // Ambil Data Link URL terbaru dari Spreadsheet buat ditampilin di Galeri HP
+    await syncCloud(true); 
 
     closeValidasi();
-    showAlert('Dokumen berhasil disimpan!', 'success');
+    showAlert('Dokumen berhasil dikirim ke Google Drive!', 'success');
   } catch(err){ showAlert(err.message, 'error'); }
-  btn.disabled=false; btn.innerText='Simpan Dokumen';
+  btn.disabled=false; btn.innerText='Upload ke Drive';
 });
+
 
 // FITUR LIHAT FOTO / GALERI & RIWAYAT PEMBAYARAN
 function bukaLihatDokumen(noUrut) {
   const p = dbM.find(x => String(x.noUrut) === String(noUrut));
   if (!p) return;
   
-  // 1. Buat list Riwayat Pembayaran (Cicilan)
   let riwayatHtml = '<div style="margin-bottom:15px; padding:12px; background:#f9f9f9; border-radius:8px; border:1px solid #ddd;">';
   riwayatHtml += '<h4 style="margin:0 0 10px; color:var(--blue); font-size:0.9rem;">Riwayat Pembayaran (Cicilan)</h4>';
   if (p.tglTerbayar && p.tglTerbayar.length > 0) {
@@ -585,7 +592,6 @@ function bukaLihatDokumen(noUrut) {
   }
   riwayatHtml += '</div>';
 
-  // 2. Buat Galeri Foto
   const generateImgHtml = (arr, title) => {
     if (!arr || !arr.length) return '';
     let imgs = arr.map(src => `<img src="${src}" class="gallery-img" onclick="window.open('${src}', '_blank')">`).join('');
@@ -617,7 +623,7 @@ function closeLihatDokumen() {
 }
 
 
-// ================= FASE 5: INPUT BAYAR =================
+// ================= FASE 5: INPUT BAYAR (TEKS LOKAL, FOTO KE DRIVE) =================
 function bukaInputBayar(noUrut){
   activeNoUrut = noUrut;
   const p = dbM.find(x=>String(x.noUrut)===String(noUrut));
@@ -637,8 +643,6 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
   try {
     const nominal = unRp(document.getElementById('inpBayar').value), tgl = document.getElementById('inpTglBayar').value;
     const sumberRaw = document.getElementById('inpSumberDana').value.trim();
-    
-    // Sembunyikan nominal yang dibayar hari ini di string Sumber Dana biar terekam rapi!
     const sumber = `${sumberRaw} (Rp ${rp(nominal)})`; 
     
     if(nominal <= 0) throw new Error("Nominal tidak valid");
@@ -653,22 +657,34 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
     p.sisa = p.anggaranAwal - p.dibayar;
     if(p.sisa <= 0) { p.sisa = 0; p.status = 'Lunas / Selesai'; } else { p.status = 'Belum Lunas / Dicicil'; }
     
-    // Simpan riwayat
-    if(!p.tglTerbayar) p.tglTerbayar=[]; if(!p.sumberDana) p.sumberDana=[]; if(!p.fotoStrukBayar) p.fotoStrukBayar=[];
-    p.tglTerbayar.push(tgl); p.sumberDana.push(sumber); if(b64Struk) p.fotoStrukBayar.push(b64Struk);
+    // Hanya menyimpan teks (tgl & sumber) ke LocalStorage memori HP 
+    if(!p.tglTerbayar) p.tglTerbayar=[]; if(!p.sumberDana) p.sumberDana=[];
+    p.tglTerbayar.push(tgl); p.sumberDana.push(sumber); 
     
-    // Kunci data bank ke transaksi
+    // b64Struk TIDAK LAGI disimpan ke p.fotoStrukBayar lokal
+    
     p.bankNama = dbS.bnk||''; p.bankRek = dbS.rek||''; p.bankAn = dbS.an||'';
     
     localStorage.setItem('db_monitor', JSON.stringify(dbM));
     
     if(navigator.onLine){
-      fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ action:'submitPembayaran', noUrut:activeNoUrut, dibayar:p.dibayar, sisa:p.sisa, status:p.status, tglBaru:tgl, danaBaru:sumber, fotoStrukBase64:b64Struk, bankNama:p.bankNama, bankRek:p.bankRek, bankAn:p.bankAn }) }).catch(()=>{});
+      btn.innerText='Upload ke Server...';
+      await fetch(API_URL, { 
+          method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'text/plain'}, 
+          body: JSON.stringify({ action:'submitPembayaran', noUrut:activeNoUrut, dibayar:p.dibayar, sisa:p.sisa, status:p.status, tglBaru:tgl, danaBaru:sumber, fotoStrukBase64:b64Struk, bankNama:p.bankNama, bankRek:p.bankRek, bankAn:p.bankAn }) 
+      });
+
+      if (b64Struk) {
+        btn.innerText='Menyinkronkan Link...';
+        await new Promise(r => setTimeout(r, 4000));
+        await syncCloud(true);
+      }
     }
 
-    closeBayar(); applyFilter(); showAlert('Pembayaran Rp ' + rp(nominal) + ' dicatat!', 'success');
+    closeBayar(); applyFilter(); showAlert('Pembayaran Rp ' + rp(nominal) + ' dicatat & disinkron!', 'success');
   } catch(err){ showAlert(err.message, 'error'); }
-  btn.disabled=false; btn.innerText='Simpan Pembayaran';
+  btn.disabled=false; btn.innerText='Simpan & Upload';
 });
 
 // ================= FASE 6: EDIT PROYEK (TAMBAH BAUT DLL) =================
@@ -745,27 +761,39 @@ async function saveSetting(){
   btn.disabled=false; btn.innerText='Simpan & Sync Pengaturan'; showAlert('Pengaturan tersimpan!', 'success');
 }
 
-async function syncCloud(){
-  if(!navigator.onLine) return showAlert('Tidak ada koneksi internet!', 'error');
-  showAlert('Sedang Sinkronisasi...', 'info');
+// Sync sekarang punya mode 'silent' biar bisa jalan diem-diem di background
+async function syncCloud(silent = false){
+  if(!navigator.onLine) {
+      if(!silent) showAlert('Tidak ada koneksi internet!', 'error');
+      return;
+  }
+  if(!silent) showAlert('Sedang Sinkronisasi...', 'info');
   try {
-    const res = await fetch(API_URL + '?t=' + Date.now()); if(!res.ok) throw new Error('HTTP ' + res.status);
+    const res = await fetch(API_URL + '?t=' + Date.now()); 
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    
     const data = await res.json();
     if(data.monitoring) dbM = data.monitoring;
     if(data.pesanan) dbP = data.pesanan;
     if(data.pengaturan) dbS = data.pengaturan;
     
-    localStorage.setItem('db_monitor', JSON.stringify(dbM)); localStorage.setItem('db_pesanan', JSON.stringify(dbP)); localStorage.setItem('smm_setting', JSON.stringify(dbS));
+    // Ingat, yang ditarik dari Cloud sekarang cuma URL link gambar (ukuran kecil), bukan Base64!
+    localStorage.setItem('db_monitor', JSON.stringify(dbM)); 
+    localStorage.setItem('db_pesanan', JSON.stringify(dbP)); 
+    localStorage.setItem('smm_setting', JSON.stringify(dbS));
+    
     buildFilter(); applyFilter(); loadSetting();
-    showAlert('Sinkronisasi Berhasil!', 'success');
-  } catch(err){ showAlert('Gagal Sync: ' + err.message, 'error'); }
+    if(!silent) showAlert('Sinkronisasi Berhasil!', 'success');
+  } catch(err){ 
+      if(!silent) showAlert('Gagal Sync: ' + err.message, 'error'); 
+  }
 }
 
 function buka(hal){ window.open(hal+'.html','_blank'); }
 
 // ================= INIT =================
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
-document.addEventListener('DOMContentLoaded', () => { loadSetting(); buildFilter(); applyFilter(); if(navigator.onLine) syncCloud(); });
+document.addEventListener('DOMContentLoaded', () => { loadSetting(); buildFilter(); applyFilter(); if(navigator.onLine) syncCloud(true); });
 </script>
 </body>
 </html>
