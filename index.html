@@ -21,10 +21,33 @@
     .container{width:100%;max-width:100%;margin:auto}
 
     /* HEADER */
-    .app-header{display:flex;justify-content:space-between;align-items:center;padding:15px;margin-bottom:20px;border-radius:20px;background:var(--bg);box-shadow:var(--sh-out)}
-    .app-header .title{font-size:1.2rem;font-weight:800;color:var(--blue);margin:0}
-    .app-header .sub{font-size:.8rem;color:var(--muted);margin:3px 0 0}
-    .app-header img{width:70px;height:70px;object-fit:contain;margin-left:30px}
+    .app-header {
+        display: flex;
+        justify-content: space-between; /* Judul tetap kiri, logo tetap kanan */
+        align-items: center;
+        padding: 15px 20px; /* Ditambah padding biar logo punya ruang napas */
+        margin-bottom: 20px;
+        border-radius: 20px;
+        background: var(--bg);
+        box-shadow: var(--sh-out);
+    }
+    
+    /* Biar teks judul gak nabrak logo kalau logo digedein */
+    .app-header div {
+        flex: 1;
+        margin-right: 15px;
+    }
+
+    .app-header .title { font-size: 1.2rem; font-weight: 800; color: var(--blue); margin: 0 }
+    .app-header .sub { font-size: .8rem; color: var(--muted); margin: 3px 0 0 }
+    
+    /* Logo sekarang pas proporsionalnya */
+    .app-header img {
+        width: 60px;    /* 60px sudah sangat ideal untuk header HP */
+        height: 60px;
+        object-fit: contain;
+        margin-left: 10px; /* Dikecilin biar lebih rapat ke teks judul */
+    }
 
     /* CARD & GRID */
     .card{background:var(--bg);border-radius:20px;padding:20px;margin-bottom:25px;box-shadow:var(--sh-out)}
