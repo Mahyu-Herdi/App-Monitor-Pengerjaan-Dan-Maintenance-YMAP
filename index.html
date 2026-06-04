@@ -55,17 +55,22 @@
     text-transform: uppercase;
 }
 /* Bagian ini yang diubah */
+/* Ganti blok .dc h2 kamu dengan ini */
 .dc h2 {
     margin: 5px 0 0 0 !important;
-    color: var(--blue) !important;
     font-size: 1.8rem !important;
     font-weight: 900 !important;
     text-align: center !important;
-    width: 100% !important; /* Memaksa lebar penuh */
-    display: block !important; /* Memaksa agar tidak terpengaruh flexbox */
+    width: 100% !important;
+    display: block !important;
+    /* Kita HAPUS color di sini supaya tidak nabrak warna per-card */
 }
-.dc.grn h2 { color: var(--green); }
-.dc.red h2 { color: var(--red); }
+
+/* Warna spesifik tetap kita jaga supaya tidak berubah jadi biru semua */
+.dc.grn h2 { color: var(--green) !important; }
+.dc.red h2 { color: var(--red) !important; }
+.dc:not(.grn):not(.red) h2 { color: var(--blue) !important; }
+    
     /* BTN */
     .btn{padding:14px 18px;border:none;border-radius:14px;background:var(--blue);color:#fff;font-weight:bold;cursor:pointer;box-shadow:var(--clay);transition:all .2s;font-size:.9rem;display:flex;align-items:center;justify-content:center;gap:8px}
     .btn svg{width:18px;height:18px;fill:currentColor}
