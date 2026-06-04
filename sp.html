@@ -60,8 +60,7 @@
 </div>
 <div class="no-print"><button class="btnP" onclick="window.print()">🖨 Cetak</button></div>
 
-<script>
-const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link";  
+<script> 
 document.addEventListener('DOMContentLoaded', () => {
   const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
   const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tglCetak = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
   
   if(s.kop && s.kop !== 'Kop.png') document.getElementById('kopEl').innerHTML = `<img src="${s.kop}">`;
-  else document.getElementById('kopEl').innerHTML = `<h1 style="text-align:center">SMM DAPUR MBG</h1>`;
+  else const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link"; 
   
   document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
   document.getElementById('iDapur').innerText = b.namaDapur; document.getElementById('iPIC').innerText = b.pic;
