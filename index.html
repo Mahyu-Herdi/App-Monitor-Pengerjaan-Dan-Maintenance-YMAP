@@ -81,6 +81,10 @@
     .file-input-wrapper { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg); box-shadow: var(--sh-in-sm); border-radius: 12px; margin-bottom: 15px; }
     .file-input-wrapper label { margin: 0; font-size: 0.85rem; color: var(--blue); }
     .file-input-wrapper input[type=file] { width: auto; box-shadow: none; padding: 0; background: transparent; }
+    
+    /* GAYA KHUSUS GALERI */
+    .gallery-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; }
+    .gallery-img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid var(--blue); cursor: pointer; box-shadow: var(--sh-in-sm); }
   </style>
 </head>
 <body>
@@ -123,7 +127,8 @@
       <button type="submit" class="btn grn full" id="btnSimpanUsulan">SIMPAN USULAN</button>
     </form>
   </div>
-<div id="sec-usulan" class="card app-sec" style="display:none">
+
+  <div id="sec-usulan" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> Daftar Usulan Pending</h2>
     <div class="tbl-wrap">
       <table>
@@ -189,7 +194,8 @@
       </table>
     </div>
   </div>
-<div id="ovEditProyek" class="overlay"></div>
+
+  <div id="ovEditProyek" class="overlay"></div>
   <div id="mdEditProyek" class="modal" style="max-width:700px">
     <h3>Edit Proyek / Revisi Item</h3>
     <form id="frmEditProyek" autocomplete="off">
@@ -251,9 +257,16 @@
       </div>
     </form>
   </div>
+  
+  <div id="ovLihatDokumen" class="overlay"></div>
+  <div id="mdLihatDokumen" class="modal" style="max-width:600px;">
+    <h3>Riwayat & Galeri Proyek</h3>
+    <div id="galeriKonten" style="max-height:65vh; overflow-y:auto; margin-bottom:15px; padding-right:5px;"></div>
+    <button type="button" class="btn red full" onclick="closeLihatDokumen()">Tutup Layar</button>
+  </div>
 
   <div id="sec-setting" class="card app-sec" style="display:none">
-    <h2><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.05-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22l-1.92 3.32c-.12.22-.07.49.12.61l2.03 1.58c-.04.3-.06.61-.06.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39-.96c.22-.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Pengaturan Sistem & Rekening</h2>
+    <h2><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.05-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Pengaturan Sistem & Rekening</h2>
     <div class="g2">
       <div><label>Lokasi / Kota TTD</label><input type="text" id="sLokasi"></div>
       <div><label>Jabatan Penanda Tangan</label><input type="text" id="sJabatan"></div>
@@ -274,6 +287,7 @@
   <div class="ni" id="ni-setting" onclick="showSec('setting')"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.05-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41z"/></svg><span>Pengaturan</span></div>
   <div class="ni" onclick="syncCloud()"><svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg><span>Sinkron</span></div>
 </nav>
+
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbyoNZvxU5AhHd335djm7MY68H0MCe9P11k1ouMgQoBiO88pNf8k-2QHQy6v0ij4arQa/exec";
 // ── STATE & LOCAL STORAGE ──
@@ -463,6 +477,7 @@ document.getElementById('frmProsesSP').addEventListener('submit', async e => {
   buka('sp');
   showSec('monitor');
 });
+
 // ================= FASE 3: MONITORING & FILTER =================
 function buildFilter(){
   const fp=document.getElementById('flPIC'), fd=document.getElementById('flDapur');
@@ -492,10 +507,11 @@ function applyFilter(){
       <td style="color:var(--red);font-weight:bold">Rp ${rp(r.sisa)}</td>
       <td><span class="badge ${bdg}">${r.status}</span></td>
       <td>
-        <div style="display:flex;gap:5px;flex-direction:column">
+        <div style="display:flex;gap:6px;flex-direction:column">
           <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="bukaInputBayar('${r.noUrut}')">Bayar</button>
           <button class="btn org" style="padding:6px;font-size:0.75rem;background:#d35400" onclick="bukaValidasi('${r.noUrut}')">Upload Foto</button>
-          <button class="btn" style="padding:6px;font-size:0.75rem" onclick="bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
+          <button class="btn" style="padding:6px;font-size:0.75rem;background:#3498db" onclick="bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
+          <button class="btn" style="padding:6px;font-size:0.75rem;background:#7f8c8d" onclick="bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
         </div>
       </td>
     </tr>`;
@@ -507,7 +523,7 @@ function applyFilter(){
   } else { document.getElementById('pnlCetak').style.display='none'; }
 }
 
-// ================= FASE 4: VALIDASI DOKUMEN (Bisa Belakangan) =================
+// ================= FASE 4: VALIDASI DOKUMEN & LIHAT RIWAYAT =================
 function bukaValidasi(noUrut){
   activeNoUrut = noUrut;
   document.getElementById('frmValidasi').reset();
@@ -523,7 +539,6 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
   try {
     const fA = document.getElementById('fAwal').files, fSe = document.getElementById('fSedang').files, fSl = document.getElementById('fSelesai').files, fB = document.getElementById('fBon').files, fK = document.getElementById('fKwitansi').files;
     
-    // TIDAK WAJIB DIISI SEMUA (BEBAS)
     const pA = fA.length ? await Promise.all([...fA].map(kompres)) : [];
     const pSe = fSe.length ? await Promise.all([...fSe].map(kompres)) : [];
     const pSl = fSl.length ? await Promise.all([...fSl].map(kompres)) : [];
@@ -532,7 +547,6 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
 
     const idx = dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
     
-    // Hanya simpan jika ada isinya, kalau kosong biarkan yang lama (kalau ada)
     if(pA.length) dbM[idx].fotoAwal = (dbM[idx].fotoAwal || []).concat(pA);
     if(pSe.length) dbM[idx].fotoSedang = (dbM[idx].fotoSedang || []).concat(pSe);
     if(pSl.length) dbM[idx].fotoSelesai = (dbM[idx].fotoSelesai || []).concat(pSl);
@@ -550,6 +564,58 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
   } catch(err){ showAlert(err.message, 'error'); }
   btn.disabled=false; btn.innerText='Simpan Dokumen';
 });
+
+// FITUR LIHAT FOTO / GALERI & RIWAYAT PEMBAYARAN
+function bukaLihatDokumen(noUrut) {
+  const p = dbM.find(x => String(x.noUrut) === String(noUrut));
+  if (!p) return;
+  
+  // 1. Buat list Riwayat Pembayaran (Cicilan)
+  let riwayatHtml = '<div style="margin-bottom:15px; padding:12px; background:#f9f9f9; border-radius:8px; border:1px solid #ddd;">';
+  riwayatHtml += '<h4 style="margin:0 0 10px; color:var(--blue); font-size:0.9rem;">Riwayat Pembayaran (Cicilan)</h4>';
+  if (p.tglTerbayar && p.tglTerbayar.length > 0) {
+    riwayatHtml += '<ul style="margin:0; padding-left:20px; font-size:0.85rem; color:var(--txt);">';
+    p.tglTerbayar.forEach((t, i) => {
+      let dana = (p.sumberDana && p.sumberDana[i]) ? p.sumberDana[i] : '-';
+      riwayatHtml += `<li style="margin-bottom:4px;"><b>Tgl:</b> ${t} <br> <b>Ket:</b> ${dana}</li>`;
+    });
+    riwayatHtml += '</ul>';
+  } else {
+    riwayatHtml += '<p style="margin:0; font-size:0.8rem; color:var(--muted);">Belum ada pembayaran dicatat.</p>';
+  }
+  riwayatHtml += '</div>';
+
+  // 2. Buat Galeri Foto
+  const generateImgHtml = (arr, title) => {
+    if (!arr || !arr.length) return '';
+    let imgs = arr.map(src => `<img src="${src}" class="gallery-img" onclick="window.open('${src}', '_blank')">`).join('');
+    return `<div style="margin-bottom:10px;"><b style="color:var(--blue); font-size:0.85rem;">${title}</b><div class="gallery-row">${imgs}</div></div>`;
+  };
+
+  let html = riwayatHtml;
+  const fotoAwal = generateImgHtml(p.fotoAwal, 'Foto Sebelum Pekerjaan (Awal)');
+  const fotoSedang = generateImgHtml(p.fotoSedang, 'Foto Saat Pengerjaan (Progress)');
+  const fotoSelesai = generateImgHtml(p.fotoSelesai, 'Foto Selesai (Hasil)');
+  const fotoBon = generateImgHtml(p.fotoBon, 'Bukti Bon Belanja');
+  const fotoKwitansi = generateImgHtml(p.fotoKwitansi, 'Bukti Kwitansi Tukang');
+  const fotoStruk = generateImgHtml(p.fotoStrukBayar, 'Struk Pembayaran / Cicilan');
+
+  if(fotoAwal||fotoSedang||fotoSelesai||fotoBon||fotoKwitansi||fotoStruk) {
+      html += fotoAwal + fotoSedang + fotoSelesai + fotoBon + fotoKwitansi + fotoStruk;
+  } else {
+      html += '<p style="text-align:center; color:var(--muted); font-style:italic; font-size:0.85rem;">Belum ada foto dokumen yang diupload.</p>';
+  }
+
+  document.getElementById('galeriKonten').innerHTML = html;
+  document.getElementById('ovLihatDokumen').style.display = 'block';
+  document.getElementById('mdLihatDokumen').style.display = 'block';
+}
+
+function closeLihatDokumen() {
+  document.getElementById('ovLihatDokumen').style.display = 'none';
+  document.getElementById('mdLihatDokumen').style.display = 'none';
+}
+
 
 // ================= FASE 5: INPUT BAYAR =================
 function bukaInputBayar(noUrut){
@@ -569,7 +635,12 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
   const btn = document.getElementById('btnProsesBayar'); btn.disabled=true; btn.innerText='Memproses...';
   
   try {
-    const nominal = unRp(document.getElementById('inpBayar').value), tgl = document.getElementById('inpTglBayar').value, sumber = document.getElementById('inpSumberDana').value.trim();
+    const nominal = unRp(document.getElementById('inpBayar').value), tgl = document.getElementById('inpTglBayar').value;
+    const sumberRaw = document.getElementById('inpSumberDana').value.trim();
+    
+    // Sembunyikan nominal yang dibayar hari ini di string Sumber Dana biar terekam rapi!
+    const sumber = `${sumberRaw} (Rp ${rp(nominal)})`; 
+    
     if(nominal <= 0) throw new Error("Nominal tidak valid");
     
     const fS = document.getElementById('inpStrukBayar').files;
@@ -584,7 +655,7 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
     
     // Simpan riwayat
     if(!p.tglTerbayar) p.tglTerbayar=[]; if(!p.sumberDana) p.sumberDana=[]; if(!p.fotoStrukBayar) p.fotoStrukBayar=[];
-    p.tglTerbayar.push(tgl); p.sumberDana.push(sumber); p.fotoStrukBayar.push(b64Struk);
+    p.tglTerbayar.push(tgl); p.sumberDana.push(sumber); if(b64Struk) p.fotoStrukBayar.push(b64Struk);
     
     // Kunci data bank ke transaksi
     p.bankNama = dbS.bnk||''; p.bankRek = dbS.rek||''; p.bankAn = dbS.an||'';
