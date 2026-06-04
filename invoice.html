@@ -58,7 +58,8 @@
 </div>
 <div class="no-print"><button class="btnP" onclick="window.print()">Cetak</button></div>
 
-<script>    
+<script>
+const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link";    
 document.addEventListener('DOMContentLoaded', () => {
   const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
   const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
@@ -67,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const rp = n => (Number(n)||0).toLocaleString('id-ID');
   
   if(s.kop && s.kop !== 'Kop.png') document.getElementById('kopEl').innerHTML = `<img src="${s.kop}">`;
-  else const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link";
+  else document.getElementById('kopEl').innerHTML = `<h1 style="text-align:center">YAYASAN MUSLIM ACEH PEDULI</h1>`;
   
   document.getElementById('noDoc').innerText = `INV/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
   document.getElementById('iDapur').innerText = b.namaDapur; document.getElementById('iPIC').innerText = b.pic;
