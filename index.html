@@ -6,7 +6,6 @@
   <title>Monitoring - Rekonstruksi & Anggaran</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e8e4d9">
-  <script src="config.js"></script>
   <style>
     :root {
       --bg: #e8e4d9; --txt: #4a4a4a; --muted: #8c8c8c;
@@ -93,7 +92,6 @@
   <button class="btn full" style="margin-top:0" onclick="closeAlert()">Mengerti</button>
 </div>
 
-<!-- CONTAINER UTAMA -->
 <div class="container">
 
   <div class="app-header">
@@ -101,7 +99,6 @@
     <img src="icon.png" alt="Logo">
   </div>
 
-  <!-- SECTION 1: FORM PENGUSULAN (Belum Ada Harga) -->
   <div id="sec-input" class="card app-sec">
     <h2><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Form Pengajuan Usulan</h2>
     <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px">Masukkan usulan kebutuhan barang/jasa dapur. PIC dan Harga akan diisi saat pencetakan SP.</p>
@@ -126,8 +123,7 @@
       <button type="submit" class="btn grn full" id="btnSimpanUsulan">SIMPAN USULAN</button>
     </form>
   </div>
-<!-- SECTION 2: DAFTAR USULAN & CETAK SP -->
-  <div id="sec-usulan" class="card app-sec" style="display:none">
+<div id="sec-usulan" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> Daftar Usulan Pending</h2>
     <div class="tbl-wrap">
       <table>
@@ -137,7 +133,6 @@
     </div>
   </div>
 
-  <!-- MODAL: PROSES SP (Tetapkan Harga & PIC) -->
   <div id="ovSP" class="overlay"></div>
   <div id="mdSP" class="modal">
     <h3>Tetapkan SP & Harga</h3>
@@ -160,7 +155,6 @@
     </form>
   </div>
 
-  <!-- SECTION 3: DASHBOARD MONITORING & BAYAR -->
   <div id="sec-monitor" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M5 19.248V4h14v15.248l-2.5-1.5-2.5 1.5-2.5-1.5-2.5 1.5-1.5-1zM17 6H7v2h10V6zm0 4H7v2h10v-2zm-4 4H7v2h6v-2z"/></svg> Dashboard Monitoring Proyek</h2>
     <div class="g3" style="margin-bottom:25px">
@@ -195,8 +189,7 @@
       </table>
     </div>
   </div>
-<!-- MODAL: EDIT PROYEK (Bisa ubah harga/tambah baut dll) -->
-  <div id="ovEditProyek" class="overlay"></div>
+<div id="ovEditProyek" class="overlay"></div>
   <div id="mdEditProyek" class="modal" style="max-width:700px">
     <h3>Edit Proyek / Revisi Item</h3>
     <form id="frmEditProyek" autocomplete="off">
@@ -218,11 +211,10 @@
     </form>
   </div>
 
-  <!-- MODAL: VALIDASI UPLOAD 5 DOKUMEN -->
   <div id="ovValidasi" class="overlay"></div>
   <div id="mdValidasi" class="modal">
-    <h3>Validasi Kelengkapan Dokumen</h3>
-    <p style="font-size:0.8rem">Wajib upload kelengkapan sebelum membuka form pembayaran.</p>
+    <h3>Upload Kelengkapan Dokumen</h3>
+    <p style="font-size:0.8rem">Anda bisa melengkapi dokumen ini kapan saja (sebelum atau sesudah pembayaran).</p>
     <form id="frmValidasi">
       <div class="file-input-wrapper"><label>1. Foto Sebelum (Awal)</label><input type="file" id="fAwal" accept="image/*" multiple></div>
       <div class="file-input-wrapper"><label>2. Foto Sedang Kerja</label><input type="file" id="fSedang" accept="image/*" multiple></div>
@@ -231,13 +223,12 @@
       <div class="file-input-wrapper"><label>5. Foto Kwitansi Tukang</label><input type="file" id="fKwitansi" accept="image/*" multiple></div>
       
       <div style="display:flex;gap:10px;margin-top:20px">
-        <button type="submit" class="btn grn" style="flex:1" id="btnUploadValidasi">Upload & Lanjut Bayar</button>
-        <button type="button" class="btn red" style="flex:1" onclick="closeValidasi()">Batal</button>
+        <button type="submit" class="btn grn" style="flex:1" id="btnUploadValidasi">Simpan Dokumen</button>
+        <button type="button" class="btn red" style="flex:1" onclick="closeValidasi()">Tutup</button>
       </div>
     </form>
   </div>
 
-  <!-- MODAL: INPUT PEMBAYARAN -->
   <div id="ovBayar" class="overlay"></div>
   <div id="mdBayar" class="modal">
     <h3>CATAT PEMBAYARAN</h3>
@@ -252,7 +243,7 @@
         <div><label>Sumber Dana</label><input type="text" id="inpSumberDana" placeholder="Kas Dapur/Transfer" required></div>
       </div>
       <div class="file-input-wrapper">
-        <label>Foto Struk Pembayaran</label><input type="file" id="inpStrukBayar" accept="image/*" required>
+        <label>Foto Struk Pembayaran (Opsional)</label><input type="file" id="inpStrukBayar" accept="image/*">
       </div>
       <div style="display:flex;gap:10px">
         <button type="submit" class="btn grn" style="flex:1" id="btnProsesBayar">Simpan Pembayaran</button>
@@ -261,7 +252,6 @@
     </form>
   </div>
 
-  <!-- SECTION 4: PENGATURAN REKENING & TTD -->
   <div id="sec-setting" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.05-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22l-1.92 3.32c-.12.22-.07.49.12.61l2.03 1.58c-.04.3-.06.61-.06.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39-.96c.22-.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.03-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Pengaturan Sistem & Rekening</h2>
     <div class="g2">
@@ -277,7 +267,6 @@
 
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="nav">
   <div class="ni on" id="ni-input" onclick="showSec('input')"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg><span>Usulan</span></div>
   <div class="ni" id="ni-usulan" onclick="showSec('usulan')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Daftar Usulan</span></div>
@@ -504,7 +493,8 @@ function applyFilter(){
       <td><span class="badge ${bdg}">${r.status}</span></td>
       <td>
         <div style="display:flex;gap:5px;flex-direction:column">
-          <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="bukaValidasiAtauBayar('${r.noUrut}')">Bayar / Validasi</button>
+          <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="bukaInputBayar('${r.noUrut}')">Bayar</button>
+          <button class="btn org" style="padding:6px;font-size:0.75rem;background:#d35400" onclick="bukaValidasi('${r.noUrut}')">Upload Foto</button>
           <button class="btn" style="padding:6px;font-size:0.75rem" onclick="bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
         </div>
       </td>
@@ -517,19 +507,12 @@ function applyFilter(){
   } else { document.getElementById('pnlCetak').style.display='none'; }
 }
 
-// ================= FASE 4: VALIDASI DOKUMEN SEBELUM BAYAR =================
-function bukaValidasiAtauBayar(noUrut){
+// ================= FASE 4: VALIDASI DOKUMEN (Bisa Belakangan) =================
+function bukaValidasi(noUrut){
   activeNoUrut = noUrut;
-  const p = dbM.find(x=>String(x.noUrut)===String(noUrut));
-  if(!p) return;
-  // Cek apakah udah punya foto bon dll
-  if(p.fotoAwal?.length && p.fotoBon?.length && p.fotoKwitansi?.length){
-    bukaInputBayar(p); // Udah divalidasi, langsung buka bayar
-  } else {
-    document.getElementById('frmValidasi').reset();
-    document.getElementById('ovValidasi').style.display='block';
-    document.getElementById('mdValidasi').style.display='block';
-  }
+  document.getElementById('frmValidasi').reset();
+  document.getElementById('ovValidasi').style.display='block';
+  document.getElementById('mdValidasi').style.display='block';
 }
 function closeValidasi(){ document.getElementById('ovValidasi').style.display='none'; document.getElementById('mdValidasi').style.display='none'; }
 
@@ -540,13 +523,22 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
   try {
     const fA = document.getElementById('fAwal').files, fSe = document.getElementById('fSedang').files, fSl = document.getElementById('fSelesai').files, fB = document.getElementById('fBon').files, fK = document.getElementById('fKwitansi').files;
     
-    if(!fA.length || !fB.length || !fK.length) throw new Error("Foto Awal, Bon, dan Kwitansi Wajib Diisi!");
-    
-    const pA = await Promise.all([...fA].map(kompres)), pSe = fSe.length ? await Promise.all([...fSe].map(kompres)) : [], pSl = fSl.length ? await Promise.all([...fSl].map(kompres)) : [];
-    const pB = await Promise.all([...fB].map(kompres)), pK = await Promise.all([...fK].map(kompres));
+    // TIDAK WAJIB DIISI SEMUA (BEBAS)
+    const pA = fA.length ? await Promise.all([...fA].map(kompres)) : [];
+    const pSe = fSe.length ? await Promise.all([...fSe].map(kompres)) : [];
+    const pSl = fSl.length ? await Promise.all([...fSl].map(kompres)) : [];
+    const pB = fB.length ? await Promise.all([...fB].map(kompres)) : [];
+    const pK = fK.length ? await Promise.all([...fK].map(kompres)) : [];
 
     const idx = dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
-    dbM[idx].fotoAwal = pA; dbM[idx].fotoSedang = pSe; dbM[idx].fotoSelesai = pSl; dbM[idx].fotoBon = pB; dbM[idx].fotoKwitansi = pK;
+    
+    // Hanya simpan jika ada isinya, kalau kosong biarkan yang lama (kalau ada)
+    if(pA.length) dbM[idx].fotoAwal = (dbM[idx].fotoAwal || []).concat(pA);
+    if(pSe.length) dbM[idx].fotoSedang = (dbM[idx].fotoSedang || []).concat(pSe);
+    if(pSl.length) dbM[idx].fotoSelesai = (dbM[idx].fotoSelesai || []).concat(pSl);
+    if(pB.length) dbM[idx].fotoBon = (dbM[idx].fotoBon || []).concat(pB);
+    if(pK.length) dbM[idx].fotoKwitansi = (dbM[idx].fotoKwitansi || []).concat(pK);
+    
     localStorage.setItem('db_monitor', JSON.stringify(dbM));
     
     if(navigator.onLine){
@@ -554,13 +546,16 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
     }
 
     closeValidasi();
-    bukaInputBayar(dbM[idx]);
+    showAlert('Dokumen berhasil disimpan!', 'success');
   } catch(err){ showAlert(err.message, 'error'); }
-  btn.disabled=false; btn.innerText='Upload & Lanjut Bayar';
+  btn.disabled=false; btn.innerText='Simpan Dokumen';
 });
 
 // ================= FASE 5: INPUT BAYAR =================
-function bukaInputBayar(p){
+function bukaInputBayar(noUrut){
+  activeNoUrut = noUrut;
+  const p = dbM.find(x=>String(x.noUrut)===String(noUrut));
+  if(!p) return;
   document.getElementById('mdBayarDesc').innerHTML = `Tagihan: Rp ${rp(p.anggaranAwal)}<br>Sisa Pembayaran: <b style="color:var(--red)">Rp ${rp(p.sisa)}</b>`;
   document.getElementById('frmBayar').reset();
   document.getElementById('inpTglBayar').valueAsDate = new Date();
