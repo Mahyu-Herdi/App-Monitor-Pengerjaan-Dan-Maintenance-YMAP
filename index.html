@@ -297,6 +297,13 @@ let dbS = JSON.parse(localStorage.getItem('smm_setting') || '{}');
 let activeNoUrut = null;
 
 // ── UTILITIES ──
+// Tambahkan fungsi ini di area script bagian UTILITIES
+function formatTgl(tglStr) {
+  if (!tglStr) return '-';
+  const tgl = new Date(tglStr);
+  const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+  return tgl.toLocaleDateString('id-ID', options);
+}  
 const rp = n => (Number(n)||0).toLocaleString('id-ID');
 const unRp = s => parseFloat(String(s).replace(/\./g,'').replace(',','.')) || 0;
 const fmtRp = el => { let v = String(el.value).replace(/[^\d]/g,''); el.value = v ? parseInt(v).toLocaleString('id-ID') : ''; };
@@ -501,7 +508,7 @@ function applyFilter(){
   filtered.forEach(r => {
     const bdg = r.status.includes('Lunas') ? 'bdg-ln' : r.status.includes('Cicil') ? 'bdg-cc' : 'bdg-pg';
     tb.innerHTML += `<tr>
-      <td>#${String(r.noUrut).slice(-4)}<br><small>${r.tglMulai}</small></td>
+      <td>#${String(r.noUrut).slice(-4)}<br><small>${formatTgl(r.tglMulai)}</small></td>
       <td><b>${r.namaDapur}</b><br><small>${r.pic}</small></td>
       <td>Rp ${rp(r.anggaranAwal)}</td>
       <td style="color:var(--red);font-weight:bold">Rp ${rp(r.sisa)}</td>
