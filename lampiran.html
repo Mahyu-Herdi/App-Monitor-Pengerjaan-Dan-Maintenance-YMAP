@@ -1,43 +1,49 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8"><title>Lampiran Foto</title>
-    <style>
-        @page { size: A4; margin: 15mm; }
-        body { font-family: Arial, sans-serif; }
-        .header { margin-bottom: 20px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 10px;}
-        .photo-card { display: inline-block; width: 45%; margin: 2%; text-align: center; border: 1px solid #ccc; padding: 5px; box-sizing: border-box; }
-        .photo-card img { width: 100%; height: 220px; object-fit: contain; }
-    </style>
+  <meta charset="UTF-8"><title>Lampiran Validasi Dokumen</title>
+  <style>
+    @page { size: A4; margin: 15mm; }
+    body { font-family: Arial, sans-serif; }
+    .header { margin-bottom: 20px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 10px; font-size:14pt;}
+    .photo-card { display: inline-block; width: 45%; margin: 2%; text-align: center; border: 1px solid #ccc; padding: 5px; box-sizing: border-box; }
+    .photo-card img { width: 100%; height: 200px; object-fit: contain; background:#f0f0f0; }
+    h3 { margin-top:20px; color:#2c3e50; }
+    .pb { page-break-before: always; }
+    @media print{ .no-print{ display:none!important; } }
+    .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; }
+    .btnP{ padding:10px 22px; border:none; border-radius:8px; background:#2c3e50; color:#fff; font-weight:bold; cursor:pointer;}
+  </style>
 </head>
 <body>
-    <div class="header">LAMPIRAN BUKTI FISIK | Dapur: <span id="lblDapur"></span> | PIC: <span id="lblPIC"></span></div>
-    
-    <h3>I. Progress Pekerjaan</h3><div id="gridKerja"></div>
-    <div style="page-break-before: always;"></div>
-    <h3>II. Nota Belanja</h3><div id="gridNota"></div>
-
+  <div class="header">LAMPIRAN VALIDASI PROYEK | Dapur: <span id="lblDapur"></span> | PIC: <span id="lblPIC"></span></div>
+  <div id="content"></div>
+  <div class="no-print"><button class="btnP" onclick="window.print()">Cetak Bukti Fisik</button></div>
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const data = JSON.parse(localStorage.getItem('smm_siap_cetak'));
-        if(!data) return;
+document.addEventListener("DOMContentLoaded", () => {
+  const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
+  if(!d) return;
+  const b = d.bundle;
+  document.getElementById('lblDapur').innerText = b.namaDapur;
+  document.getElementById('lblPIC').innerText = b.pic;
 
-        document.getElementById('lblDapur').innerText = data.bundle.namaDapur;
-        document.getElementById('lblPIC').innerText = data.bundle.pic;
+  const imgHtml = (src, title) => `<div class="photo-card"><img src="${src}"><div>${title}</div></div>`;
+  let html = "";
+  
+  // Progress
+  html += `<h3>I. Progress Pekerjaan (Awal, Sedang, Selesai)</h3>`;
+  if(b.fotoAwal?.length) b.fotoAwal.forEach((s,i) => html += imgHtml(s, `Foto Awal #${i+1}`));
+  if(b.fotoSedang?.length) b.fotoSedang.forEach((s,i) => html += imgHtml(s, `Foto Sedang #${i+1}`));
+  if(b.fotoSelesai?.length) b.fotoSelesai.forEach((s,i) => html += imgHtml(s, `Foto Selesai #${i+1}`));
+  
+  html += `<div class="pb"></div><h3>II. Bukti Keuangan (Bon Belanja, Kwitansi Tukang, Struk Transfer)</h3>`;
+  if(b.fotoBon?.length) b.fotoBon.forEach((s,i) => html += imgHtml(s, `Bon Belanja #${i+1}`));
+  if(b.fotoKwitansi?.length) b.fotoKwitansi.forEach((s,i) => html += imgHtml(s, `Kwitansi Tukang #${i+1}`));
+  if(b.fotoStrukBayar?.length) b.fotoStrukBayar.forEach((s,i) => html += imgHtml(s, `Struk Transfer #${i+1}`));
 
-        const imgHtml = (src, title) => `<div class="photo-card"><img src="${src}"><div>${title}</div></div>`;
-        const item = data.items[0];
-        
-        const gKerja = document.getElementById('gridKerja');
-        if(item.fotoKerja?.length) item.fotoKerja.forEach((s,i) => gKerja.innerHTML += imgHtml(s, `Foto Kerja #${i+1}`));
-        else gKerja.innerHTML = "Tidak ada foto kerja.";
-
-        const gNota = document.getElementById('gridNota');
-        if(item.fotoNota?.length) item.fotoNota.forEach((s,i) => gNota.innerHTML += imgHtml(s, `Foto Nota #${i+1}`));
-        else gNota.innerHTML = "Tidak ada nota.";
-
-        setTimeout(() => window.print(), 800);
-    });
+  document.getElementById('content').innerHTML = html;
+  setTimeout(() => window.print(), 800);
+});
 </script>
 </body>
 </html>
