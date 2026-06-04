@@ -44,9 +44,8 @@
         if(!d) return;
         
         // Cek link Kop dari config.js
-        if(typeof KOP_SURAT_URL !== 'undefined' && KOP_SURAT_URL) {
-            document.getElementById('kopImage').innerHTML = `<img src="${KOP_SURAT_URL}" alt="Kop Surat">`;
-        } else {
+        const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link";
+        else {
             // Kalau link kop kosong, tampilin teks cadangan
             document.getElementById('kopImage').innerHTML = `<h2 style="text-align:center; margin:0;">YAYASAN MUSLIM ACEH PEDULI</h2>`;
         }
