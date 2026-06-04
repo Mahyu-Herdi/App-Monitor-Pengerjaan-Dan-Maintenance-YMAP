@@ -41,11 +41,29 @@
     input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
     
     /* DASH CARD */
-    .dc{border-radius:16px;padding:15px;background:var(--bg);box-shadow:var(--sh-in);text-align:center}
-    .dc h4{margin:0 0 5px;color:var(--muted);font-size:.75rem;text-transform:uppercase}
-    .dc h2{margin:0;color:var(--blue);font-size:1.4rem;font-weight:800}
-    .dc.grn h2{color:var(--green)}.dc.red h2{color:var(--red)}
-
+.dc {
+    border-radius: 16px;
+    padding: 15px;
+    background: var(--bg);
+    box-shadow: var(--sh-in);
+    text-align: center;
+}
+.dc h4 {
+    margin: 0 0 5px;
+    color: var(--muted);
+    font-size: .75rem;
+    text-transform: uppercase;
+}
+/* Bagian ini yang diubah */
+.dc h2 {
+    margin: 5px 0 0 0;
+    color: var(--blue);
+    font-size: 1.8rem;   /* Dibuat lebih besar */
+    font-weight: 900;    /* Dibuat lebih tebal */
+    text-align: center;  /* Memastikan posisi di tengah */
+}
+.dc.grn h2 { color: var(--green); }
+.dc.red h2 { color: var(--red); }
     /* BTN */
     .btn{padding:14px 18px;border:none;border-radius:14px;background:var(--blue);color:#fff;font-weight:bold;cursor:pointer;box-shadow:var(--clay);transition:all .2s;font-size:.9rem;display:flex;align-items:center;justify-content:center;gap:8px}
     .btn svg{width:18px;height:18px;fill:currentColor}
