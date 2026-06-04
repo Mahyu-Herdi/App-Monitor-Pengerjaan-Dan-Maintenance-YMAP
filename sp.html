@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tglCetak = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
   
   if(s.kop && s.kop !== 'Kop.png') document.getElementById('kopEl').innerHTML = `<img src="${s.kop}">`;
-  else document.getElementById('kopEl').innerHTML = `<h1 style="text-align:center">SMM DAPUR MBG</h1>`;
+  else document.getElementById('kopEl').innerHTML = `<h1 style="text-align:center">YAYASAN MUSLIM ACEH PEDULI</h1>`;
   
   document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
   document.getElementById('iDapur').innerText = b.namaDapur; document.getElementById('iPIC').innerText = b.pic;
