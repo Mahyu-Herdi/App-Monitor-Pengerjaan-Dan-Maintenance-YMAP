@@ -289,7 +289,7 @@
 </nav>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbyxxNIzqZxIEsTXoLF_J4BHS2h9bAhk1N3_vwgzI78p6r5mJOi9d80LgkQ7nN-STen4/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzgDnr0YWIoSghC7m64eO9IfdiHxHtqC6-eJuIcS7rjpguA664XIeZ32sAH2nyt9PWI/exec";
 // ── STATE & LOCAL STORAGE ──
 let dbM = JSON.parse(localStorage.getItem('db_monitor') || '[]');
 let dbP = JSON.parse(localStorage.getItem('db_pesanan') || '[]');
@@ -551,19 +551,15 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
     const pB = fB.length ? await Promise.all([...fB].map(kompres)) : [];
     const pK = fK.length ? await Promise.all([...fK].map(kompres)) : [];
 
-    // Langsung kirim foto Base64 ke server.
-    // DILARANG simpan pA/pB ke dbM lokal agar HP tidak ngehang/penuh!
+    // Menggunakan fetch biasa (TANPA no-cors) supaya nyambung lancar ke kode.gs
     await fetch(API_URL, { 
-        method:'POST', mode: 'no-cors',
+        method:'POST', 
         headers:{'Content-Type':'text/plain'}, 
         body: JSON.stringify({ action:'uploadValidasi', noUrut:activeNoUrut, fAwal:pA, fSedang:pSe, fSelesai:pSl, fBon:pB, fKwitansi:pK }) 
     });
 
     btn.innerText='Menyinkronkan Link...';
-    // Beri waktu 4 detik agar Script & Drive punya waktu untuk bikin URL File
-    await new Promise(r => setTimeout(r, 4000));
-    
-    // Ambil Data Link URL terbaru dari Spreadsheet buat ditampilin di Galeri HP
+    await new Promise(r => setTimeout(r, 2000));
     await syncCloud(true); 
 
     closeValidasi();
@@ -657,11 +653,9 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
     p.sisa = p.anggaranAwal - p.dibayar;
     if(p.sisa <= 0) { p.sisa = 0; p.status = 'Lunas / Selesai'; } else { p.status = 'Belum Lunas / Dicicil'; }
     
-    // Hanya menyimpan teks (tgl & sumber) ke LocalStorage memori HP 
+    // Hanya menyimpan teks (tgl & sumber) ke memori HP biar kenceng!
     if(!p.tglTerbayar) p.tglTerbayar=[]; if(!p.sumberDana) p.sumberDana=[];
     p.tglTerbayar.push(tgl); p.sumberDana.push(sumber); 
-    
-    // b64Struk TIDAK LAGI disimpan ke p.fotoStrukBayar lokal
     
     p.bankNama = dbS.bnk||''; p.bankRek = dbS.rek||''; p.bankAn = dbS.an||'';
     
@@ -669,15 +663,16 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
     
     if(navigator.onLine){
       btn.innerText='Upload ke Server...';
+      // Murni standar fetch tanpa no-cors
       await fetch(API_URL, { 
-          method:'POST', mode:'no-cors',
+          method:'POST', 
           headers:{'Content-Type':'text/plain'}, 
           body: JSON.stringify({ action:'submitPembayaran', noUrut:activeNoUrut, dibayar:p.dibayar, sisa:p.sisa, status:p.status, tglBaru:tgl, danaBaru:sumber, fotoStrukBase64:b64Struk, bankNama:p.bankNama, bankRek:p.bankRek, bankAn:p.bankAn }) 
       });
 
       if (b64Struk) {
         btn.innerText='Menyinkronkan Link...';
-        await new Promise(r => setTimeout(r, 4000));
+        await new Promise(r => setTimeout(r, 2000));
         await syncCloud(true);
       }
     }
@@ -761,7 +756,6 @@ async function saveSetting(){
   btn.disabled=false; btn.innerText='Simpan & Sync Pengaturan'; showAlert('Pengaturan tersimpan!', 'success');
 }
 
-// Sync sekarang punya mode 'silent' biar bisa jalan diem-diem di background
 async function syncCloud(silent = false){
   if(!navigator.onLine) {
       if(!silent) showAlert('Tidak ada koneksi internet!', 'error');
@@ -777,7 +771,7 @@ async function syncCloud(silent = false){
     if(data.pesanan) dbP = data.pesanan;
     if(data.pengaturan) dbS = data.pengaturan;
     
-    // Ingat, yang ditarik dari Cloud sekarang cuma URL link gambar (ukuran kecil), bukan Base64!
+    // Sekarang hanya narik link pendek dari Spreadsheet, no base64!
     localStorage.setItem('db_monitor', JSON.stringify(dbM)); 
     localStorage.setItem('db_pesanan', JSON.stringify(dbP)); 
     localStorage.setItem('smm_setting', JSON.stringify(dbS));
