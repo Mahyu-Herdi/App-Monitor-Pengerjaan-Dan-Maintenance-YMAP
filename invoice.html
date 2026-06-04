@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><title>Invoice — SMM Dapur MBG</title>
-  <script src="config.js"></script>
+  <meta charset="UTF-8">
+  <title>Invoice — SMM Dapur MBG</title>
   <style>
     @page { size: A4; margin: 15mm 18mm; }
     *{ box-sizing:border-box; margin:0; padding:0; }
@@ -144,26 +144,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const raw = localStorage.getItem('smm_siap_cetak');
   const set = JSON.parse(localStorage.getItem('smm_setting')||'{}');
   if(!raw){
-    document.body.innerHTML='<div style="text-align:center;padding:80px;font-family:sans-serif"><h2 style="color:#e74c3c">Data tidak ditemukan</h2><p style="color:#666;margin-top:12px">Buka dari Dashboard → filter 1 data → klik <b>Invoice</b></p><button onclick="window.close()" style="margin-top:20px;padding:10px 24px;background:#2c3e50;color:#fff;border:none;border-radius:6px;cursor:pointer">Tutup</button></div>';
+    document.body.innerHTML='<div style="text-align:center;padding:80px;font-family:sans-serif"><h2 style="color:#e74c3c">Data tidak ditemukan</h2><p style="color:#666;margin-top:12px">Buka dari Dashboard lalu pilih data terlebih dahulu.</p></div>';
     return;
   }
   const d=JSON.parse(raw), b=d.bundle, items=d.items||[];
 
-  // KOP
+  // KOP SURAT (Ditanam Langsung Menggunakan Format Direct Download Google Drive)
   const kopEl=document.getElementById('kopEl');
-  const kopUrl=set.kop||(typeof KOP_SURAT_URL!=='undefined'?KOP_SURAT_URL:'');
-  if(kopUrl&&kopUrl!=='Kop.png'){
-    kopEl.innerHTML=`<img src="${kopUrl}" alt="Kop">`;
-  } else {
-    const img=new Image();
-    img.onload=()=>kopEl.innerHTML=`<img src="Kop.png" alt="Kop">`;
-    img.onerror=()=>kopEl.innerHTML=`<div class="kop-txt"><h1>SMM DAPUR MBG</h1></div>`;
-    img.src='Kop.png';
-  }
+  const kopUrl=set.kop || "https://docs.google.com/uc?export=download&id=1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt";
+  
+  const img=new Image();
+  img.onload=()=>kopEl.innerHTML=`<img src="${kopUrl}" alt="Kop">`;
+  img.onerror=()=>kopEl.innerHTML=`<div class="kop-txt"><h1>SMM DAPUR MBG</h1></div>`;
+  img.src=kopUrl;
 
-  // Nomor
+  // Nomor Dokumen
   const noP=String(b.noUrut).length>8?String(b.noUrut).slice(-4):b.noUrut;
-  document.getElementById('noDoc').innerText=`INV/${String(noP).padStart(3,'0')}/MBG/${new Date().getFullYear()}`;
+  document.getElementById('noDoc').innerText=`INV/${String(noP||'001').padStart(3,'0')}/MBG/${new Date().getFullYear()}`;
 
   const fmtTgl=s=>{if(!s)return'—';const[y,m,dd]=s.split('-');const bln=['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];return`${dd} ${bln[+m]} ${y}`;};
   const rp=n=>(Number(n)||0).toLocaleString('id-ID');
@@ -193,10 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('tRek').innerText  = set.rek||'—';
   document.getElementById('tAN').innerText   = set.an||'—';
 
-  // TTD
-  document.getElementById('tKota').innerText = `${set.lok||'Lokasi'}, ${tglCetak}`;
+  // TTD & Lokasi penanggung jawab
+  document.getElementById('tKota').innerText = `${set.lok||'Jakarta'}, ${tglCetak}`;
   document.getElementById('tJab').innerText  = set.jab||'Penanggung Jawab';
-  document.getElementById('tNama').innerText = set.jab||'—';
+  document.getElementById('tNama').innerText = set.nama||'—';
   document.getElementById('tSub').innerText  = set.lok||'';
   document.getElementById('fCetak').innerText= tglCetak;
 
