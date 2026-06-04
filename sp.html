@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Surat Pesanan — SMM Dapur MBG</title>
+  <meta charset="UTF-8"><title>Surat Pesanan — SMM Dapur MBG</title>
+  <script src="config.js"></script>
   <style>
     @page { size: A4; margin: 15mm 18mm; }
     *{ box-sizing:border-box; margin:0; padding:0; }
@@ -135,24 +135,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const raw = localStorage.getItem('smm_siap_cetak');
   const set = JSON.parse(localStorage.getItem('smm_setting') || '{}');
   if(!raw){
-    document.body.innerHTML='<div style="text-align:center;padding:80px;font-family:sans-serif"><h2 style="color:#e74c3c">Data tidak ditemukan</h2><p style="color:#666;margin-top:12px">Buka dari Dashboard lalu pilih data terlebih dahulu.</p></div>';
+    document.body.innerHTML='<div style="text-align:center;padding:80px;font-family:sans-serif"><h2 style="color:#e74c3c">Data tidak ditemukan</h2><p style="color:#666;margin-top:12px">Buka dari Dashboard → filter 1 data → klik <b>Surat Pesanan</b></p><button onclick="window.close()" style="margin-top:20px;padding:10px 24px;background:#2c3e50;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px">Tutup</button></div>';
     return;
   }
   const d = JSON.parse(raw);
   const b = d.bundle, items = d.items||[];
 
-  // KOP SURAT (Ditanam Langsung Menggunakan Format Direct Download Google Drive)
-  const kopEl = document.getElementById('kopEl');
-  const kopUrl = set.kop || "https://docs.google.com/uc?export=download&id=1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt";
-  
-  const img=new Image();
-  img.onload=()=>kopEl.innerHTML=`<img src="${kopUrl}" alt="Kop Surat">`;
-  img.onerror=()=>kopEl.innerHTML=`<div class="kop-txt"><h1>SMM DAPUR MBG</h1><p>Sistem Monitoring & Maintenance</p></div>`;
-  img.src=kopUrl;
+  // KOP
+   const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link";
+  } else {
+    const img=new Image();
+    img.onload=()=>kopEl.innerHTML=`<img src="Kop.png" alt="Kop Surat">`;
+    img.onerror=()=>kopEl.innerHTML=`<div class="kop-txt"><h1>SMM DAPUR MBG</h1><p>Sistem Monitoring & Maintenance</p></div>`;
+    img.src='Kop.png';
+  }
 
   // Nomor Dokumen
   const noP = String(b.noUrut).length>8 ? String(b.noUrut).slice(-4) : b.noUrut;
-  document.getElementById('noDoc').innerText = `MAP-SP/${String(noP||'001').padStart(3,'0')}/MBG/${new Date().getFullYear()}`;
+  document.getElementById('noDoc').innerText = `MAP-SP/${String(noP).padStart(3,'0')}/MBG/${new Date().getFullYear()}`;
 
   // Format tanggal
   const fmtTgl = s => { if(!s) return '—'; const[y,m,dd]=s.split('-'); const bln=['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']; return `${dd} ${bln[+m]} ${y}`; };
@@ -173,13 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
     html+=`<tr><td class="tc">${i+1}</td><td>${it.namaBarang||'—'}</td><td class="tc">${it.qty||0}</td><td>${it.satuan||'—'}</td><td class="tr">Rp ${rp(it.hargaSatuan)}</td><td class="tr">Rp ${rp(it.total)}</td></tr>`;
   });
   document.getElementById('spBody').innerHTML = html||'<tr><td colspan="6" class="tc" style="color:#888;padding:12px">Tidak ada item</td></tr>';
-  document.getElementById('spTotal').innerText = 'Rp ' + rp(b.anggaranAwal || total);
+  document.getElementById('spTotal').innerText = 'Rp ' + rp(total);
 
-  // TTD & Lokasi Pensetujuan
+  // TTD
   document.getElementById('tJab').innerText   = set.jab||'Penanggung Jawab';
-  document.getElementById('tNama1').innerText = set.nama||'—';
+  document.getElementById('tNama1').innerText = set.jab||'—';
   document.getElementById('tLok1').innerText  = set.lok||'';
-  document.getElementById('tKota').innerText  = `${set.lok||'Jakarta'}, ${tglCetak}`;
+  document.getElementById('tKota').innerText  = `${set.lok||'Lokasi'}, ${tglCetak}`;
   document.getElementById('tNamaPIC').innerText = b.pic||'—';
   document.getElementById('fCetak').innerText = tglCetak;
 
