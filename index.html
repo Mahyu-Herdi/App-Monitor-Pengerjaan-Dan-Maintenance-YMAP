@@ -23,31 +23,18 @@
     /* HEADER */
     .app-header {
         display: flex;
-        justify-content: space-between; /* Judul tetap kiri, logo tetap kanan */
+        justify-content: space-between;
         align-items: center;
-        padding: 15px 20px; /* Ditambah padding biar logo punya ruang napas */
+        padding: 15px 20px;
         margin-bottom: 20px;
         border-radius: 20px;
         background: var(--bg);
         box-shadow: var(--sh-out);
     }
-    
-    /* Biar teks judul gak nabrak logo kalau logo digedein */
-    .app-header div {
-        flex: 1;
-        margin-right: 15px;
-    }
-
+    .app-header div { flex: 1; margin-right: 15px; }
     .app-header .title { font-size: 1.2rem; font-weight: 800; color: var(--blue); margin: 0 }
     .app-header .sub { font-size: .8rem; color: var(--muted); margin: 3px 0 0 }
-    
-    /* Logo sekarang pas proporsionalnya */
-    .app-header img {
-        width: 60px;    /* 60px sudah sangat ideal untuk header HP */
-        height: 60px;
-        object-fit: contain;
-        margin-left: 10px; /* Dikecilin biar lebih rapat ke teks judul */
-    }
+    .app-header img { width: 60px; height: 60px; object-fit: contain; margin-left: 10px; }
 
     /* CARD & GRID */
     .card{background:var(--bg);border-radius:20px;padding:20px;margin-bottom:25px;box-shadow:var(--sh-out)}
@@ -64,35 +51,12 @@
     input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
     
     /* DASH CARD */
-.dc {
-    border-radius: 16px;
-    padding: 15px;
-    background: var(--bg);
-    box-shadow: var(--sh-in);
-    text-align: center;
-}
-.dc h4 {
-    margin: 0 0 5px;
-    color: var(--muted);
-    font-size: .75rem;
-    text-transform: uppercase;
-}
-/* Bagian ini yang diubah */
-/* Ganti blok .dc h2 kamu dengan ini */
-.dc h2 {
-    margin: 5px 0 0 0 !important;
-    font-size: 1.8rem !important;
-    font-weight: 900 !important;
-    text-align: center !important;
-    width: 100% !important;
-    display: block !important;
-    /* Kita HAPUS color di sini supaya tidak nabrak warna per-card */
-}
-
-/* Warna spesifik tetap kita jaga supaya tidak berubah jadi biru semua */
-.dc.grn h2 { color: var(--green) !important; }
-.dc.red h2 { color: var(--red) !important; }
-.dc:not(.grn):not(.red) h2 { color: var(--blue) !important; }
+    .dc { border-radius: 16px; padding: 15px; background: var(--bg); box-shadow: var(--sh-in); text-align: center; }
+    .dc h4 { margin: 0 0 5px; color: var(--muted); font-size: .75rem; text-transform: uppercase; }
+    .dc h2 { margin: 5px 0 0 0 !important; font-size: 1.8rem !important; font-weight: 900 !important; text-align: center !important; width: 100% !important; display: block !important; }
+    .dc.grn h2 { color: var(--green) !important; }
+    .dc.red h2 { color: var(--red) !important; }
+    .dc:not(.grn):not(.red) h2 { color: var(--blue) !important; }
     
     /* BTN */
     .btn{padding:14px 18px;border:none;border-radius:14px;background:var(--blue);color:#fff;font-weight:bold;cursor:pointer;box-shadow:var(--clay);transition:all .2s;font-size:.9rem;display:flex;align-items:center;justify-content:center;gap:8px}
@@ -142,6 +106,12 @@
   <div style="display:flex;justify-content:center;margin-bottom:15px" id="mdIcon"></div>
   <p id="mdMsg" style="font-weight:bold"></p>
   <button class="btn full" style="margin-top:0" onclick="closeAlert()">Mengerti</button>
+</div>
+
+<div id="ovLightbox" class="overlay" style="z-index:10002" onclick="closeFotoZoom()"></div>
+<div id="mdLightbox" class="modal" style="z-index:10003; padding:10px; background:transparent; box-shadow:none; width:95%; max-width:800px;">
+  <img id="imgZoom" src="" style="width:100%; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.5); object-fit:contain; background:#fff;">
+  <button class="btn red full" onclick="closeFotoZoom()" style="margin-top:10px; box-shadow:0 5px 15px rgba(0,0,0,0.4);">Tutup Lensa 📸</button>
 </div>
 
 <div class="container">
@@ -217,23 +187,23 @@
     </div>
     
     <div class="card" style="box-shadow:var(--sh-in);background:transparent">
+      <div class="g2" style="margin-bottom:15px">
+        <div><label>Dari Tanggal Mulai</label><input type="date" id="flTglAwal"></div>
+        <div><label>Sampai Tanggal Mulai</label><input type="date" id="flTglAkhir"></div>
+      </div>
       <div class="g3">
         <div><label>Status</label><select id="flStatus"><option value="">Semua</option><option>Dalam Pengerjaan</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
         <div><label>PIC</label><select id="flPIC"><option value="">Semua PIC</option></select></div>
         <div><label>Dapur</label><select id="flDapur"><option value="">Semua Dapur</option></select></div>
-        <div style="display:flex;gap:10px;align-items:flex-end">
-          <button class="btn grn" style="flex:1" onclick="applyFilter()">Cari</button>
+        <div style="display:flex;gap:10px;align-items:flex-end;grid-column:1/-1;">
+          <button class="btn grn" style="flex:1" onclick="applyFilter()">Cari Data</button>
           <button class="btn red" style="flex:1" onclick="resetFilter()">Reset</button>
         </div>
       </div>
     </div>
 
-    <div id="pnlCetak" class="pbar" style="display:none">
-      <span style="color:var(--blue);font-weight:bold;flex:1">Cetak / Buka Laporan:</span>
-      <button class="btn" onclick="buka('sp')">Surat Pesanan</button>
-      <button class="btn" onclick="buka('invoice')">Invoice</button>
-      <button class="btn" onclick="buka('lampiran')">Lampiran Foto</button>
-    </div>
+    <div id="pnlCetak" class="pbar" style="display:none; flex-direction:column; align-items:stretch;">
+      </div>
 
     <div class="tbl-wrap">
       <table>
@@ -332,12 +302,13 @@
   <div class="ni on" id="ni-input" onclick="showSec('input')"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg><span>Usulan</span></div>
   <div class="ni" id="ni-usulan" onclick="showSec('usulan')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Daftar Usulan</span></div>
   <div class="ni" id="ni-monitor" onclick="showSec('monitor')"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg><span>Dashboard</span></div>
-  <div class="ni" id="ni-setting" onclick="showSec('setting')"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.05-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41z"/></svg><span>Pengaturan</span></div>
+  <div class="ni" id="ni-setting" onclick="showSec('setting')"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.05-.24-.24-.41-.48-.41z"/></svg><span>Pengaturan</span></div>
   <div class="ni" onclick="syncCloud()"><svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg><span>Sinkron</span></div>
 </nav>
 
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbzgDnr0YWIoSghC7m64eO9IfdiHxHtqC6-eJuIcS7rjpguA664XIeZ32sAH2nyt9PWI/exec";
+
 // ── STATE & LOCAL STORAGE ──
 let dbM = JSON.parse(localStorage.getItem('db_monitor') || '[]');
 let dbP = JSON.parse(localStorage.getItem('db_pesanan') || '[]');
@@ -345,7 +316,6 @@ let dbS = JSON.parse(localStorage.getItem('smm_setting') || '{}');
 let activeNoUrut = null;
 
 // ── UTILITIES ──
-// Tambahkan fungsi ini di area script bagian UTILITIES
 function formatTgl(tglStr) {
   if (!tglStr) return '-';
   const tgl = new Date(tglStr);
@@ -369,6 +339,11 @@ function showAlert(msg, type = 'info'){
   document.getElementById('mdAlert').style.display = 'block';
 }
 function closeAlert(){ document.getElementById('ovAlert').style.display='none'; document.getElementById('mdAlert').style.display='none'; }
+
+// ── ZOOM FOTO LENS ──
+function bukaFotoZoom(src){ document.getElementById('imgZoom').src = src; document.getElementById('ovLightbox').style.display = 'block'; document.getElementById('mdLightbox').style.display = 'block'; }
+function closeFotoZoom(){ document.getElementById('ovLightbox').style.display = 'none'; document.getElementById('mdLightbox').style.display = 'none'; document.getElementById('imgZoom').src = ''; }
+
 
 // ── NAVIGASI & INIT ──
 function showSec(key){
@@ -524,12 +499,18 @@ document.getElementById('frmProsesSP').addEventListener('submit', async e => {
   }
   
   document.getElementById('frmProsesSP').reset();
+  
+  btn.innerText='Sinkronisasi PDF...';
+  await new Promise(r => setTimeout(r, 2000)); 
+  await syncCloud(true);
+  
   closeSP();
   btn.disabled=false; btn.innerText='Simpan & Cetak SP';
   
-  // Set untuk langsung cetak SP
-  localStorage.setItem('smm_siap_cetak', JSON.stringify({ bundle: dbM[idx], items: dbP.filter(x=>String(x.noUrut)===String(activeNoUrut)) }));
-  buka('sp');
+  // Paksa filter tampilkan dapur ini biar tombol cetak PDF langsung nongol
+  document.getElementById('flStatus').value = 'Dalam Pengerjaan';
+  document.getElementById('flPIC').value = pic;
+  applyFilter();
   showSec('monitor');
 });
 
@@ -541,10 +522,28 @@ function buildFilter(){
   [...new Set(dbM.map(r=>r.pic).filter(Boolean))].forEach(p=>fp.innerHTML+=`<option ${p===cP?'selected':''}>${p}</option>`);
   [...new Set(dbM.map(r=>r.namaDapur).filter(Boolean))].forEach(d=>fd.innerHTML+=`<option ${d===cD?'selected':''}>${d}</option>`);
 }
-function resetFilter(){ ['flStatus','flPIC','flDapur'].forEach(id=>document.getElementById(id).value=''); applyFilter(); }
+
+function resetFilter(){ ['flStatus','flPIC','flDapur','flTglAwal','flTglAkhir'].forEach(id=>document.getElementById(id).value=''); applyFilter(); }
+
 function applyFilter(){
   const st=document.getElementById('flStatus').value, pi=document.getElementById('flPIC').value, da=document.getElementById('flDapur').value;
-  const filtered = dbM.filter(r => r.status !== 'Pending Usulan' && (!st || r.status===st) && (!pi || r.pic===pi) && (!da || r.namaDapur===da));
+  const tAw=document.getElementById('flTglAwal').value, tAk=document.getElementById('flTglAkhir').value;
+  
+  const filtered = dbM.filter(r => {
+    if (r.status === 'Pending Usulan') return false;
+    if (st && r.status !== st) return false;
+    if (pi && r.pic !== pi) return false;
+    if (da && r.namaDapur !== da) return false;
+    if (tAw || tAk) {
+       let tglP = new Date(r.tglMulai);
+       if (tAw && tglP < new Date(tAw)) return false;
+       if (tAk) {
+           let dAk = new Date(tAk); dAk.setHours(23,59,59);
+           if (tglP > dAk) return false;
+       }
+    }
+    return true;
+  });
   
   let tA=0, tB=0, tS=0;
   filtered.forEach(r=>{ tA+=Number(r.anggaranAwal); tB+=Number(r.dibayar); tS+=Number(r.sisa); });
@@ -573,12 +572,20 @@ function applyFilter(){
   });
   
   if(filtered.length === 1){
-    localStorage.setItem('smm_siap_cetak', JSON.stringify({ bundle: filtered[0], items: dbP.filter(x=>String(x.noUrut)===String(filtered[0].noUrut)) }));
+    const f = filtered[0];
+    document.getElementById('pnlCetak').innerHTML = `
+      <div style="color:var(--blue);font-weight:bold;margin-bottom:10px;">📄 Download Laporan PDF (Dari Server):</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" ${f.spUrl ? `onclick="window.open('${f.spUrl}','_blank')"` : 'disabled title="SP Belum Dibuat"'}>Surat Pesanan</button>
+        <button class="btn" ${f.invoiceUrl ? `onclick="window.open('${f.invoiceUrl}','_blank')"` : 'disabled title="Belum Ada Pembayaran"'}>Invoice</button>
+        <button class="btn" ${f.lampiranUrl ? `onclick="window.open('${f.lampiranUrl}','_blank')"` : 'disabled title="Belum Ada Foto"'}>Lampiran Foto</button>
+      </div>
+    `;
     document.getElementById('pnlCetak').style.display='flex';
   } else { document.getElementById('pnlCetak').style.display='none'; }
 }
 
-// ================= FASE 4: VALIDASI DOKUMEN & UPLOAD KE DRIVE (MEMORI HP AMAN) =================
+// ================= FASE 4: VALIDASI DOKUMEN & UPLOAD KE DRIVE =================
 function bukaValidasi(noUrut){
   activeNoUrut = noUrut;
   document.getElementById('frmValidasi').reset();
@@ -606,19 +613,18 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
     const pB = fB.length ? await Promise.all([...fB].map(kompres)) : [];
     const pK = fK.length ? await Promise.all([...fK].map(kompres)) : [];
 
-    // Menggunakan fetch biasa (TANPA no-cors) supaya nyambung lancar ke kode.gs
     await fetch(API_URL, { 
         method:'POST', 
         headers:{'Content-Type':'text/plain'}, 
         body: JSON.stringify({ action:'uploadValidasi', noUrut:activeNoUrut, fAwal:pA, fSedang:pSe, fSelesai:pSl, fBon:pB, fKwitansi:pK }) 
     });
 
-    btn.innerText='Menyinkronkan Link...';
+    btn.innerText='Menyinkronkan Link PDF...';
     await new Promise(r => setTimeout(r, 2000));
     await syncCloud(true); 
 
     closeValidasi();
-    showAlert('Dokumen berhasil dikirim ke Google Drive!', 'success');
+    showAlert('Dokumen berhasil dikirim ke Google Drive & Lampiran PDF Dibuat!', 'success');
   } catch(err){ showAlert(err.message, 'error'); }
   btn.disabled=false; btn.innerText='Upload ke Drive';
 });
@@ -645,7 +651,7 @@ function bukaLihatDokumen(noUrut) {
 
   const generateImgHtml = (arr, title) => {
     if (!arr || !arr.length) return '';
-    let imgs = arr.map(src => `<img src="${src}" class="gallery-img" onclick="window.open('${src}', '_blank')">`).join('');
+    let imgs = arr.map(src => `<img src="${src}" class="gallery-img" onclick="bukaFotoZoom('${src}')">`).join('');
     return `<div style="margin-bottom:10px;"><b style="color:var(--blue); font-size:0.85rem;">${title}</b><div class="gallery-row">${imgs}</div></div>`;
   };
 
@@ -674,7 +680,7 @@ function closeLihatDokumen() {
 }
 
 
-// ================= FASE 5: INPUT BAYAR (TEKS LOKAL, FOTO KE DRIVE) =================
+// ================= FASE 5: INPUT BAYAR =================
 function bukaInputBayar(noUrut){
   activeNoUrut = noUrut;
   const p = dbM.find(x=>String(x.noUrut)===String(noUrut));
@@ -708,7 +714,6 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
     p.sisa = p.anggaranAwal - p.dibayar;
     if(p.sisa <= 0) { p.sisa = 0; p.status = 'Lunas / Selesai'; } else { p.status = 'Belum Lunas / Dicicil'; }
     
-    // Hanya menyimpan teks (tgl & sumber) ke memori HP biar kenceng!
     if(!p.tglTerbayar) p.tglTerbayar=[]; if(!p.sumberDana) p.sumberDana=[];
     p.tglTerbayar.push(tgl); p.sumberDana.push(sumber); 
     
@@ -718,26 +723,23 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
     
     if(navigator.onLine){
       btn.innerText='Upload ke Server...';
-      // Murni standar fetch tanpa no-cors
       await fetch(API_URL, { 
           method:'POST', 
           headers:{'Content-Type':'text/plain'}, 
           body: JSON.stringify({ action:'submitPembayaran', noUrut:activeNoUrut, dibayar:p.dibayar, sisa:p.sisa, status:p.status, tglBaru:tgl, danaBaru:sumber, fotoStrukBase64:b64Struk, bankNama:p.bankNama, bankRek:p.bankRek, bankAn:p.bankAn }) 
       });
 
-      if (b64Struk) {
-        btn.innerText='Menyinkronkan Link...';
-        await new Promise(r => setTimeout(r, 2000));
-        await syncCloud(true);
-      }
+      btn.innerText='Menyinkronkan Link PDF...';
+      await new Promise(r => setTimeout(r, 2000));
+      await syncCloud(true);
     }
 
-    closeBayar(); applyFilter(); showAlert('Pembayaran Rp ' + rp(nominal) + ' dicatat & disinkron!', 'success');
+    closeBayar(); applyFilter(); showAlert('Pembayaran Rp ' + rp(nominal) + ' dicatat & Invoice dibuat!', 'success');
   } catch(err){ showAlert(err.message, 'error'); }
   btn.disabled=false; btn.innerText='Simpan & Upload';
 });
 
-// ================= FASE 6: EDIT PROYEK (TAMBAH BAUT DLL) =================
+// ================= FASE 6: EDIT PROYEK =================
 function htmlBarisEdit(nb='', q=1, sat='', hrg=0, tot=0){
   return `<tr>
     <td><input type="text" class="nb" value="${nb}" required style="min-width:120px"></td>
@@ -826,7 +828,6 @@ async function syncCloud(silent = false){
     if(data.pesanan) dbP = data.pesanan;
     if(data.pengaturan) dbS = data.pengaturan;
     
-    // Sekarang hanya narik link pendek dari Spreadsheet, no base64!
     localStorage.setItem('db_monitor', JSON.stringify(dbM)); 
     localStorage.setItem('db_pesanan', JSON.stringify(dbP)); 
     localStorage.setItem('smm_setting', JSON.stringify(dbS));
@@ -837,8 +838,6 @@ async function syncCloud(silent = false){
       if(!silent) showAlert('Gagal Sync: ' + err.message, 'error'); 
   }
 }
-
-function buka(hal){ window.open(hal+'.html','_blank'); }
 
 // ================= INIT =================
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
