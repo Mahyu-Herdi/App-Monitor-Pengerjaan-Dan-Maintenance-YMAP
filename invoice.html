@@ -8,6 +8,9 @@
     body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#111; line-height:1.5; }
     .kop{ margin-bottom:12px; border-bottom:3px double #000; padding-bottom:8px; }
     .kop img{ width:100%; height:auto; display:block; }
+    .kop-fallback{ text-align:center; padding:10px 0; }
+    .kop-fallback h1{ font-size:14pt; font-weight:bold; margin:0; }
+    .kop-fallback p{ font-size:9pt; color:#555; margin:2px 0; }
     .doc-title{ text-align:center; margin:14px 0 4px; }
     .doc-title h2{ font-size:13pt; font-weight:bold; text-decoration:underline; letter-spacing:1px; }
     .info{ width:100%; border-collapse:collapse; margin-bottom:18px; font-size:10.5pt; }
@@ -24,6 +27,7 @@
     @media print{ .no-print{ display:none!important; } }
     .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; }
     .btnP{ padding:10px 22px; border:none; border-radius:8px; background:#2c3e50; color:#fff; font-weight:bold; cursor:pointer;}
+    .riwayat-item{ margin-bottom:4px; padding:3px 0; border-bottom:1px dotted #ddd; }
   </style>
 </head>
 <body>
@@ -33,11 +37,11 @@
 
 <table class="info">
   <tr><td>Nama Dapur</td><td>: <span id="iDapur"></span></td><td>PIC</td><td>: <span id="iPIC"></span></td></tr>
-  <tr><td>Status</td><td>: <span id="iStatus"></span></td><td>Periode</td><td>: <span id="iPeriode"></span></td></tr>
+  <tr><td>Status</td><td>: <span id="iStatus"></span></td><td>Tgl. Mulai</td><td>: <span id="iPeriode"></span></td></tr>
 </table>
 
 <table class="items">
-  <thead><tr><th style="width:32px">No</th><th>Barang / Pekerjaan</th><th style="width:45px">Qty</th><th style="width:60px">Sat</th><th style="width:115px">Harga</th><th style="width:115px">Total (Rp)</th></tr></thead>
+  <thead><tr><th style="width:32px">No</th><th>Barang / Pekerjaan</th><th style="width:45px">Qty</th><th style="width:60px">Sat</th><th style="width:115px">Harga Satuan</th><th style="width:115px">Total (Rp)</th></tr></thead>
   <tbody id="invBody"></tbody>
   <tfoot>
     <tr><td colspan="5" class="tr">TOTAL BIAYA</td><td class="tr" id="invTotal">Rp 0</td></tr>
@@ -53,56 +57,114 @@
 </div>
 
 <div class="ttd-box">
-  <div id="tKota">—</div><div style="font-weight:bold" id="tJab">—</div>
-  <div class="ruang"></div><div style="font-weight:bold;text-decoration:underline" id="tNama">—</div>
+  <div id="tKota">—</div>
+  <div style="font-weight:bold" id="tJab">—</div>
+  <div class="ruang"></div>
+  <div style="font-weight:bold;text-decoration:underline" id="tNama">—</div>
 </div>
 <div class="no-print"><button class="btnP" onclick="window.print()">Cetak</button></div>
 
 <script>
-const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link";    
+// ── Format tanggal rapi (no alien code) ──
+function formatTglLengkap(tglStr) {
+  if (!tglStr || tglStr === '—') return '—';
+  const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  let tgl;
+  if (typeof tglStr === 'number') {
+    tgl = new Date(tglStr);
+  } else if (typeof tglStr === 'string' && tglStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    const parts = tglStr.split('-');
+    tgl = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  } else {
+    tgl = new Date(tglStr);
+  }
+  if (isNaN(tgl.getTime())) return String(tglStr);
+  return `${String(tgl.getDate()).padStart(2,'0')} ${bulan[tgl.getMonth()]} ${tgl.getFullYear()}`;
+}
+
+const rp = n => (Number(n)||0).toLocaleString('id-ID');
+
+// ── Load kop surat ──
+function loadKop(kopUrl, cb) {
+  const el = document.getElementById('kopEl');
+  
+  if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
+    const img = new Image();
+    img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
+    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Makan Bergizi Gratis (MBG)</p></div>`; cb(); };
+    img.src = 'Kop.png';
+  } else {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { el.innerHTML = `<img src="${kopUrl}" alt="Kop Surat">`; cb(); };
+    img.onerror = () => {
+      const img2 = new Image();
+      img2.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
+      img2.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; cb(); };
+      img2.src = 'Kop.png';
+    };
+    img.src = kopUrl;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
   const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
-  if(!d) return;
+  if(!d) return document.body.innerHTML = '<h3 style="padding:20px">Data kosong. Silakan kembali ke aplikasi dan pilih proyek.</h3>';
+
   const b = d.bundle, items = d.items||[];
-  const rp = n => (Number(n)||0).toLocaleString('id-ID');
-  
-  if(s.kop && s.kop !== 'Kop.png') document.getElementById('kopEl').innerHTML = `<img src="${s.kop}">`;
-  else document.getElementById('kopEl').innerHTML = `<h1 style="text-align:center">YAYASAN MUSLIM ACEH PEDULI</h1>`;
-  
+  const tglCetak = formatTglLengkap(new Date().toISOString().slice(0,10));
+
   document.getElementById('noDoc').innerText = `INV/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
-  document.getElementById('iDapur').innerText = b.namaDapur; document.getElementById('iPIC').innerText = b.pic;
-  document.getElementById('iStatus').innerText = b.status; document.getElementById('iPeriode').innerText = b.tglMulai;
-  
+  document.getElementById('iDapur').innerText = b.namaDapur || '—';
+  document.getElementById('iPIC').innerText = b.pic || '—';
+  document.getElementById('iStatus').innerText = b.status || '—';
+  document.getElementById('iPeriode').innerText = formatTglLengkap(b.tglMulai);
+
   let tot=0, html='';
-  items.forEach((it,i) => { tot+=Number(it.total)||0; html+=`<tr><td class="tc">${i+1}</td><td>${it.namaBarang}</td><td class="tc">${it.qty}</td><td>${it.satuan}</td><td class="tr">Rp ${rp(it.hargaSatuan)}</td><td class="tr">Rp ${rp(it.total)}</td></tr>`; });
+  items.forEach((it,i) => {
+    tot += Number(it.total)||0;
+    html += `<tr>
+      <td class="tc">${i+1}</td>
+      <td>${it.namaBarang}</td>
+      <td class="tc">${it.qty}</td>
+      <td>${it.satuan}</td>
+      <td class="tr">Rp ${rp(it.hargaSatuan)}</td>
+      <td class="tr">Rp ${rp(it.total)}</td>
+    </tr>`;
+  });
   document.getElementById('invBody').innerHTML = html;
-  
+
   document.getElementById('invTotal').innerText = 'Rp ' + rp(b.anggaranAwal);
   document.getElementById('invBayar').innerText = 'Rp ' + rp(b.dibayar);
   document.getElementById('invSisa').innerText = 'Rp ' + rp(b.sisa);
-  
-  // Ambil bank dari transaksi jika ada, jika tidak fallback ke setting
+
+  // Info bank
   document.getElementById('tBank').innerText = b.bankNama || s.bnk || '—';
   document.getElementById('tRek').innerText = b.bankRek || s.rek || '—';
   document.getElementById('tAN').innerText = b.bankAn || s.an || '—';
-  
-  // Riwayat cicilan
-  let riwayat = "";
+
+  // Riwayat cicilan dengan format tanggal rapi
+  let riwayat = '';
   if(b.tglTerbayar && Array.isArray(b.tglTerbayar) && b.tglTerbayar.length > 0){
+    riwayat = '<b>Riwayat Pembayaran:</b><br>';
     b.tglTerbayar.forEach((t, i) => {
-      let dana = b.sumberDana && b.sumberDana[i] ? b.sumberDana[i] : 'Unknown';
-      riwayat += `- Tgl: ${t} (${dana})<br>`;
+      let dana = (b.sumberDana && b.sumberDana[i]) ? b.sumberDana[i] : '-';
+      riwayat += `<div class="riwayat-item">${i+1}. Tanggal: ${formatTglLengkap(t)} &nbsp;|&nbsp; Keterangan: ${dana}</div>`;
     });
-    document.getElementById('riwayatBayar').innerHTML = "Riwayat Cicilan:<br>" + riwayat;
+    document.getElementById('riwayatBayar').innerHTML = riwayat;
   }
-  
-  const tglCetak = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+
+  // TTD
   document.getElementById('tKota').innerText = `${s.lok||'Kota'}, ${tglCetak}`;
   document.getElementById('tJab').innerText = s.jab || 'Koordinator';
-  document.getElementById('tNama').innerText = s.jab || '—';
-  
-  setTimeout(()=>window.print(), 800);
+  document.getElementById('tNama').innerText = s.an || s.jab || '—';
+
+  // Load kop lalu print
+  loadKop(s.kop, () => {
+    setTimeout(() => window.print(), 900);
+  });
 });
 </script>
-</body></html>
+</body>
+</html>
