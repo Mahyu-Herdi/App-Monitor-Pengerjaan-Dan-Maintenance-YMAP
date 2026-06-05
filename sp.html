@@ -29,43 +29,30 @@
     .ttd-box .ruang{ height:55px; border-bottom:1px solid #555; margin:8px 20px; }
     .ttd-box .nama{ font-weight:bold; text-decoration:underline; }
     
-    @media print{ 
-      .no-print{ display:none!important; } 
-    }
-    
-    .no-print.btn-container { position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
-    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; background:#2c3e50; color:#fff; transition: 0.2s;}
-    .btnP:hover{ background:#1a252f; }
-    .btnGrn { background: #27ae60; }
-    .btnGrn:hover { background: #219653; }
-
-    /* STYLE UNTUK POPUP MODAL TTD */
+    /* MODAL TTD */
     .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; justify-content: center; align-items: center; font-family: sans-serif; }
     .modal-box { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     .modal-box h3 { margin: 0 0 15px 0; color: #2c3e50; font-size: 16px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px;}
     .modal-box label { display: block; margin-top: 12px; font-size: 13px; font-weight: bold; color: #444; }
     .modal-box .inp { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; outline: none; }
-    .modal-box .inp:focus { border-color: #548CA8; box-shadow: 0 0 0 2px rgba(84,140,168,0.2); }
+    
+    @media print{ .no-print{ display:none!important; } }
+    .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
+    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; background:#2c3e50; color:#fff; }
   </style>
 </head>
 <body>
 
-<div id="modalPenandatangan" class="modal-overlay no-print">
+<div id="modalPenandatangan" class="modal-overlay">
   <div class="modal-box">
-    <h3>Isi Data Penandatangan (SP)</h3>
-    
+    <h3>Data Penandatangan (SP)</h3>
     <label>Nama (Menyetujui)</label>
-    <input type="text" id="inpNamaTtd" class="inp" placeholder="Nama lengkap">
-    
+    <input type="text" id="inpNamaTtd" class="inp">
     <label>Jabatan</label>
-    <input type="text" id="inpJabTtd" class="inp" placeholder="Cth: Koordinator">
-    
-    <label>Tempat / Lokasi</label>
-    <input type="text" id="inpLokTtd" class="inp" placeholder="Cth: Lhokseumawe">
-    
-    <div style="text-align:center; margin-top:20px;">
-      <button class="btnP btnGrn" style="width:100%; padding:12px;" onclick="terapkanDanCetak()">Terapkan & Cetak</button>
-    </div>
+    <input type="text" id="inpJabTtd" class="inp">
+    <label>Tempat / Kota</label>
+    <input type="text" id="inpLokTtd" class="inp">
+    <button class="btnP" style="width:100%; margin-top:20px; background:#27ae60;" onclick="cetakSekarang()">Terapkan & Cetak</button>
   </div>
 </div>
 
@@ -104,85 +91,40 @@
   </div>
 </div>
 
-<div class="no-print btn-container">
-  <button class="btnP" onclick="bukaModalTtd()">🖨 Cetak Ulang</button>
-</div>
-
 <script>
 let tglCetakGlobal = '';
 
-// ── Fungsi format tanggal yang benar (tanpa "alien code") ──
 function formatTglLengkap(tglStr) {
   if (!tglStr) return '—';
   const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-  let tgl;
-  if (typeof tglStr === 'number') {
-    tgl = new Date(tglStr);
-  } else if (typeof tglStr === 'string' && tglStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
-    const parts = tglStr.split('-');
-    tgl = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-  } else {
-    tgl = new Date(tglStr);
-  }
+  let tgl = new Date(tglStr);
   if (isNaN(tgl.getTime())) return String(tglStr);
   return `${String(tgl.getDate()).padStart(2,'0')} ${bulan[tgl.getMonth()]} ${tgl.getFullYear()}`;
 }
 
 const rp = n => (Number(n)||0).toLocaleString('id-ID');
 
-// ── Load kop surat ──
-function loadKop(kopUrl, cb) {
-  const el = document.getElementById('kopEl');
-  
-  if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
-    const img = new Image();
-    img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
-    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Pembangunan Dan Administrasi (MAP)</p></div>`; cb(); };
-    img.src = 'Kop.png';
-  } else {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => { el.innerHTML = `<img src="${kopUrl}" alt="Kop Surat">`; cb(); };
-    img.onerror = () => {
-      const img2 = new Image();
-      img2.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
-      img2.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; cb(); };
-      img2.src = 'Kop.png';
-    };
-    img.src = kopUrl;
-  }
-}
-
-// ── Logika Modal TTD ──
-function bukaModalTtd() {
-  document.getElementById('modalPenandatangan').style.display = 'flex';
-}
-
-function terapkanDanCetak() {
-  // Ambil nilai dari input modal
-  const nm = document.getElementById('inpNamaTtd').value || '—';
-  const jb = document.getElementById('inpJabTtd').value || '—';
-  const lk = document.getElementById('inpLokTtd').value || 'Kota';
-
-  // Terapkan ke elemen di kertas SP
-  document.getElementById('tNama1').innerText = nm;
-  document.getElementById('tJab').innerText = jb;
-  document.getElementById('tLok1').innerText = lk !== 'Kota' ? lk : '';
-  
-  // Terapkan juga ke baris tempat dan tanggal di sisi PIC
-  document.getElementById('tKota').innerText = `${lk}, ${tglCetakGlobal}`;
-
-  // Sembunyikan modal
+function cetakSekarang() {
+  document.getElementById('tNama1').innerText = document.getElementById('inpNamaTtd').value;
+  document.getElementById('tJab').innerText = document.getElementById('inpJabTtd').value;
+  document.getElementById('tLok1').innerText = document.getElementById('inpLokTtd').value;
+  document.getElementById('tKota').innerText = `${document.getElementById('inpLokTtd').value}, ${tglCetakGlobal}`;
   document.getElementById('modalPenandatangan').style.display = 'none';
-  
-  // Beri jeda sebentar biar teks dirender sebelum print dieksekusi
-  setTimeout(() => window.print(), 400);
+  window.print();
+}
+
+function loadKop(kopUrl) {
+  const el = document.getElementById('kopEl');
+  const img = new Image();
+  img.onload = () => { el.innerHTML = `<img src="${kopUrl || 'Kop.png'}" alt="Kop Surat">`; };
+  img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Pembangunan Dan Administrasi (MAP)</p></div>`; };
+  img.src = kopUrl || 'Kop.png';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
   const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
-  if(!d) return document.body.innerHTML = '<h3 style="padding:20px">Data kosong. Silakan kembali ke aplikasi dan pilih proyek.</h3>';
+  if(!d) return;
 
   const b = d.bundle, items = d.items||[];
   tglCetakGlobal = formatTglLengkap(new Date().toISOString().slice(0,10));
@@ -194,33 +136,21 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('iTglMulai').innerText = formatTglLengkap(b.tglMulai);
   document.getElementById('iTglSelesai').innerText = formatTglLengkap(items[0]?.tglSelesai || '');
 
+  // Default Value form TTD
+  document.getElementById('inpNamaTtd').value = s.an || '';
+  document.getElementById('inpJabTtd').value = s.jab || 'Koordinator';
+  document.getElementById('inpLokTtd').value = s.lok || '';
+
   let tot=0, html='';
   items.forEach((it,i) => {
     tot += Number(it.total)||0;
-    html += `<tr>
-      <td class="tc">${i+1}</td>
-      <td>${it.namaBarang}</td>
-      <td class="tc">${it.qty}</td>
-      <td>${it.satuan}</td>
-      <td class="tr">Rp ${rp(it.hargaSatuan)}</td>
-      <td class="tr">Rp ${rp(it.total)}</td>
-    </tr>`;
+    html += `<tr><td class="tc">${i+1}</td><td>${it.namaBarang}</td><td class="tc">${it.qty}</td><td>${it.satuan}</td><td class="tr">Rp ${rp(it.hargaSatuan)}</td><td class="tr">Rp ${rp(it.total)}</td></tr>`;
   });
   document.getElementById('spBody').innerHTML = html;
   document.getElementById('spTotal').innerText = 'Rp ' + rp(tot);
-
-  // Isi form di modal pakai data default dari setting
-  document.getElementById('inpNamaTtd').value = s.an || s.jab || '';
-  document.getElementById('inpJabTtd').value = s.jab || 'Koordinator';
-  document.getElementById('inpLokTtd').value = s.lok || '';
-  
   document.getElementById('tNamaPIC').innerText = b.pic || '—';
-
-  // Load kop, tapi SEKARANG KITA JANGAN LANGSUNG PRINT
-  // karena modal sedang terbuka dan nunggu diisi.
-  loadKop(s.kop, () => {
-    console.log("Kop selesai diload. Menunggu user isi form TTD.");
-  });
+  
+  loadKop(s.kop);
 });
 </script>
 </body>
