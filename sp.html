@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><title>Surat Pesanan (SP)</title>
+  <style>
+    @page { size: A4; margin: 15mm 18mm; }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#111; background:#fff; line-height:1.5; }
+    .kop{ margin-bottom:12px; border-bottom:3px double #000; padding-bottom:8px; }
+    .kop img{ width:100%; height:auto; display:block; }
+    .doc-title{ text-align:center; margin:14px 0 4px; }
+    .doc-title h2{ font-size:13pt; font-weight:bold; letter-spacing:1px; border-bottom:1.5px solid #000; display:inline-block; padding-bottom:2px; }
+    .doc-no{ text-align:center; font-size:10pt; color:#444; margin-bottom:14px; }
+    .info{ border:1px solid #bbb; border-radius:3px; padding:8px 12px; margin-bottom:14px; background:#fafafa; font-size:10.5pt; }
+    .info table{ border:none; margin:0; width:100%; }
+    .info td{ border:none; padding:2px 8px 2px 0; vertical-align:top; }
+    .info td:nth-child(odd){ font-weight:bold; width:130px; color:#333; }
+    table.items{ width:100%; border-collapse:collapse; margin-bottom:6px; font-size:10.5pt; }
+    table.items th{ background:#2c3e50; color:#fff; padding:7px 8px; text-align:center; border:1px solid #2c3e50; font-size:10pt; }
+    table.items td{ border:1px solid #bbb; padding:6px 8px; vertical-align:middle; }
+    table.items tbody tr:nth-child(even){ background:#f8f8f8; }
+    table.items tfoot td{ border:1px solid #888; padding:7px 8px; background:#eef2f5; font-weight:bold; }
+    .tc{ text-align:center; } .tr{ text-align:right; }
+    .ttd{ display:flex; justify-content:space-between; margin-top:40px; gap:20px; }
+    .ttd-box{ flex:1; text-align:center; font-size:10.5pt; }
+    .ttd-box .ruang{ height:55px; border-bottom:1px solid #555; margin:8px 20px; }
+    .ttd-box .nama{ font-weight:bold; text-decoration:underline; }
+    @media print{ .no-print{ display:none!important; } }
+    .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
+    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; background:#2c3e50; color:#fff; }
+  </style>
+</head>
+<body>
+<div class="kop" id="kopEl"></div>
+<div class="doc-title"><h2>SURAT PESANAN (SP) / PERINTAH KERJA</h2></div>
+<div class="doc-no">Nomor: <b id="noDoc">—</b></div>
+
+<div class="info">
+  <table>
+    <tr><td>Nama Dapur</td><td>: <span id="iDapur"></span></td><td>Tgl. Mulai</td><td>: <span id="iTglMulai"></span></td></tr>
+    <tr><td>PIC / SPPG</td><td>: <span id="iPIC"></span></td><td>Tgl. Selesai</td><td>: <span id="iTglSelesai"></span></td></tr>
+  </table>
+</div>
+<p style="margin-bottom:8px">Diperintahkan untuk melaksanakan pengadaan material/pekerjaan rincian berikut:</p>
+<table class="items">
+  <thead><tr><th style="width:32px">No</th><th>Barang / Pekerjaan</th><th style="width:45px">Qty</th><th style="width:70px">Sat</th><th style="width:115px">Harga</th><th style="width:115px">Total (Rp)</th></tr></thead>
+  <tbody id="spBody"></tbody>
+  <tfoot><tr><td colspan="5" class="tr">ESTIMASI ANGGARAN</td><td class="tr" id="spTotal">Rp 0</td></tr></tfoot>
+</table>
+
+<div class="ttd">
+  <div class="ttd-box">
+    <div>Menyetujui,</div><div style="font-weight:bold" id="tJab">—</div>
+    <div class="ruang"></div><div class="nama" id="tNama1">—</div><div id="tLok1"></div>
+  </div>
+  <div class="ttd-box">
+    <div id="tKota">—</div><div style="font-weight:bold">Pelaksana / PIC</div>
+    <div class="ruang"></div><div class="nama" id="tNamaPIC">—</div><div>PIC Dapur</div>
+  </div>
+</div>
+<div class="no-print"><button class="btnP" onclick="window.print()">🖨 Cetak</button></div>
+
+<script>
+const KOP_SURAT_URL = "https://drive.google.com/file/d/1kxpb7dLKVYZTRgrihvpIJbLjelJ7YpTt/view?usp=drive_link";  
+document.addEventListener('DOMContentLoaded', () => {
+  const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
+  const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
+  if(!d) return document.body.innerHTML = "<h3>Data Kosong</h3>";
+  
+  const b = d.bundle, items = d.items||[];
+  const rp = n => (Number(n)||0).toLocaleString('id-ID');
+  const tglCetak = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+  
+  if(s.kop && s.kop !== 'Kop.png') document.getElementById('kopEl').innerHTML = `<img src="${s.kop}">`;
+  else document.getElementById('kopEl').innerHTML = `<h1 style="text-align:center">YAYASAN MUSLIM ACEH PEDULI</h1>`;
+  
+  document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
+  document.getElementById('iDapur').innerText = b.namaDapur; document.getElementById('iPIC').innerText = b.pic;
+  document.getElementById('iTglMulai').innerText = b.tglMulai; document.getElementById('iTglSelesai').innerText = items[0]?.tglSelesai || '—';
+  
+  let tot=0, html='';
+  items.forEach((it,i) => {
+    tot += Number(it.total)||0;
+    html += `<tr><td class="tc">${i+1}</td><td>${it.namaBarang}</td><td class="tc">${it.qty}</td><td>${it.satuan}</td><td class="tr">Rp ${rp(it.hargaSatuan)}</td><td class="tr">Rp ${rp(it.total)}</td></tr>`;
+  });
+  document.getElementById('spBody').innerHTML = html; document.getElementById('spTotal').innerText = 'Rp ' + rp(tot);
+  
+  document.getElementById('tJab').innerText = s.jab || 'Koordinator'; document.getElementById('tNama1').innerText = s.jab || '—';
+  document.getElementById('tLok1').innerText = s.lok || ''; document.getElementById('tKota').innerText = `${s.lok||'Kota'}, ${tglCetak}`;
+  document.getElementById('tNamaPIC').innerText = b.pic;
+  
+  setTimeout(()=>window.print(), 800);
+});
+</script>
+</body>
+</html
