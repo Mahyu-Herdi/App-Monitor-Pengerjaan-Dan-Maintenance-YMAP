@@ -37,23 +37,22 @@
 <div class="no-print"><button class="btnP" onclick="window.print()">🖨 Cetak</button></div>
 
 <script>
-// Konversi URL Drive ke thumbnail yang lebih kuat menangani berbagai format link Google Drive
+// Konversi URL Drive menggunakan server lh3 Google agar kebal blokir
 function driveImgSrc(url) {
   if (!url) return url;
   
-  // Deteksi ID file dari format URL apa pun
   let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
               url.match(/\/d\/([a-zA-Z0-9_-]+)/) || 
               url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
               
   if (match && match[1]) {
-    // Gunakan jalur uc?export=view yang lebih diizinkan Google untuk embed gambar
-    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    // Menggunakan server lh3.googleusercontent khusus untuk merender gambar public Drive
+    return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
   return url;
 }
 
-// Fungsi proteksi jika backend database me-return format string koma, bukan array
+// Fungsi memisahkan data string koma dari Google Sheets
 function pastikanArray(val) {
   if (!val) return [];
   if (Array.isArray(val)) return val;
@@ -64,7 +63,7 @@ function pastikanArray(val) {
   return [];
 }
 
-// Load kop
+// Load kop surat
 function loadKop(kopUrl, cb) {
   const el = document.getElementById('kopEl');
   if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
@@ -91,9 +90,8 @@ function buatSection(judul, arrRaw, labelPrefix) {
   
   let cards = arr.map((src, i) => {
     const thumb = driveImgSrc(src);
-    // Tambahan referrerpolicy="no-referrer" krusial untuk mencegah gambar diblokir server Google Drive
     return `<div class="photo-card">
-      <img src="${thumb}" referrerpolicy="no-referrer" alt="${labelPrefix} ${i+1}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'150\\'><rect fill=\\'%23f0f0f0\\' width=\\'200\\' height=\\'150\\'/><text x=\\'100\\' y=\\'75\\' text-anchor=\\'middle\\' fill=\\'%23999\\' font-size=\\'12\\'>Gagal Load / Akses Gdrive Ditolak</text></svg>'">
+      <img src="${thumb}" crossorigin="anonymous" referrerpolicy="no-referrer" alt="${labelPrefix} ${i+1}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'150\\'><rect fill=\\'%23f0f0f0\\' width=\\'200\\' height=\\'150\\'/><text x=\\'100\\' y=\\'75\\' text-anchor=\\'middle\\' fill=\\'%23999\\' font-size=\\'12\\'>Gagal Load / Akses Gdrive Ditolak</text></svg>'">
       <div class="caption">${labelPrefix} #${i+1}</div>
     </div>`;
   }).join('');
@@ -131,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('kontenFoto').innerHTML = html;
   
   loadKop(s.kop, () => {
-    // Sedikit memberi waktu lebih panjang agar gambar ke-load secara sempurna sebelum popup print muncul
     setTimeout(() => window.print(), 2000);
   });
 });
