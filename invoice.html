@@ -36,6 +36,7 @@
 <div style="text-align:center;font-size:10pt;margin-bottom:18px">Nomor: <b id="noDoc">—</b></div>
 
 <table class="info">
+  <tr><td>Proyek / Uraian</td><td colspan="3">: <span id="iJudulProyek" style="font-weight:bold;font-size:11pt"></span></td></tr>
   <tr><td>Nama Dapur</td><td>: <span id="iDapur"></span></td><td>PIC</td><td>: <span id="iPIC"></span></td></tr>
   <tr><td>Status</td><td>: <span id="iStatus"></span></td><td>Tgl. Mulai</td><td>: <span id="iPeriode"></span></td></tr>
 </table>
@@ -116,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tglCetak = formatTglLengkap(new Date().toISOString().slice(0,10));
 
   document.getElementById('noDoc').innerText = `INV/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
+  document.getElementById('iJudulProyek').innerText = (b.judulProyek || 'PEKERJAAN UMUM').toUpperCase();
   document.getElementById('iDapur').innerText = b.namaDapur || '—';
   document.getElementById('iPIC').innerText = b.pic || '—';
   document.getElementById('iStatus').innerText = b.status || '—';
