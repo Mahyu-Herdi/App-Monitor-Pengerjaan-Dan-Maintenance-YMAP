@@ -40,6 +40,7 @@
 
 <div class="info">
   <table>
+    <tr><td>Pekerjaan / Uraian</td><td colspan="3">: <span id="iJudulProyek" style="font-weight:bold;font-size:11pt"></span></td></tr>
     <tr><td>Nama Dapur</td><td>: <span id="iDapur"></span></td><td>Tgl. Mulai</td><td>: <span id="iTglMulai"></span></td></tr>
     <tr><td>PIC / SPPG</td><td>: <span id="iPIC"></span></td><td>Tgl. Selesai</td><td>: <span id="iTglSelesai"></span></td></tr>
   </table>
@@ -78,7 +79,6 @@ function formatTglLengkap(tglStr) {
   if (typeof tglStr === 'number') {
     tgl = new Date(tglStr);
   } else if (typeof tglStr === 'string' && tglStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
-    // Format YYYY-MM-DD → parse manual supaya tidak kena timezone issue
     const parts = tglStr.split('-');
     tgl = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
   } else {
@@ -90,33 +90,20 @@ function formatTglLengkap(tglStr) {
 
 const rp = n => (Number(n)||0).toLocaleString('id-ID');
 
-// ── Load kop surat: coba URL dari setting, lalu fallback ke Kop.png lokal ──
+// ── Load kop surat ──
 function loadKop(kopUrl, cb) {
   const el = document.getElementById('kopEl');
   
   if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
-    // Coba load Kop.png dari folder yang sama
     const img = new Image();
-    img.onload = () => {
-      el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`;
-      cb();
-    };
-    img.onerror = () => {
-      // Fallback: teks nama organisasi
-      el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Makan Bergizi Gratis (MBG)</p></div>`;
-      cb();
-    };
+    img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
+    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Makan Bergizi Gratis (MBG)</p></div>`; cb(); };
     img.src = 'Kop.png';
   } else {
-    // Ada URL eksplisit (dari setting)
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      el.innerHTML = `<img src="${kopUrl}" alt="Kop Surat">`;
-      cb();
-    };
+    img.onload = () => { el.innerHTML = `<img src="${kopUrl}" alt="Kop Surat">`; cb(); };
     img.onerror = () => {
-      // Coba Kop.png dulu sebelum fallback teks
       const img2 = new Image();
       img2.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
       img2.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; cb(); };
@@ -132,11 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if(!d) return document.body.innerHTML = '<h3 style="padding:20px">Data kosong. Silakan kembali ke aplikasi dan pilih proyek.</h3>';
 
   const b = d.bundle, items = d.items||[];
-
-  // Isi data dulu
   const tglCetak = formatTglLengkap(new Date().toISOString().slice(0,10));
 
   document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
+  document.getElementById('iJudulProyek').innerText = (b.judulProyek || 'PEKERJAAN UMUM').toUpperCase();
   document.getElementById('iDapur').innerText = b.namaDapur || '—';
   document.getElementById('iPIC').innerText = b.pic || '—';
   document.getElementById('iTglMulai').innerText = formatTglLengkap(b.tglMulai);
@@ -158,12 +144,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('spTotal').innerText = 'Rp ' + rp(tot);
 
   document.getElementById('tJab').innerText = s.jab || 'Koordinator';
-  document.getElementById('tNama1').innerText = s.jab || '—';
+  document.getElementById('tNama1').innerText = s.an || s.jab || '—';
   document.getElementById('tLok1').innerText = s.lok || '';
   document.getElementById('tKota').innerText = `${s.lok||'Kota'}, ${tglCetak}`;
   document.getElementById('tNamaPIC').innerText = b.pic || '—';
 
-  // Load kop surat LALU baru print
   loadKop(s.kop, () => {
     setTimeout(() => window.print(), 900);
   });
