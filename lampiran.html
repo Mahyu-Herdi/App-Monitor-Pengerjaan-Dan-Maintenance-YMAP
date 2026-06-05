@@ -1,116 +1,43 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><title>Lampiran Foto</title>
-  <style>
-    @page { size: A4; margin: 15mm; }
-    *{ box-sizing:border-box; margin:0; padding:0; }
-    body{ font-family: Arial, sans-serif; font-size:10pt; color:#111; }
-    .kop{ margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px; }
-    .kop img{ width:100%; height:auto; display:block; }
-    .kop-fallback{ text-align:center; padding:8px 0; }
-    .kop-fallback h1{ font-size:13pt; font-weight:bold; margin:0; }
-    .header{ margin-bottom:16px; font-weight:bold; padding-bottom:6px; border-bottom:1px solid #000; font-size:10.5pt; }
-    .section-title{ font-size:11pt; font-weight:bold; margin:14px 0 8px; color:#2c3e50; border-left:4px solid #2c3e50; padding-left:8px; }
-    .photo-grid{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
-    .photo-card{ width: calc(33% - 6px); text-align:center; border:1px solid #ccc; padding:5px; }
-    .photo-card img{ width:100%; height:180px; object-fit:cover; }
-    .photo-card .caption{ font-size:8pt; color:#555; margin-top:4px; }
-    .no-foto{ font-style:italic; color:#999; font-size:9pt; padding:8px 0; }
-    .page-break{ page-break-before: always; }
-    @media print{ .no-print{ display:none!important; } }
-    .no-print{ position:fixed; bottom:20px; right:20px; }
-    .btnP{ padding:10px 22px; border:none; border-radius:8px; background:#2c3e50; color:#fff; font-weight:bold; cursor:pointer; font-size:13px; }
-  </style>
+    <meta charset="UTF-8"><title>Lampiran Foto</title>
+    <style>
+        @page { size: A4; margin: 15mm; }
+        body { font-family: Arial, sans-serif; }
+        .header { margin-bottom: 20px; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 10px;}
+        .photo-card { display: inline-block; width: 45%; margin: 2%; text-align: center; border: 1px solid #ccc; padding: 5px; box-sizing: border-box; }
+        .photo-card img { width: 100%; height: 220px; object-fit: contain; }
+    </style>
 </head>
 <body>
-<div class="kop" id="kopEl"></div>
-<div class="header">
-  LAMPIRAN BUKTI FISIK PEKERJAAN &nbsp;|&nbsp; 
-  Dapur: <span id="lblDapur">—</span> &nbsp;|&nbsp; 
-  PIC: <span id="lblPIC">—</span> &nbsp;|&nbsp;
-  No. SP: <span id="lblNo">—</span>
-</div>
-
-<div id="kontenFoto"></div>
-
-<div class="no-print"><button class="btnP" onclick="window.print()">🖨 Cetak</button></div>
+    <div class="header">LAMPIRAN BUKTI FISIK | Dapur: <span id="lblDapur"></span> | PIC: <span id="lblPIC"></span></div>
+    
+    <h3>I. Progress Pekerjaan</h3><div id="gridKerja"></div>
+    <div style="page-break-before: always;"></div>
+    <h3>II. Nota Belanja</h3><div id="gridNota"></div>
 
 <script>
-// Konversi URL Drive ke thumbnail yang bisa tampil di img
-function driveImgSrc(url) {
-  if (!url) return url;
-  const match = url.match(/\/file\/d\/([^\/]+)\//);
-  if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
-  return url;
-}
+    document.addEventListener("DOMContentLoaded", () => {
+        const data = JSON.parse(localStorage.getItem('smm_siap_cetak'));
+        if(!data) return;
 
-// Load kop
-function loadKop(kopUrl, cb) {
-  const el = document.getElementById('kopEl');
-  if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
-    const img = new Image();
-    img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
-    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; cb(); };
-    img.src = 'Kop.png';
-  } else {
-    const img = new Image();
-    img.onload = () => { el.innerHTML = `<img src="${kopUrl}">`; cb(); };
-    img.onerror = () => {
-      const img2 = new Image();
-      img2.onload = () => { el.innerHTML = `<img src="Kop.png">`; cb(); };
-      img2.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; cb(); };
-      img2.src = 'Kop.png';
-    };
-    img.src = kopUrl;
-  }
-}
+        document.getElementById('lblDapur').innerText = data.bundle.namaDapur;
+        document.getElementById('lblPIC').innerText = data.bundle.pic;
 
-function buatSection(judul, arr, labelPrefix) {
-  if (!arr || arr.length === 0) return `<div class="section-title">${judul}</div><p class="no-foto">Tidak ada foto untuk kategori ini.</p>`;
-  let cards = arr.map((src, i) => {
-    const thumb = driveImgSrc(src);
-    return `<div class="photo-card">
-      <img src="${thumb}" alt="${labelPrefix} ${i+1}" onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'150\'><rect fill=\'%23f0f0f0\' width=\'200\' height=\'150\'/><text x=\'100\' y=\'75\' text-anchor=\'middle\' fill=\'%23999\' font-size=\'12\'>Gagal Load</text></svg>'">
-      <div class="caption">${labelPrefix} #${i+1}</div>
-    </div>`;
-  }).join('');
-  return `<div class="section-title">${judul}</div><div class="photo-grid">${cards}</div>`;
-}
+        const imgHtml = (src, title) => `<div class="photo-card"><img src="${src}"><div>${title}</div></div>`;
+        const item = data.items[0];
+        
+        const gKerja = document.getElementById('gridKerja');
+        if(item.fotoKerja?.length) item.fotoKerja.forEach((s,i) => gKerja.innerHTML += imgHtml(s, `Foto Kerja #${i+1}`));
+        else gKerja.innerHTML = "Tidak ada foto kerja.";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const data = JSON.parse(localStorage.getItem('smm_siap_cetak'));
-  const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
-  if (!data || !data.bundle) {
-    document.getElementById('kontenFoto').innerHTML = '<p style="padding:20px">Data kosong. Kembali ke aplikasi dan pilih proyek terlebih dahulu.</p>';
-    return;
-  }
+        const gNota = document.getElementById('gridNota');
+        if(item.fotoNota?.length) item.fotoNota.forEach((s,i) => gNota.innerHTML += imgHtml(s, `Foto Nota #${i+1}`));
+        else gNota.innerHTML = "Tidak ada nota.";
 
-  const b = data.bundle;
-
-  document.getElementById('lblDapur').innerText = b.namaDapur || '—';
-  document.getElementById('lblPIC').innerText = b.pic || '—';
-  document.getElementById('lblNo').innerText = `SP/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
-
-  let html = '';
-
-  // Halaman 1: Progress pekerjaan
-  html += buatSection('I. Foto Kondisi Awal (Sebelum Pekerjaan)', b.fotoAwal, 'Kondisi Awal');
-  html += buatSection('II. Foto Saat Pengerjaan (Progress)', b.fotoSedang, 'Progress');
-  html += buatSection('III. Foto Selesai (Hasil Akhir)', b.fotoSelesai, 'Selesai');
-
-  // Halaman 2: Nota & Kwitansi
-  html += '<div class="page-break"></div>';
-  html += buatSection('IV. Bukti Bon / Nota Belanja', b.fotoBon, 'Bon');
-  html += buatSection('V. Bukti Kwitansi Tukang', b.fotoKwitansi, 'Kwitansi');
-  html += buatSection('VI. Struk Pembayaran', b.fotoStrukBayar, 'Struk');
-
-  document.getElementById('kontenFoto').innerHTML = html;
-
-  loadKop(s.kop, () => {
-    setTimeout(() => window.print(), 1200);
-  });
-});
+        setTimeout(() => window.print(), 800);
+    });
 </script>
 </body>
 </html>
