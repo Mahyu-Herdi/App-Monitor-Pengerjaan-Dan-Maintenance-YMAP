@@ -257,7 +257,7 @@
             <button class="btn" style="padding:0 20px; height:38px;" onclick="clearDateFilter()">Reset Tgl</button>
           </div>
         </div>
-        <p style="font-size:.75rem;color:var(--muted);margin:4px 0 0">💡 Filter mencari data berdasarkan Tgl Mulai Project atau Tgl Pembayaran.</p>
+        <p style="font-size:.75rem;color:var(--muted);margin:4px 0 0">Filter mencari data berdasarkan Tgl Mulai Project atau Tgl Pembayaran.</p>
       </div>
 
       <div class="g3">
@@ -773,6 +773,21 @@ function applyFilter(){
       }
     }
     return true;
+  });
+
+  // LOGIKA SORTING BARU
+  filtered.sort((a, b) => {
+    const isALunas = a.status.includes('Lunas');
+    const isBLunas = b.status.includes('Lunas');
+    
+    // Jika A lunas dan B tidak, A pindah ke bawah (return 1)
+    if (isALunas && !isBLunas) return 1;
+    // Jika A tidak lunas dan B lunas, A pindah ke atas (return -1)
+    if (!isALunas && isBLunas) return -1;
+    
+    // Jika statusnya sama (keduanya lunas atau keduanya belum lunas),
+    // urutkan berdasarkan waktu (terbaru/noUrut besar di atas)
+    return b.noUrut - a.noUrut;
   });
 
   let tA=0,tB=0,tS=0;
