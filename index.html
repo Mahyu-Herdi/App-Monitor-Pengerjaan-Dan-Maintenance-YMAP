@@ -144,6 +144,7 @@
     <form id="frmUsulan" autocomplete="off">
       <div class="g2">
         <div><label>Nama Dapur (Usulan)</label><input type="text" id="uDapur" placeholder="Pilih / ketik nama dapur" required></div>
+        <div><label>Judul Proyek / Uraian</label><input type="text" id="uJudul" placeholder="Misal: Perbaikan Atap & Pengecatan" required></div>
       </div>
       <div class="tbl-wrap" style="margin:20px 0">
         <table id="tblUsulanBarang">
@@ -167,7 +168,7 @@
     <h2><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> Daftar Usulan Pending</h2>
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>No Usulan</th><th>Dapur</th><th>Status</th><th>Aksi</th></tr></thead>
+        <thead><tr><th>No Usulan</th><th>Dapur & Judul Proyek</th><th>Status</th><th>Aksi</th></tr></thead>
         <tbody id="tblUsulanList"></tbody>
       </table>
     </div>
@@ -260,7 +261,7 @@
 
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>No/Tgl</th><th>Dapur/PIC</th><th>Anggaran</th><th>Sisa</th><th>Status</th><th>Aksi Proyek</th></tr></thead>
+        <thead><tr><th>No/Tgl</th><th>Judul & Dapur/PIC</th><th>Anggaran</th><th>Sisa</th><th>Status</th><th>Aksi Proyek</th></tr></thead>
         <tbody id="tblMonitor"></tbody>
       </table>
     </div>
@@ -271,6 +272,7 @@
     <h3>Edit Proyek / Revisi Item</h3>
     <form id="frmEditProyek" autocomplete="off">
       <div class="g2">
+        <div style="grid-column:1/-1"><label>Judul Proyek / Uraian</label><input type="text" id="epJudul" required></div>
         <div><label>Nama Dapur</label><input type="text" id="epDapur" required></div>
         <div><label>Nama PIC</label><input type="text" id="epPIC" required></div>
       </div>
@@ -383,12 +385,12 @@
 </nav>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyHcSwtwKB4tVCZXptxEMh7ubyMD5q2DmtfFkeNGNv9BZH4RcXpzlFIGwavQaXNBowQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwZgXiYr2xEadbqEUnUztAEgtnTF8HexOHG5_JDBGRpkr5Cy-MJIEM5PyZS59hwznE7/exec";
 // ── STATE ──
 let dbM = JSON.parse(localStorage.getItem('db_monitor') || '[]');
 let dbP = JSON.parse(localStorage.getItem('db_pesanan') || '[]');
 let dbS = JSON.parse(localStorage.getItem('smm_setting') || '{}');
-let dbRekening = JSON.parse(localStorage.getItem('db_rekening') || '[]'); // ← INI DIPERBARUI AGAR TERSIMPAN DI MEMORI
+let dbRekening = JSON.parse(localStorage.getItem('db_rekening') || '[]'); 
 let activeNoUrut = null;
 
 // ── UTILITIES ──
@@ -507,19 +509,28 @@ function hapusBaris(btn){
 document.getElementById('frmUsulan').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = document.getElementById('btnSimpanUsulan'); btn.disabled=true; btn.innerText='Menyimpan...';
+  
   const dapur = document.getElementById('uDapur').value.trim();
+  const judulProyek = document.getElementById('uJudul').value.trim();
   const noUrut = Date.now();
+  
   let items = [];
   document.querySelectorAll('#bodyUsulanBarang tr').forEach(tr => {
     items.push({ namaBarang:tr.querySelector('.nb').value.trim(), qty:parseFloat(tr.querySelector('.qty').value)||1, satuan:tr.querySelector('.sat').value.trim() });
   });
-  const rowM = { noUrut, namaDapur:dapur, tglMulai:'', pic:'', anggaranAwal:0, dibayar:0, sisa:0, status:'Pending Usulan', tglTerbayar:[], sumberDana:[], fotoStrukBayar:[], fotoAwal:[], fotoSedang:[], fotoSelesai:[], fotoBon:[], fotoKwitansi:[] };
+  
+  // Masukkan judulProyek ke object dbM lokal
+  const rowM = { noUrut, judulProyek, namaDapur:dapur, tglMulai:'', pic:'', anggaranAwal:0, dibayar:0, sisa:0, status:'Pending Usulan', tglTerbayar:[], sumberDana:[], fotoStrukBayar:[], fotoAwal:[], fotoSedang:[], fotoSelesai:[], fotoBon:[], fotoKwitansi:[] };
   dbM.push(rowM);
+  
   items.forEach(it => dbP.push({ noUrut, tglMulai:'', tglSelesai:'', namaDapur:dapur, pic:'', ...it, hargaSatuan:0, total:0 }));
+  
   localStorage.setItem('db_monitor', JSON.stringify(dbM));
   localStorage.setItem('db_pesanan', JSON.stringify(dbP));
+  
   if(navigator.onLine){
-    try{ await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'simpanUsulan',noUrut,namaDapur:dapur,items})}); }catch(err){}
+    // Kirim judulProyek juga ke server!
+    try{ await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'simpanUsulan',noUrut,namaDapur:dapur,judulProyek,items})}); }catch(err){}
   }
   document.getElementById('frmUsulan').reset();
   document.getElementById('bodyUsulanBarang').innerHTML = htmlBarisUsulan();
@@ -533,10 +544,14 @@ function renderUsulanList(){
   const tb = document.getElementById('tblUsulanList'); tb.innerHTML='';
   const pendings = dbM.filter(x => x.status==='Pending Usulan');
   if(!pendings.length){ tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:#999">Tidak ada usulan pending.</td></tr>'; return; }
+  
   pendings.forEach(r => {
     const no = String(r.noUrut).slice(-4);
+    const judul = r.judulProyek || 'Pekerjaan Umum'; // Ambil langsung dari r.judulProyek
     tb.innerHTML += `<tr>
-      <td>#${no}</td><td>${r.namaDapur}</td><td><span class="badge bdg-pn">${r.status}</span></td>
+      <td>#${no}</td>
+      <td><b style="color:var(--blue)">${judul}</b><br><small>${r.namaDapur}</small></td>
+      <td><span class="badge bdg-pn">${r.status}</span></td>
       <td><button class="btn org" style="padding:6px 12px;font-size:0.8rem" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button></td>
     </tr>`;
   });
@@ -625,21 +640,24 @@ document.getElementById('frmProsesSP').addEventListener('submit', async e => {
   
   const idx = dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
   const origDapur = idx > -1 ? dbM[idx].namaDapur : '';
+  const origJudul = idx > -1 ? dbM[idx].judulProyek : '';
+  
   if(idx>-1){
     dbM[idx].pic=pic; dbM[idx].tglMulai=tM; dbM[idx].anggaranAwal=totalAnggaran; dbM[idx].sisa=totalAnggaran;
     dbM[idx].status='Dalam Pengerjaan';
   }
   
   dbP = dbP.filter(x=>String(x.noUrut)!==String(activeNoUrut));
-  items.forEach(it => dbP.push({noUrut:activeNoUrut,tglMulai:tM,tglSelesai:tS,namaDapur:dbM[idx].namaDapur,pic,...it}));
+  items.forEach(it => dbP.push({noUrut:activeNoUrut,tglMulai:tM,tglSelesai:tS,namaDapur:origDapur,pic,...it}));
   
+  // Kalau ada item yang di-uncheck, pisahkan jadi usulan baru tapi copy judulProyek-nya
   if (uncheckedItems.length > 0) {
     const newNoUrut = Date.now() + Math.floor(Math.random() * 1000);
-    const rowM = { noUrut: newNoUrut, namaDapur:origDapur, tglMulai:'', pic:'', anggaranAwal:0, dibayar:0, sisa:0, status:'Pending Usulan', tglTerbayar:[], sumberDana:[], fotoStrukBayar:[], fotoAwal:[], fotoSedang:[], fotoSelesai:[], fotoBon:[], fotoKwitansi:[] };
+    const rowM = { noUrut: newNoUrut, judulProyek:origJudul, namaDapur:origDapur, tglMulai:'', pic:'', anggaranAwal:0, dibayar:0, sisa:0, status:'Pending Usulan', tglTerbayar:[], sumberDana:[], fotoStrukBayar:[], fotoAwal:[], fotoSedang:[], fotoSelesai:[], fotoBon:[], fotoKwitansi:[] };
     dbM.push(rowM);
     uncheckedItems.forEach(it => dbP.push({ noUrut: newNoUrut, tglMulai:'', tglSelesai:'', namaDapur:origDapur, pic:'', ...it }));
     if(navigator.onLine){
-      fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'simpanUsulan',noUrut:newNoUrut,namaDapur:origDapur,items:uncheckedItems})}).catch(()=>{});
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'simpanUsulan',noUrut:newNoUrut,namaDapur:origDapur,judulProyek:origJudul,items:uncheckedItems})}).catch(()=>{});
     }
   }
 
@@ -653,7 +671,10 @@ document.getElementById('frmProsesSP').addEventListener('submit', async e => {
   document.getElementById('frmProsesSP').reset();
   closeSP(); btn.disabled=false;
   btn.innerText='Simpan & Cetak SP';
-  localStorage.setItem('smm_siap_cetak', JSON.stringify({bundle:dbM[idx],items:dbP.filter(x=>String(x.noUrut)===String(activeNoUrut))}));
+  
+  // Selipkan bundle cetak utuh, judulProyek otomatis ikut dari dbM[idx]
+  localStorage.setItem('smm_siap_cetak', JSON.stringify({bundle: dbM[idx], items: dbP.filter(x=>String(x.noUrut)===String(activeNoUrut))}));
+  
   buka('sp'); showSec('monitor');
 });
 
@@ -720,9 +741,10 @@ function applyFilter(){
 
   filtered.forEach(r => {
     const bdg=r.status.includes('Lunas')?'bdg-ln':r.status.includes('Cicil')?'bdg-cc':'bdg-pg';
+    const judul = r.judulProyek || 'Pekerjaan Umum'; // Ambil langsung dari object
     tb.innerHTML += `<tr>
       <td>#${String(r.noUrut).slice(-4)}<br><small>${formatTgl(r.tglMulai)}</small></td>
-      <td><b>${r.namaDapur}</b><br><small>${r.pic}</small></td>
+      <td><b style="color:var(--blue);font-size:.95rem">${judul}</b><br><b>${r.namaDapur}</b><br><small>PIC: ${r.pic}</small></td>
       <td>Rp ${rp(r.anggaranAwal)}</td>
       <td style="color:var(--red);font-weight:bold">Rp ${rp(r.sisa)}</td>
       <td><span class="badge ${bdg}">${r.status}</span></td>
@@ -738,7 +760,7 @@ function applyFilter(){
   });
 
   if(filtered.length===1){
-    localStorage.setItem('smm_siap_cetak',JSON.stringify({bundle:filtered[0],items:dbP.filter(x=>String(x.noUrut)===String(filtered[0].noUrut))}));
+    localStorage.setItem('smm_siap_cetak',JSON.stringify({bundle: filtered[0], items: dbP.filter(x=>String(x.noUrut)===String(filtered[0].noUrut))}));
     document.getElementById('pnlCetak').style.display='flex';
   } else { document.getElementById('pnlCetak').style.display='none'; }
 }
@@ -884,8 +906,12 @@ function bukaEditProyek(noUrut){
   activeNoUrut=noUrut;
   const p=dbM.find(x=>String(x.noUrut)===String(noUrut));
   const items=dbP.filter(x=>String(x.noUrut)===String(noUrut));
+  
+  // Ambil judul untuk diedit
+  document.getElementById('epJudul').value = p.judulProyek || '';
   document.getElementById('epDapur').value=p.namaDapur;
   document.getElementById('epPIC').value=p.pic;
+  
   let html=''; items.forEach(it=>html+=htmlBarisEdit(it.namaBarang,it.qty,it.satuan,it.hargaSatuan,it.total));
   document.getElementById('bodyEpBarang').innerHTML=html;
   document.getElementById('ovEditProyek').style.display='block'; document.getElementById('mdEditProyek').style.display='block';
@@ -895,6 +921,7 @@ function closeEditProyek(){ document.getElementById('ovEditProyek').style.displa
 document.getElementById('frmEditProyek').addEventListener('submit', async e => {
   e.preventDefault();
   const btn=document.getElementById('btnSimpanEp'); btn.disabled=true; btn.innerText='Menyimpan...';
+
   let totalAng=0, items=[];
   document.querySelectorAll('#bodyEpBarang tr').forEach(tr=>{
     const q=parseFloat(tr.querySelector('.qty').value), h=unRp(tr.querySelector('.hrg').value), t=q*h; totalAng+=t;
@@ -902,20 +929,25 @@ document.getElementById('frmEditProyek').addEventListener('submit', async e => {
   });
   const idx=dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
   const p=dbM[idx];
-  p.namaDapur=document.getElementById('epDapur').value; p.pic=document.getElementById('epPIC').value;
+  
+  p.judulProyek = document.getElementById('epJudul').value.trim(); // Simpan perubahan judul
+  p.namaDapur=document.getElementById('epDapur').value; 
+  p.pic=document.getElementById('epPIC').value;
   p.anggaranAwal=totalAng; p.sisa=totalAng-p.dibayar;
   if(p.sisa<=0&&p.dibayar>0){p.sisa=0;p.status='Lunas / Selesai';}else if(p.dibayar>0){p.status='Belum Lunas / Dicicil';}else{p.status='Dalam Pengerjaan';}
+  
   dbP=dbP.filter(x=>String(x.noUrut)!==String(activeNoUrut));
   items.forEach(it=>dbP.push({noUrut:activeNoUrut,tglMulai:p.tglMulai,tglSelesai:'',namaDapur:p.namaDapur,pic:p.pic,...it}));
+  
   localStorage.setItem('db_monitor',JSON.stringify(dbM)); localStorage.setItem('db_pesanan',JSON.stringify(dbP));
   if(navigator.onLine){
-    fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'updateProyek',noUrut:activeNoUrut,namaDapur:p.namaDapur,pic:p.pic,tglMulai:p.tglMulai,anggaranAwal:p.anggaranAwal,dibayar:p.dibayar,sisa:p.sisa,status:p.status,items})}).catch(()=>{});
+    fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'updateProyek',noUrut:activeNoUrut,namaDapur:p.namaDapur,pic:p.pic,tglMulai:p.tglMulai,anggaranAwal:p.anggaranAwal,dibayar:p.dibayar,sisa:p.sisa,status:p.status,judulProyek:p.judulProyek,items})}).catch(()=>{});
   }
   closeEditProyek(); applyFilter(); showAlert('Perubahan Proyek Berhasil Disimpan!','success');
   btn.disabled=false; btn.innerText='Simpan Perubahan';
 });
 
-// ==================== PENGATURAN (SUDAH DIPERBARUI) ====================
+// ==================== PENGATURAN ====================
 function loadSetting(){
   document.getElementById('sLokasi').value=dbS.lok||'';
   document.getElementById('sJabatan').value=dbS.jab||'';
@@ -983,7 +1015,7 @@ async function saveSetting(){
   showAlert('Pengaturan tersimpan!','success');
 }
 
-// ==================== SINKRONISASI (SUDAH DIPERBARUI) ====================
+// ==================== SINKRONISASI ====================
 async function syncCloud(silent=false){
   if(!navigator.onLine){ if(!silent) showAlert('Tidak ada koneksi internet!','error'); return; }
   if(!silent) showAlert('Sedang Sinkronisasi...','info');
@@ -995,7 +1027,6 @@ async function syncCloud(silent=false){
     if(data.pesanan) dbP=data.pesanan;
     if(data.pengaturan) dbS=data.pengaturan;
     
-    // Simpan ke dbRekening lalu masukkan ke LocalStorage agar langsung dibaca saat web dimuat ulang
     if(data.daftarRekening) {
       dbRekening = data.daftarRekening;
       localStorage.setItem('db_rekening', JSON.stringify(dbRekening));
