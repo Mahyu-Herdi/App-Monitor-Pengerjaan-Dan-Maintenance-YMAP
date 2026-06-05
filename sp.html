@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const b = d.bundle, items = d.items||[];
   const tglCetak = formatTglLengkap(new Date().toISOString().slice(0,10));
 
-  document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
+  document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MAP/${new Date().getFullYear()}`;
   document.getElementById('iJudulProyek').innerText = (b.judulProyek || 'PEKERJAAN UMUM').toUpperCase();
   document.getElementById('iDapur').innerText = b.namaDapur || '—';
   document.getElementById('iPIC').innerText = b.pic || '—';
