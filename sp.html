@@ -28,12 +28,47 @@
     .ttd-box{ flex:1; text-align:center; font-size:10.5pt; }
     .ttd-box .ruang{ height:55px; border-bottom:1px solid #555; margin:8px 20px; }
     .ttd-box .nama{ font-weight:bold; text-decoration:underline; }
-    @media print{ .no-print{ display:none!important; } }
-    .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
-    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; background:#2c3e50; color:#fff; }
+    
+    @media print{ 
+      .no-print{ display:none!important; } 
+    }
+    
+    .no-print.btn-container { position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
+    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; background:#2c3e50; color:#fff; transition: 0.2s;}
+    .btnP:hover{ background:#1a252f; }
+    .btnGrn { background: #27ae60; }
+    .btnGrn:hover { background: #219653; }
+
+    /* STYLE UNTUK POPUP MODAL TTD */
+    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; justify-content: center; align-items: center; font-family: sans-serif; }
+    .modal-box { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .modal-box h3 { margin: 0 0 15px 0; color: #2c3e50; font-size: 16px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px;}
+    .modal-box label { display: block; margin-top: 12px; font-size: 13px; font-weight: bold; color: #444; }
+    .modal-box .inp { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; outline: none; }
+    .modal-box .inp:focus { border-color: #548CA8; box-shadow: 0 0 0 2px rgba(84,140,168,0.2); }
   </style>
 </head>
 <body>
+
+<div id="modalPenandatangan" class="modal-overlay no-print">
+  <div class="modal-box">
+    <h3>Isi Data Penandatangan (SP)</h3>
+    
+    <label>Nama (Menyetujui)</label>
+    <input type="text" id="inpNamaTtd" class="inp" placeholder="Nama lengkap">
+    
+    <label>Jabatan</label>
+    <input type="text" id="inpJabTtd" class="inp" placeholder="Cth: Koordinator">
+    
+    <label>Tempat / Lokasi</label>
+    <input type="text" id="inpLokTtd" class="inp" placeholder="Cth: Lhokseumawe">
+    
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btnP btnGrn" style="width:100%; padding:12px;" onclick="terapkanDanCetak()">Terapkan & Cetak</button>
+    </div>
+  </div>
+</div>
+
 <div class="kop" id="kopEl"></div>
 <div class="doc-title"><h2>SURAT PESANAN (SP) / PERINTAH KERJA</h2></div>
 <div class="doc-no">Nomor: <b id="noDoc">—</b></div>
@@ -68,9 +103,14 @@
     <div>PIC Dapur</div>
   </div>
 </div>
-<div class="no-print"><button class="btnP" onclick="window.print()">🖨 Cetak</button></div>
+
+<div class="no-print btn-container">
+  <button class="btnP" onclick="bukaModalTtd()">🖨 Cetak Ulang</button>
+</div>
 
 <script>
+let tglCetakGlobal = '';
+
 // ── Fungsi format tanggal yang benar (tanpa "alien code") ──
 function formatTglLengkap(tglStr) {
   if (!tglStr) return '—';
@@ -113,13 +153,39 @@ function loadKop(kopUrl, cb) {
   }
 }
 
+// ── Logika Modal TTD ──
+function bukaModalTtd() {
+  document.getElementById('modalPenandatangan').style.display = 'flex';
+}
+
+function terapkanDanCetak() {
+  // Ambil nilai dari input modal
+  const nm = document.getElementById('inpNamaTtd').value || '—';
+  const jb = document.getElementById('inpJabTtd').value || '—';
+  const lk = document.getElementById('inpLokTtd').value || 'Kota';
+
+  // Terapkan ke elemen di kertas SP
+  document.getElementById('tNama1').innerText = nm;
+  document.getElementById('tJab').innerText = jb;
+  document.getElementById('tLok1').innerText = lk !== 'Kota' ? lk : '';
+  
+  // Terapkan juga ke baris tempat dan tanggal di sisi PIC
+  document.getElementById('tKota').innerText = `${lk}, ${tglCetakGlobal}`;
+
+  // Sembunyikan modal
+  document.getElementById('modalPenandatangan').style.display = 'none';
+  
+  // Beri jeda sebentar biar teks dirender sebelum print dieksekusi
+  setTimeout(() => window.print(), 400);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
   const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
   if(!d) return document.body.innerHTML = '<h3 style="padding:20px">Data kosong. Silakan kembali ke aplikasi dan pilih proyek.</h3>';
 
   const b = d.bundle, items = d.items||[];
-  const tglCetak = formatTglLengkap(new Date().toISOString().slice(0,10));
+  tglCetakGlobal = formatTglLengkap(new Date().toISOString().slice(0,10));
 
   document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MAP/${new Date().getFullYear()}`;
   document.getElementById('iJudulProyek').innerText = (b.judulProyek || 'PEKERJAAN UMUM').toUpperCase();
@@ -143,14 +209,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('spBody').innerHTML = html;
   document.getElementById('spTotal').innerText = 'Rp ' + rp(tot);
 
-  document.getElementById('tJab').innerText = s.jab || 'Koordinator';
-  document.getElementById('tNama1').innerText = s.an || s.jab || '—';
-  document.getElementById('tLok1').innerText = s.lok || '';
-  document.getElementById('tKota').innerText = `${s.lok||'Kota'}, ${tglCetak}`;
+  // Isi form di modal pakai data default dari setting
+  document.getElementById('inpNamaTtd').value = s.an || s.jab || '';
+  document.getElementById('inpJabTtd').value = s.jab || 'Koordinator';
+  document.getElementById('inpLokTtd').value = s.lok || '';
+  
   document.getElementById('tNamaPIC').innerText = b.pic || '—';
 
+  // Load kop, tapi SEKARANG KITA JANGAN LANGSUNG PRINT
+  // karena modal sedang terbuka dan nunggu diisi.
   loadKop(s.kop, () => {
-    setTimeout(() => window.print(), 900);
+    console.log("Kop selesai diload. Menunggu user isi form TTD.");
   });
 });
 </script>
