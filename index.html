@@ -606,7 +606,7 @@ function bukaProsesSP(noUrut){
       <td><input type="number" class="qty" value="${it.qty}" min="1" oninput="hitungTr(this); hitungGrandTotal()" style="width:55px"></td>
       <td><input type="text" class="sat" value="${it.satuan}" style="min-width:60px"></td>
       <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:110px"></td>
-      <td><input type="text" class="tot" placeholder="0" readonly style="padding:8px;font-size:0.95rem;margin:0;background:#f0ede6;min-width:90px"></td>
+      <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:90px"></td>
     </tr>`;
   });
   document.getElementById('bodySpBarang').innerHTML = html;
@@ -623,7 +623,7 @@ function tambahBarisSP(){
     <td><input type="number" class="qty" value="1" min="1" oninput="hitungTr(this); hitungGrandTotal()" style="width:55px"></td>
     <td><input type="text" class="sat" placeholder="Satuan" style="min-width:60px"></td>
     <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:110px"></td>
-    <td><input type="text" class="tot" placeholder="0" readonly style="padding:8px;font-size:0.95rem;margin:0;background:#f0ede6;min-width:90px"></td>
+    <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:90px"></td>
   </tr>`;
   document.getElementById('bodySpBarang').insertAdjacentHTML('beforeend', html);
 }
@@ -633,6 +633,13 @@ function hitungTr(el){
   const q = parseFloat(tr.querySelector('.qty').value)||0;
   const h = unRp(tr.querySelector('.hrg').value);
   tr.querySelector('.tot').value = (q*h).toLocaleString('id-ID');
+}
+
+function hitungUnitFromTotal(el) {
+  const tr = el.closest('tr');
+  const q = parseFloat(tr.querySelector('.qty').value)||1;
+  const total = unRp(tr.querySelector('.tot').value);
+  tr.querySelector('.hrg').value = rp(total / q);
 }
 
 function hitungGrandTotal(){
@@ -1031,7 +1038,7 @@ function htmlBarisEdit(nb='',q=1,sat='',hrg=0,tot=0){
     <td><input type="number" class="qty" value="${q}" min="1" required></td>
     <td><input type="text" class="sat" value="${sat}" required></td>
     <td><input type="text" class="hrg" value="${rp(hrg)}" oninput="fmtRp(this); hitungTr(this)" required></td>
-    <td><input type="text" class="tot" value="${rp(tot)}" readonly style="background:#f5f5f5"></td>
+    <td><input type="text" class="tot" value="${rp(tot)}" oninput="fmtRp(this); hitungUnitFromTotal(this)" style="min-width:90px"></td>
     <td><button type="button" class="btn red" style="padding:8px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:18px;height:18px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
   </tr>`;
 }
