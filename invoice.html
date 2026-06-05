@@ -92,7 +92,7 @@ function loadKop(kopUrl, cb) {
   if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
     const img = new Image();
     img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
-    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Makan Bergizi Gratis (MBG)</p></div>`; cb(); };
+    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Pembangunan Dan Pusat Admininistrasi (MAP)</p></div>`; cb(); };
     img.src = 'Kop.png';
   } else {
     const img = new Image();
