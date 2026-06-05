@@ -8,7 +8,8 @@
   <meta name="theme-color" content="#e8e4d9">
   <style>
     :root {
-      --bg: #e8e4d9; --txt: #4a4a4a; --muted: #8c8c8c;
+      --bg: #e8e4d9;
+      --txt: #4a4a4a; --muted: #8c8c8c;
       --blue: #548CA8; --green: #609966; --red: #d96c6c;
       --sh-out: 8px 8px 16px #d1cdc0, -8px -8px 16px #fff;
       --sh-out-sm: 4px 4px 8px #d1cdc0, -4px -4px 8px #fff;
@@ -115,7 +116,6 @@
 </head>
 <body>
 
-<!-- ALERT MODAL -->
 <div id="ovAlert" class="overlay" style="z-index:10000"></div>
 <div id="mdAlert" class="modal" style="z-index:10001;max-width:340px">
   <div style="display:flex;justify-content:center;margin-bottom:15px" id="mdIcon"></div>
@@ -123,7 +123,6 @@
   <button class="btn full" style="margin-top:0" onclick="closeAlert()">Mengerti</button>
 </div>
 
-<!-- FOTO POPUP OVERLAY -->
 <div class="overlay-foto" id="ovFoto" onclick="closeFotoPopup(event)">
   <button class="close-btn" onclick="closeFotoPopup(null,true)">✕</button>
   <img id="popupFotoImg" src="" alt="Foto">
@@ -139,7 +138,6 @@
     <img src="icon.png" alt="Logo">
   </div>
 
-  <!-- FORM USULAN -->
   <div id="sec-input" class="card app-sec">
     <h2><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Form Pengajuan Usulan</h2>
     <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px">Masukkan usulan kebutuhan barang/jasa dapur. PIC dan Harga akan diisi saat pencetakan SP.</p>
@@ -165,7 +163,6 @@
     </form>
   </div>
 
-  <!-- DAFTAR USULAN -->
   <div id="sec-usulan" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> Daftar Usulan Pending</h2>
     <div class="tbl-wrap">
@@ -176,7 +173,6 @@
     </div>
   </div>
 
-  <!-- ========== MODAL PROSES SP — LEBIH LEBAR ========== -->
   <div id="ovSP" class="overlay"></div>
   <div id="mdSP" class="modal">
     <h3>Tetapkan SP & Harga</h3>
@@ -216,7 +212,6 @@
     </form>
   </div>
 
-  <!-- DASHBOARD MONITORING -->
   <div id="sec-monitor" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M5 19.248V4h14v15.248l-2.5-1.5-2.5 1.5-2.5-1.5-2.5 1.5-1.5-1zM17 6H7v2h10V6zm0 4H7v2h10v-2zm-4 4H7v2h6v-2z"/></svg> Dashboard Monitoring Proyek</h2>
     <div class="g3" style="margin-bottom:25px">
@@ -226,7 +221,6 @@
     </div>
     
     <div class="card" style="box-shadow:var(--sh-in);background:transparent;margin-bottom:20px">
-      <!-- Filter Tanggal BARU - flexible range atau 1 hari -->
       <div style="margin-bottom:10px">
         <label style="margin-bottom:8px;font-size:.85rem;color:var(--blue);font-weight:bold">🗓️ Filter Tanggal</label>
         <div class="date-filter-row">
@@ -246,7 +240,6 @@
         <p style="font-size:.75rem;color:var(--muted);margin:4px 0 0">💡 Isi satu kolom saja untuk cari 1 hari, atau isi keduanya untuk rentang tanggal.</p>
       </div>
 
-      <!-- Filter lainnya -->
       <div class="g3">
         <div><label>Status</label><select id="flStatus"><option value="">Semua</option><option>Dalam Pengerjaan</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
         <div><label>PIC</label><select id="flPIC"><option value="">Semua PIC</option></select></div>
@@ -273,7 +266,6 @@
     </div>
   </div>
 
-  <!-- MODAL EDIT PROYEK -->
   <div id="ovEditProyek" class="overlay"></div>
   <div id="mdEditProyek" class="modal" style="max-width:700px">
     <h3>Edit Proyek / Revisi Item</h3>
@@ -296,7 +288,6 @@
     </form>
   </div>
 
-  <!-- MODAL UPLOAD VALIDASI -->
   <div id="ovValidasi" class="overlay"></div>
   <div id="mdValidasi" class="modal">
     <h3>Upload Kelengkapan Dokumen</h3>
@@ -314,7 +305,6 @@
     </form>
   </div>
 
-  <!-- MODAL CATAT BAYAR -->
   <div id="ovBayar" class="overlay"></div>
   <div id="mdBayar" class="modal">
     <h3>CATAT PEMBAYARAN</h3>
@@ -338,7 +328,6 @@
     </form>
   </div>
   
-  <!-- MODAL RIWAYAT & GALERI — dengan popup foto -->
   <div id="ovLihatDokumen" class="overlay"></div>
   <div id="mdLihatDokumen" class="modal" style="max-width:650px">
     <h3>Riwayat & Galeri Proyek</h3>
@@ -346,7 +335,6 @@
     <button type="button" class="btn red full" onclick="closeLihatDokumen()">Tutup Layar</button>
   </div>
 
-  <!-- PENGATURAN -->
   <div id="sec-setting" class="card app-sec" style="display:none">
     <h2>
       <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:currentColor;flex-shrink:0">
@@ -358,7 +346,7 @@
       <div style="grid-column:1/-1">
         <label>Atas Nama Rekening (pilih dari daftar atau ketik)</label>
         <select id="sAtasNamaDropdown" onchange="pilihRekening(this.value)">
-          <option value="">— Pilih Atas Nama —</option>
+         <option value="">— Pilih Atas Nama —</option>
         </select>
       </div>
       <div><label>Lokasi / Kota TTD</label><input type="text" id="sLokasi"></div>
@@ -371,9 +359,7 @@
     <button class="btn grn full" id="btnSimpanSetting" onclick="saveSetting()">Simpan & Sync Pengaturan</button>
   </div>
 
-</div><!-- /container -->
-
-<nav class="nav">
+</div><nav class="nav">
   <div class="ni on" id="ni-input" onclick="showSec('input')">
     <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>
     <span>Usulan</span>
@@ -397,35 +383,34 @@
 </nav>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxuRDPAwbONT4PBCAoLiqPVIVWbE-RCy5fuKTHMzC1TdGMk4kbF8g65ZGZRXvwYAAvQ/exec";
-
+const API_URL = "https://script.google.com/macros/s/AKfycbxUo7OB5N2qhogJiR9vnu_WH78EkXTqzkmQ56v6CBhu-NjyYT5d2BTMPbjwom6CJ7v0/exec";
 // ── STATE ──
 let dbM = JSON.parse(localStorage.getItem('db_monitor') || '[]');
 let dbP = JSON.parse(localStorage.getItem('db_pesanan') || '[]');
 let dbS = JSON.parse(localStorage.getItem('smm_setting') || '{}');
-let dbRekening = []; // daftar rekening dari Pengaturan sheet (nanti dari sync)
+let dbRekening = [];
+// daftar rekening dari Pengaturan sheet (nanti dari sync)
 let activeNoUrut = null;
-
 // ── UTILITIES ──
 function formatTgl(tglStr) {
   if (!tglStr) return '-';
-  // Tangani berbagai format input (Date object serialized, string YYYY-MM-DD, dll)
+// Tangani berbagai format input (Date object serialized, string YYYY-MM-DD, dll)
   let tgl;
-  if (typeof tglStr === 'number' || (typeof tglStr === 'string' && tglStr.match(/^\d+$/))) {
+if (typeof tglStr === 'number' || (typeof tglStr === 'string' && tglStr.match(/^\d+$/))) {
     // Epoch number dari Sheets
     tgl = new Date(Number(tglStr));
-  } else {
+} else {
     tgl = new Date(tglStr);
   }
   if (isNaN(tgl.getTime())) return String(tglStr);
-  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+const options = { day: '2-digit', month: 'long', year: 'numeric' };
   return tgl.toLocaleDateString('id-ID', options);
 }
 
 // Format tanggal singkat utk cetak surat (dd MMMM yyyy)
 function formatTglCetak(tglStr) {
   if (!tglStr) return '—';
-  let tgl = new Date(tglStr);
+let tgl = new Date(tglStr);
   if (isNaN(tgl.getTime())) return String(tglStr);
   const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
   return `${String(tgl.getDate()).padStart(2,'0')} ${bulan[tgl.getMonth()]} ${tgl.getFullYear()}`;
@@ -434,7 +419,6 @@ function formatTglCetak(tglStr) {
 const rp = n => (Number(n)||0).toLocaleString('id-ID');
 const unRp = s => parseFloat(String(s).replace(/\./g,'').replace(',','.')) || 0;
 const fmtRp = el => { let v = String(el.value).replace(/[^\d]/g,''); el.value = v ? parseInt(v).toLocaleString('id-ID') : ''; };
-
 // ── ALERT ──
 const ICONS = {
   success: `<svg width="48" height="48" fill="var(--green)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
@@ -447,7 +431,8 @@ function showAlert(msg, type='info'){
   document.getElementById('ovAlert').style.display='block';
   document.getElementById('mdAlert').style.display='block';
 }
-function closeAlert(){ document.getElementById('ovAlert').style.display='none'; document.getElementById('mdAlert').style.display='none'; }
+function closeAlert(){ document.getElementById('ovAlert').style.display='none'; document.getElementById('mdAlert').style.display='none';
+}
 
 // ── NAVIGASI ──
 function showSec(key){
@@ -456,7 +441,7 @@ function showSec(key){
   document.getElementById('sec-'+key).style.display='block';
   const ni = document.getElementById('ni-'+key);
   if(ni) ni.classList.add('on');
-  if(key==='usulan') renderUsulanList();
+if(key==='usulan') renderUsulanList();
   if(key==='monitor'){ buildFilter(); applyFilter(); }
   if(key==='setting') loadSetting();
 }
@@ -471,7 +456,8 @@ function kompres(file){
         const MAX=800, c=document.createElement('canvas');
         let w=img.width, h=img.height;
         if(w>MAX){ h=Math.round(h*MAX/w); w=MAX; }
-        c.width=w; c.height=h;
+        c.width=w; 
+c.height=h;
         c.getContext('2d').drawImage(img,0,0,w,h);
         res(c.toDataURL('image/jpeg',0.6));
       };
@@ -483,31 +469,31 @@ function kompres(file){
 function bukaFoto(src) {
   const ov = document.getElementById('ovFoto');
   document.getElementById('popupFotoImg').src = src;
-  // Buat link Drive-friendly (convert /view ke direct/preview)
+// Buat link Drive-friendly (convert /view ke direct/preview)
   let driveUrl = src;
-  // Jika URL Google Drive, pastikan bisa dibuka
+// Jika URL Google Drive, pastikan bisa dibuka
   if (src.includes('drive.google.com')) {
     // sudah URL drive, pakai apa adanya
     driveUrl = src;
-  }
+}
   document.getElementById('popupFotoDriveBtn').href = driveUrl;
   ov.classList.add('show');
 }
 function closeFotoPopup(e, force=false){
   if(force || (e && e.target === document.getElementById('ovFoto'))){
     document.getElementById('ovFoto').classList.remove('show');
-    document.getElementById('popupFotoImg').src = '';
+document.getElementById('popupFotoImg').src = '';
   }
 }
 
 // ── KONVERSI URL DRIVE ke dapat ditampilkan di img ──
 function driveImgSrc(url) {
   if (!url) return url;
-  // https://drive.google.com/file/d/FILE_ID/view?usp=... → https://drive.google.com/thumbnail?id=FILE_ID&sz=w400
+// https://drive.google.com/file/d/FILE_ID/view?usp=... → https://drive.google.com/thumbnail?id=FILE_ID&sz=w400
   const match = url.match(/\/file\/d\/([^\/]+)\//);
   if (match) {
     return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`;
-  }
+}
   return url;
 }
 
@@ -538,22 +524,24 @@ document.getElementById('frmUsulan').addEventListener('submit', async e => {
   const rowM = { noUrut, namaDapur:dapur, tglMulai:'', pic:'', anggaranAwal:0, dibayar:0, sisa:0, status:'Pending Usulan', tglTerbayar:[], sumberDana:[], fotoStrukBayar:[], fotoAwal:[], fotoSedang:[], fotoSelesai:[], fotoBon:[], fotoKwitansi:[] };
   dbM.push(rowM);
   items.forEach(it => dbP.push({ noUrut, tglMulai:'', tglSelesai:'', namaDapur:dapur, pic:'', ...it, hargaSatuan:0, total:0 }));
-  localStorage.setItem('db_monitor', JSON.stringify(dbM)); localStorage.setItem('db_pesanan', JSON.stringify(dbP));
+  localStorage.setItem('db_monitor', JSON.stringify(dbM));
+localStorage.setItem('db_pesanan', JSON.stringify(dbP));
   if(navigator.onLine){
     try{ await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'simpanUsulan',noUrut,namaDapur:dapur,items})}); }catch(err){}
   }
   document.getElementById('frmUsulan').reset();
   document.getElementById('bodyUsulanBarang').innerHTML = htmlBarisUsulan();
   btn.disabled=false; btn.innerText='SIMPAN USULAN';
-  showAlert('Usulan berhasil disimpan!','success');
+showAlert('Usulan berhasil disimpan!','success');
   showSec('usulan');
 });
 
 // ==================== FASE 2: PROSES SP ====================
 function renderUsulanList(){
   const tb = document.getElementById('tblUsulanList'); tb.innerHTML='';
-  const pendings = dbM.filter(x => x.status==='Pending Usulan');
-  if(!pendings.length){ tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:#999">Tidak ada usulan pending.</td></tr>'; return; }
+const pendings = dbM.filter(x => x.status==='Pending Usulan');
+  if(!pendings.length){ tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:#999">Tidak ada usulan pending.</td></tr>'; return;
+}
   pendings.forEach(r => {
     const no = String(r.noUrut).slice(-4);
     tb.innerHTML += `<tr>
@@ -567,7 +555,7 @@ function bukaProsesSP(noUrut){
   activeNoUrut = noUrut;
   const items = dbP.filter(x => String(x.noUrut)===String(noUrut));
   let html = '';
-  items.forEach((it,idx) => {
+items.forEach((it,idx) => {
     html += `<tr>
       <td style="text-align:center">
         <input type="checkbox" class="chk-sp" checked onchange="hitungGrandTotal()">
@@ -579,13 +567,14 @@ function bukaProsesSP(noUrut){
       <td><input type="text" class="tot" placeholder="0" readonly style="padding:8px;font-size:0.95rem;margin:0;background:#f0ede6;min-width:90px"></td>
     </tr>`;
   });
-  // Tambah input item baru jika ada
+// Tambah input item baru jika ada
   document.getElementById('bodySpBarang').innerHTML = html;
   document.getElementById('ovSP').style.display='block';
   document.getElementById('mdSP').style.display='block';
   hitungGrandTotal();
 }
-function closeSP(){ document.getElementById('ovSP').style.display='none'; document.getElementById('mdSP').style.display='none'; }
+function closeSP(){ document.getElementById('ovSP').style.display='none'; document.getElementById('mdSP').style.display='none';
+}
 
 function tambahBarisSP(){
   const html = `<tr>
@@ -596,7 +585,7 @@ function tambahBarisSP(){
     <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:110px"></td>
     <td><input type="text" class="tot" placeholder="0" readonly style="padding:8px;font-size:0.95rem;margin:0;background:#f0ede6;min-width:90px"></td>
   </tr>`;
-  document.getElementById('bodySpBarang').insertAdjacentHTML('beforeend', html);
+document.getElementById('bodySpBarang').insertAdjacentHTML('beforeend', html);
 }
 
 function hitungTr(el){
@@ -614,7 +603,7 @@ function hitungGrandTotal(){
       total += unRp(tr.querySelector('.tot').value);
     }
   });
-  document.getElementById('spGrandTotal').innerText = 'Rp ' + rp(total);
+document.getElementById('spGrandTotal').innerText = 'Rp ' + rp(total);
 }
 
 document.getElementById('frmProsesSP').addEventListener('submit', async e => {
@@ -623,38 +612,73 @@ document.getElementById('frmProsesSP').addEventListener('submit', async e => {
   const pic = document.getElementById('spPIC').value;
   const tM = document.getElementById('spTglMulai').value;
   const tS = document.getElementById('spTglSelesai').value;
-  let totalAnggaran=0, items=[];
+  
+  let totalAnggaran=0, items=[], uncheckedItems=[];
+  
   document.querySelectorAll('#bodySpBarang tr').forEach(tr => {
     const chk = tr.querySelector('.chk-sp');
-    if(chk && !chk.checked) return; // skip yang tidak dicentang
     const q=parseFloat(tr.querySelector('.qty').value)||0;
     const h=unRp(tr.querySelector('.hrg').value);
+    const nb=tr.querySelector('.nb').value;
+    const sat=tr.querySelector('.sat').value;
     const t=q*h;
-    totalAnggaran+=t;
-    items.push({ namaBarang:tr.querySelector('.nb').value, qty:q, satuan:tr.querySelector('.sat').value, hargaSatuan:h, total:t });
+    
+    if(chk && chk.checked) {
+      totalAnggaran+=t;
+      items.push({ namaBarang:nb, qty:q, satuan:sat, hargaSatuan:h, total:t });
+    } else if(chk && !chk.checked) {
+      // Yang tidak dicentang masuk ke array uncheckedItems (harga reset 0)
+      uncheckedItems.push({ namaBarang:nb, qty:q, satuan:sat, hargaSatuan:0, total:0 });
+    }
   });
-  if(items.length===0){ showAlert('Pilih minimal 1 item!','error'); btn.disabled=false; btn.innerText='Simpan & Cetak SP'; return; }
-  const idx = dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
-  if(idx>-1){
-    dbM[idx].pic=pic; dbM[idx].tglMulai=tM; dbM[idx].anggaranAwal=totalAnggaran; dbM[idx].sisa=totalAnggaran; dbM[idx].status='Dalam Pengerjaan';
+
+  if(items.length===0){ 
+    showAlert('Pilih minimal 1 item!','error'); 
+    btn.disabled=false; btn.innerText='Simpan & Cetak SP'; return; 
   }
+  
+  const idx = dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
+  const origDapur = idx > -1 ? dbM[idx].namaDapur : '';
+
+  if(idx>-1){
+    dbM[idx].pic=pic; dbM[idx].tglMulai=tM; dbM[idx].anggaranAwal=totalAnggaran; dbM[idx].sisa=totalAnggaran;
+    dbM[idx].status='Dalam Pengerjaan';
+  }
+  
   dbP = dbP.filter(x=>String(x.noUrut)!==String(activeNoUrut));
   items.forEach(it => dbP.push({noUrut:activeNoUrut,tglMulai:tM,tglSelesai:tS,namaDapur:dbM[idx].namaDapur,pic,...it}));
-  localStorage.setItem('db_monitor',JSON.stringify(dbM)); localStorage.setItem('db_pesanan',JSON.stringify(dbP));
+
+  // LOGIKA BARU: Jika ada item tidak dicentang, buatkan Usulan Pending Baru
+  if (uncheckedItems.length > 0) {
+    const newNoUrut = Date.now() + Math.floor(Math.random() * 1000); // Pastikan NoUrut beda
+    const rowM = { noUrut: newNoUrut, namaDapur:origDapur, tglMulai:'', pic:'', anggaranAwal:0, dibayar:0, sisa:0, status:'Pending Usulan', tglTerbayar:[], sumberDana:[], fotoStrukBayar:[], fotoAwal:[], fotoSedang:[], fotoSelesai:[], fotoBon:[], fotoKwitansi:[] };
+    dbM.push(rowM);
+    uncheckedItems.forEach(it => dbP.push({ noUrut: newNoUrut, tglMulai:'', tglSelesai:'', namaDapur:origDapur, pic:'', ...it }));
+
+    // Opsional: Kirim split usulan ke server (background)
+    if(navigator.onLine){
+      fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'simpanUsulan',noUrut:newNoUrut,namaDapur:origDapur,items:uncheckedItems})}).catch(()=>{});
+    }
+  }
+
+  localStorage.setItem('db_monitor',JSON.stringify(dbM)); 
+  localStorage.setItem('db_pesanan',JSON.stringify(dbP));
+
   if(navigator.onLine){
-    try{ await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'prosesSP',noUrut:activeNoUrut,pic,tglMulai:tM,tglSelesai:tS,anggaranAwal:totalAnggaran,items})}); }catch(e){}
+    try{ await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'prosesSP',noUrut:activeNoUrut,pic,tglMulai:tM,tglSelesai:tS,anggaranAwal:totalAnggaran,items})});
+    }catch(e){}
   }
   document.getElementById('frmProsesSP').reset();
   closeSP(); btn.disabled=false; btn.innerText='Simpan & Cetak SP';
   localStorage.setItem('smm_siap_cetak', JSON.stringify({bundle:dbM[idx],items:dbP.filter(x=>String(x.noUrut)===String(activeNoUrut))}));
   buka('sp'); showSec('monitor');
 });
-
 // ==================== FASE 3: MONITORING & FILTER ====================
 function buildFilter(){
   const fp=document.getElementById('flPIC'), fd=document.getElementById('flDapur');
   const cP=fp.value, cD=fd.value;
-  fp.innerHTML='<option value="">Semua PIC</option>'; fd.innerHTML='<option value="">Semua Dapur</option>';
+  fp.innerHTML='<option value="">Semua PIC</option>';
+fd.innerHTML='<option value="">Semua Dapur</option>';
   [...new Set(dbM.map(r=>r.pic).filter(Boolean))].forEach(p=>fp.innerHTML+=`<option ${p===cP?'selected':''}>${p}</option>`);
   [...new Set(dbM.map(r=>r.namaDapur).filter(Boolean))].forEach(d=>fd.innerHTML+=`<option ${d===cD?'selected':''}>${d}</option>`);
 }
@@ -676,8 +700,7 @@ function applyFilter(){
   const da=document.getElementById('flDapur').value;
   const tDari=document.getElementById('flTglDari').value;
   const tSampai=document.getElementById('flTglSampai').value;
-
-  const filtered = dbM.filter(r => {
+const filtered = dbM.filter(r => {
     if(r.status==='Pending Usulan') return false;
     if(st && r.status!==st) return false;
     if(pi && r.pic!==pi) return false;
@@ -689,6 +712,7 @@ function applyFilter(){
       // Normalisasi ke awal hari
       tglMulai.setHours(0,0,0,0);
       if(tDari && !tSampai){
+     
         // Hanya 1 tanggal → cari hari itu saja
         const d = new Date(tDari); d.setHours(0,0,0,0);
         if(tglMulai.getTime()!==d.getTime()) return false;
@@ -698,10 +722,11 @@ function applyFilter(){
         if(tglMulai > s) return false;
       } else {
         // Rentang
-        const d = new Date(tDari); d.setHours(0,0,0,0);
+    
+     const d = new Date(tDari); d.setHours(0,0,0,0);
         const s = new Date(tSampai); s.setHours(23,59,59,999);
         if(tglMulai < d || tglMulai > s) return false;
-      }
+}
     }
     return true;
   });
@@ -709,11 +734,12 @@ function applyFilter(){
   let tA=0,tB=0,tS=0;
   filtered.forEach(r=>{ tA+=Number(r.anggaranAwal); tB+=Number(r.dibayar); tS+=Number(r.sisa); });
   document.getElementById('sumTotal').innerText='Rp '+rp(tA);
-  document.getElementById('sumBayar').innerText='Rp '+rp(tB);
+document.getElementById('sumBayar').innerText='Rp '+rp(tB);
   document.getElementById('sumSisa').innerText='Rp '+rp(tS);
 
   const tb=document.getElementById('tblMonitor'); tb.innerHTML='';
-  if(!filtered.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center">Tidak ada data aktif.</td></tr>'; document.getElementById('pnlCetak').style.display='none'; return; }
+  if(!filtered.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center">Tidak ada data aktif.</td></tr>'; document.getElementById('pnlCetak').style.display='none'; return;
+}
 
   filtered.forEach(r => {
     const bdg=r.status.includes('Lunas')?'bdg-ln':r.status.includes('Cicil')?'bdg-cc':'bdg-pg';
@@ -727,12 +753,13 @@ function applyFilter(){
         <div style="display:flex;gap:6px;flex-direction:column">
           <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="bukaInputBayar('${r.noUrut}')">Bayar</button>
           <button class="btn org" style="padding:6px;font-size:0.75rem" onclick="bukaValidasi('${r.noUrut}')">Upload Foto</button>
-          <button class="btn" style="padding:6px;font-size:0.75rem;background:#3498db" onclick="bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
+      
+     <button class="btn" style="padding:6px;font-size:0.75rem;background:#3498db" onclick="bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
           <button class="btn" style="padding:6px;font-size:0.75rem;background:#7f8c8d" onclick="bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
         </div>
       </td>
     </tr>`;
-  });
+});
 
   if(filtered.length===1){
     localStorage.setItem('smm_siap_cetak',JSON.stringify({bundle:filtered[0],items:dbP.filter(x=>String(x.noUrut)===String(filtered[0].noUrut))}));
@@ -741,7 +768,8 @@ function applyFilter(){
 }
 
 // ==================== FASE 4: UPLOAD VALIDASI ====================
-function bukaValidasi(noUrut){ activeNoUrut=noUrut; document.getElementById('frmValidasi').reset(); document.getElementById('ovValidasi').style.display='block'; document.getElementById('mdValidasi').style.display='block'; }
+function bukaValidasi(noUrut){ activeNoUrut=noUrut;
+document.getElementById('frmValidasi').reset(); document.getElementById('ovValidasi').style.display='block'; document.getElementById('mdValidasi').style.display='block'; }
 function closeValidasi(){ document.getElementById('ovValidasi').style.display='none'; document.getElementById('mdValidasi').style.display='none'; }
 
 document.getElementById('frmValidasi').addEventListener('submit', async e => {
@@ -756,24 +784,24 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
     const pB=fB.length?await Promise.all([...fB].map(kompres)):[];
     const pK=fK.length?await Promise.all([...fK].map(kompres)):[];
     await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'uploadValidasi',noUrut:activeNoUrut,fAwal:pA,fSedang:pSe,fSelesai:pSl,fBon:pB,fKwitansi:pK})});
-    btn.innerText='Menyinkronkan Link...';
+btn.innerText='Menyinkronkan Link...';
     await new Promise(r=>setTimeout(r,2000));
     await syncCloud(true);
     closeValidasi();
     showAlert('Dokumen berhasil dikirim ke Google Drive!','success');
   } catch(err){ showAlert(err.message,'error'); }
-  btn.disabled=false; btn.innerText='Upload ke Drive';
+  btn.disabled=false;
+btn.innerText='Upload ke Drive';
 });
 
 // ==================== LIHAT FOTO & RIWAYAT (dengan popup foto) ====================
 function bukaLihatDokumen(noUrut){
   const p=dbM.find(x=>String(x.noUrut)===String(noUrut));
   if(!p) return;
-
-  // Riwayat Pembayaran
+// Riwayat Pembayaran
   let riwayatHtml=`<div style="margin-bottom:15px;padding:12px;background:#f9f9f9;border-radius:8px;border:1px solid #ddd">
     <h4 style="margin:0 0 10px;color:var(--blue);font-size:.9rem">Riwayat Pembayaran (Cicilan)</h4>`;
-  if(p.tglTerbayar&&p.tglTerbayar.length>0){
+if(p.tglTerbayar&&p.tglTerbayar.length>0){
     riwayatHtml+='<ul style="margin:0;padding-left:20px;font-size:.85rem;color:var(--txt)">';
     p.tglTerbayar.forEach((t,i)=>{
       let dana=(p.sumberDana&&p.sumberDana[i])?p.sumberDana[i]:'-';
@@ -785,16 +813,15 @@ function bukaLihatDokumen(noUrut){
       }
       riwayatHtml+=`<li style="margin-bottom:8px"><b>Tgl:</b> ${formatTgl(t)}<br><b>Ket:</b> ${dana}${strukHtml}</li>`;
     });
-    riwayatHtml+='</ul>';
+riwayatHtml+='</ul>';
   } else {
     riwayatHtml+='<p style="margin:0;font-size:.8rem;color:var(--muted)">Belum ada pembayaran dicatat.</p>';
   }
   riwayatHtml+='</div>';
-
-  // Generate galeri dengan popup + link Drive
+// Generate galeri dengan popup + link Drive
   const generateImgHtml=(arr,title)=>{
     if(!arr||!arr.length) return '';
-    let imgs=arr.map(src=>{
+let imgs=arr.map(src=>{
       const thumb=driveImgSrc(src);
       return `<div style="flex-shrink:0;text-align:center">
         <img src="${thumb}" class="gallery-thumb" onclick="bukaFoto('${thumb}')" title="Klik untuk perbesar">
@@ -802,23 +829,22 @@ function bukaLihatDokumen(noUrut){
         <a href="${src}" target="_blank" class="drive-link">🔗 Drive</a>
       </div>`;
     }).join('');
-    return `<div style="margin-bottom:12px">
+return `<div style="margin-bottom:12px">
       <b style="color:var(--blue);font-size:.85rem">${title}</b>
       <div class="gallery-row" style="margin-top:6px">${imgs}</div>
     </div>`;
-  };
+};
 
   let html=riwayatHtml;
   const fA=generateImgHtml(p.fotoAwal,'📷 Foto Sebelum Pekerjaan (Awal)');
   const fSe=generateImgHtml(p.fotoSedang,'📷 Foto Saat Pengerjaan (Progress)');
   const fSl=generateImgHtml(p.fotoSelesai,'📷 Foto Selesai (Hasil)');
-  const fB=generateImgHtml(p.fotoBon,'📋 Bukti Bon Belanja');
+const fB=generateImgHtml(p.fotoBon,'📋 Bukti Bon Belanja');
   const fK=generateImgHtml(p.fotoKwitansi,'📋 Bukti Kwitansi Tukang');
 
   if(fA||fSe||fSl||fB||fK) html+=fA+fSe+fSl+fB+fK;
   else html+='<p style="text-align:center;color:var(--muted);font-style:italic;font-size:.85rem">Belum ada foto dokumen yang diupload.</p>';
-
-  document.getElementById('galeriKonten').innerHTML=html;
+document.getElementById('galeriKonten').innerHTML=html;
   document.getElementById('ovLihatDokumen').style.display='block';
   document.getElementById('mdLihatDokumen').style.display='block';
 }
@@ -829,12 +855,13 @@ function bukaInputBayar(noUrut){
   activeNoUrut=noUrut;
   const p=dbM.find(x=>String(x.noUrut)===String(noUrut));
   if(!p) return;
-  document.getElementById('mdBayarDesc').innerHTML=`Tagihan: Rp ${rp(p.anggaranAwal)}<br>Sisa Pembayaran: <b style="color:var(--red)">Rp ${rp(p.sisa)}</b>`;
+document.getElementById('mdBayarDesc').innerHTML=`Tagihan: Rp ${rp(p.anggaranAwal)}<br>Sisa Pembayaran: <b style="color:var(--red)">Rp ${rp(p.sisa)}</b>`;
   document.getElementById('frmBayar').reset();
   document.getElementById('inpTglBayar').valueAsDate=new Date();
   document.getElementById('ovBayar').style.display='block'; document.getElementById('mdBayar').style.display='block';
 }
-function closeBayar(){ document.getElementById('ovBayar').style.display='none'; document.getElementById('mdBayar').style.display='none'; }
+function closeBayar(){ document.getElementById('ovBayar').style.display='none'; document.getElementById('mdBayar').style.display='none';
+}
 
 document.getElementById('frmBayar').addEventListener('submit', async e => {
   e.preventDefault();
@@ -853,19 +880,20 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
     if(p.sisa<=0){ p.sisa=0; p.status='Lunas / Selesai'; } else { p.status='Belum Lunas / Dicicil'; }
     if(!p.tglTerbayar) p.tglTerbayar=[];
     if(!p.sumberDana) p.sumberDana=[];
-    p.tglTerbayar.push(tgl); p.sumberDana.push(sumber);
+p.tglTerbayar.push(tgl); p.sumberDana.push(sumber);
     p.bankNama=dbS.bnk||''; p.bankRek=dbS.rek||''; p.bankAn=dbS.an||'';
     localStorage.setItem('db_monitor',JSON.stringify(dbM));
     if(navigator.onLine){
       btn.innerText='Upload ke Server...';
       await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'submitPembayaran',noUrut:activeNoUrut,dibayar:p.dibayar,sisa:p.sisa,status:p.status,tglBaru:tgl,danaBaru:sumber,fotoStrukBase64:b64Struk,bankNama:p.bankNama,bankRek:p.bankRek,bankAn:p.bankAn})});
-      if(b64Struk){ btn.innerText='Menyinkronkan Link...'; await new Promise(r=>setTimeout(r,2000)); await syncCloud(true); }
+      if(b64Struk){ btn.innerText='Menyinkronkan Link...';
+await new Promise(r=>setTimeout(r,2000)); await syncCloud(true); }
     }
-    closeBayar(); applyFilter(); showAlert('Pembayaran Rp '+rp(nominal)+' dicatat & disinkron!','success');
+    closeBayar(); applyFilter();
+showAlert('Pembayaran Rp '+rp(nominal)+' dicatat & disinkron!','success');
   } catch(err){ showAlert(err.message,'error'); }
   btn.disabled=false; btn.innerText='Simpan & Upload';
 });
-
 // ==================== FASE 6: EDIT PROYEK ====================
 function htmlBarisEdit(nb='',q=1,sat='',hrg=0,tot=0){
   return `<tr>
@@ -904,7 +932,7 @@ document.getElementById('frmEditProyek').addEventListener('submit', async e => {
   p.anggaranAwal=totalAng; p.sisa=totalAng-p.dibayar;
   if(p.sisa<=0&&p.dibayar>0){p.sisa=0;p.status='Lunas / Selesai';}else if(p.dibayar>0){p.status='Belum Lunas / Dicicil';}else{p.status='Dalam Pengerjaan';}
   dbP=dbP.filter(x=>String(x.noUrut)!==String(activeNoUrut));
-  items.forEach(it=>dbP.push({noUrut:activeNoUrut,tglMulai:p.tglMulai,tglSelesai:'',namaDapur:p.namaDapur,pic:p.pic,...it}));
+items.forEach(it=>dbP.push({noUrut:activeNoUrut,tglMulai:p.tglMulai,tglSelesai:'',namaDapur:p.namaDapur,pic:p.pic,...it}));
   localStorage.setItem('db_monitor',JSON.stringify(dbM)); localStorage.setItem('db_pesanan',JSON.stringify(dbP));
   if(navigator.onLine){
     fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'updateProyek',noUrut:activeNoUrut,namaDapur:p.namaDapur,pic:p.pic,tglMulai:p.tglMulai,anggaranAwal:p.anggaranAwal,dibayar:p.dibayar,sisa:p.sisa,status:p.status,items})}).catch(()=>{});
@@ -912,7 +940,6 @@ document.getElementById('frmEditProyek').addEventListener('submit', async e => {
   closeEditProyek(); applyFilter(); showAlert('Perubahan Proyek Berhasil Disimpan!','success');
   btn.disabled=false; btn.innerText='Simpan Perubahan';
 });
-
 // ==================== PENGATURAN ====================
 function loadSetting(){
   document.getElementById('sLokasi').value=dbS.lok||'';
@@ -929,15 +956,15 @@ function populateRekeningDropdown(){
   const sel=document.getElementById('sAtasNamaDropdown');
   // Kumpulkan unik atas nama dari dbM (dari transaksi yang sudah pernah diisi)
   const daftarAn=[];
-  // Dari dbRekening (jika ada dari sync Pengaturan sheet multi-row)
+// Dari dbRekening (jika ada dari sync Pengaturan sheet multi-row)
   dbRekening.forEach(r=>{ if(r.an&&!daftarAn.find(x=>x.an===r.an)) daftarAn.push(r); });
-  // Fallback: dari dbM
+// Fallback: dari dbM
   dbM.forEach(r=>{
     if(r.bankAn && !daftarAn.find(x=>x.an===r.bankAn)){
       daftarAn.push({an:r.bankAn, bnk:r.bankNama, rek:r.bankRek, lok:'', jab:''});
     }
   });
-  sel.innerHTML='<option value="">— Pilih Atas Nama —</option>';
+sel.innerHTML='<option value="">— Pilih Atas Nama —</option>';
   daftarAn.forEach(r=>{
     sel.innerHTML+=`<option value="${r.an}" data-bnk="${r.bnk||''}" data-rek="${r.rek||''}" data-lok="${r.lok||''}" data-jab="${r.jab||''}">${r.an}${r.bnk?' — '+r.bnk:''}</option>`;
   });
@@ -959,7 +986,7 @@ async function saveSetting(){
   const btn=document.getElementById('btnSimpanSetting'); btn.disabled=true; btn.innerText='Menyimpan...';
   dbS={lok:document.getElementById('sLokasi').value, jab:document.getElementById('sJabatan').value, bnk:document.getElementById('sBank').value, rek:document.getElementById('sNoRek').value, an:document.getElementById('sAtasNama').value, kop:document.getElementById('sKopUrl').value};
   localStorage.setItem('smm_setting',JSON.stringify(dbS));
-  if(navigator.onLine){
+if(navigator.onLine){
     try{ await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'simpanPengaturan',...dbS})}); }catch(e){}
   }
   btn.disabled=false; btn.innerText='Simpan & Sync Pengaturan';
@@ -970,24 +997,25 @@ async function saveSetting(){
 async function syncCloud(silent=false){
   if(!navigator.onLine){ if(!silent) showAlert('Tidak ada koneksi internet!','error'); return; }
   if(!silent) showAlert('Sedang Sinkronisasi...','info');
-  try {
+try {
     const res=await fetch(API_URL+'?t='+Date.now());
     if(!res.ok) throw new Error('HTTP '+res.status);
     const data=await res.json();
     if(data.monitoring) dbM=data.monitoring;
     if(data.pesanan) dbP=data.pesanan;
-    if(data.pengaturan) dbS=data.pengaturan;
+if(data.pengaturan) dbS=data.pengaturan;
     // Coba ambil multi-rekening dari Pengaturan sheet jika backend sudah support
     if(data.daftarRekening) dbRekening=data.daftarRekening;
     localStorage.setItem('db_monitor',JSON.stringify(dbM));
     localStorage.setItem('db_pesanan',JSON.stringify(dbP));
-    localStorage.setItem('smm_setting',JSON.stringify(dbS));
+localStorage.setItem('smm_setting',JSON.stringify(dbS));
     buildFilter(); applyFilter(); loadSetting();
     if(!silent) showAlert('Sinkronisasi Berhasil!','success');
   } catch(err){ if(!silent) showAlert('Gagal Sync: '+err.message,'error'); }
 }
 
-function buka(hal){ window.open(hal+'.html','_blank'); }
+function buka(hal){ window.open(hal+'.html','_blank');
+}
 
 // ==================== INIT ====================
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
