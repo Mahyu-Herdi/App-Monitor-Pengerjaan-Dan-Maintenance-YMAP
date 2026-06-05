@@ -142,9 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('invSisa').innerText = 'Rp ' + rp(b.sisa);
 
   // Info bank
-  document.getElementById('tBank').innerText = b.bankNama || s.bnk || '—';
-  document.getElementById('tRek').innerText = b.bankRek || s.rek || '—';
-  document.getElementById('tAN').innerText = b.bankAn || s.an || '—';
+  document.getElementById('tBank').innerText = s.bnk || b.bankNama || '—';
+document.getElementById('tRek').innerText = s.rek || b.bankRek || '—';
+  document.getElementById('tAN').innerText = s.an || b.bankAn || '—';
+
 
   // Riwayat cicilan dengan format tanggal rapi
   let riwayat = '';
