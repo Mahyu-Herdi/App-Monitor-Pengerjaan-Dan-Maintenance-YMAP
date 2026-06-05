@@ -1,9 +1,9 @@
 {
-  "name": "Sistem Validasi Proyek",
-  "short_name": "SVP Yayasan Muslim Aceh Peduli",
+  "name": "SMM Dapur MBG Validasi",
+  "short_name": "SMM Dapur",
   "description": "Sistem Monitoring, Usulan & Maintenance Dapur MBG",
   "start_url": "./index.html",
-  "display": "standalone",
+  "display": "minimal-ui",
   "background_color": "#F5F2EB",
   "theme_color": "#F5F2EB",
   "orientation": "portrait-primary",
@@ -12,7 +12,7 @@
       "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
