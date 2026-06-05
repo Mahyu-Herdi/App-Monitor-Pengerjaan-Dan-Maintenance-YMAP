@@ -403,7 +403,8 @@ function formatTgl(tglStr) {
     tgl = new Date(tglStr);
   }
   if (isNaN(tgl.getTime())) return String(tglStr);
-  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  // Diubah: sekarang formatnya menggunakan opsi weekday untuk nama hari
+  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
   return tgl.toLocaleDateString('id-ID', options);
 }
 
@@ -742,12 +743,20 @@ function applyFilter(){
   filtered.forEach(r => {
     const bdg=r.status.includes('Lunas')?'bdg-ln':r.status.includes('Cicil')?'bdg-cc':'bdg-pg';
     const judul = r.judulProyek || 'Pekerjaan Umum'; // Ambil langsung dari object
+    
+    // Logika tambahan untuk tanggal terakhir pembayaran
+    let infoTglTerakhir = '';
+    if (r.tglTerbayar && r.tglTerbayar.length > 0 && (r.status.includes('Lunas') || r.status.includes('Cicil'))) {
+      const lastTgl = r.tglTerbayar[r.tglTerbayar.length - 1];
+      infoTglTerakhir = `<div style="font-size:0.75rem; color:var(--muted); margin-top:5px; line-height:1.3;">Terakhir bayar:<br><b>${formatTgl(lastTgl)}</b></div>`;
+    }
+
     tb.innerHTML += `<tr>
-      <td>#${String(r.noUrut).slice(-4)}<br><small>${formatTgl(r.tglMulai)}</small></td>
+      <td>#${String(r.noUrut).slice(-4)}<br><small style="color:var(--muted)">${formatTgl(r.tglMulai)}</small></td>
       <td><b style="color:var(--blue);font-size:.95rem">${judul}</b><br><b>${r.namaDapur}</b><br><small>PIC: ${r.pic}</small></td>
       <td>Rp ${rp(r.anggaranAwal)}</td>
       <td style="color:var(--red);font-weight:bold">Rp ${rp(r.sisa)}</td>
-      <td><span class="badge ${bdg}">${r.status}</span></td>
+      <td style="text-align:center"><span class="badge ${bdg}">${r.status}</span>${infoTglTerakhir}</td>
       <td>
         <div style="display:flex;gap:6px;flex-direction:column">
           <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="bukaInputBayar('${r.noUrut}')">Bayar</button>
