@@ -109,8 +109,8 @@
     .overlay-foto .close-btn{position:absolute;top:15px;right:15px;background:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.4)}
     .overlay-foto .drive-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:10px 24px;border-radius:14px;text-decoration:none;font-weight:bold;font-size:.9rem}
 
-    /* SP MODAL */
-    #mdSP{max-width:860px!important;width:97%!important}
+    /* SP & EDIT MODAL (DIBUAT LEBIH LEBAR AGAR TABEL TIDAK TERLALU KEPOTONG) */
+    #mdSP, #mdEditProyek {max-width:900px!important;width:96%!important}
     .chk-item{display:flex;align-items:center;gap:8px;padding:6px 0}
     .chk-item input[type=checkbox]{width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:var(--blue);box-shadow:none;padding:0}
 
@@ -195,7 +195,7 @@
   <div id="ovSP" class="overlay"></div>
   <div id="mdSP" class="modal">
     <h3>Tetapkan SP & Harga</h3>
-    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;text-align:left">✅ Centang item yang akan diproses. Qty dan nama bisa diedit. Harga satuan wajib diisi.</p>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;text-align:left">✅ Centang item yang akan diproses. Qty dan nama bisa diedit. Harga satuan otomatis menghitung total, dan sebaliknya.</p>
     <form id="frmProsesSP" autocomplete="off">
       <div class="g2" style="margin-bottom:12px">
         <div><label>Nama PIC</label><input type="text" id="spPIC" required></div>
@@ -273,15 +273,17 @@
         <div><label>Status</label><select id="flStatus"><option value="">Semua</option><option>Dalam Pengerjaan</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
         <div><label>PIC</label><select id="flPIC"><option value="">Semua PIC</option></select></div>
         <div><label>Dapur</label><select id="flDapur"><option value="">Semua Dapur</option></select></div>
-        <div style="display:flex;gap:10px;align-items:flex-end">
-          <button class="btn grn" style="flex:1" onclick="applyFilter()">Cari</button>
+        
+        <div style="display:flex;gap:10px;align-items:flex-end; grid-column: 1 / -1;">
+          <button class="btn grn" style="flex:1" onclick="applyFilter()">Cari Filter</button>
           <button class="btn red" style="flex:1" onclick="resetFilter()">Reset Semua</button>
+          <button class="btn" style="flex:1; background:#f39c12" onclick="cetakLaporan()">Cetak Laporan</button>
         </div>
       </div>
     </div>
 
     <div id="pnlCetak" class="pbar" style="display:none">
-      <span style="color:var(--blue);font-weight:bold;flex:1">Cetak / Buka Laporan:</span>
+      <span style="color:var(--blue);font-weight:bold;flex:1">Cetak / Buka Dokumen:</span>
       <button class="btn" onclick="prosesCetak('sp')">Surat Pesanan</button>
       <button class="btn" onclick="prosesCetak('invoice')">Invoice</button>
       <button class="btn" onclick="prosesCetak('lampiran')">Lampiran Foto</button>
@@ -296,7 +298,7 @@
   </div>
 
   <div id="ovEditProyek" class="overlay"></div>
-  <div id="mdEditProyek" class="modal" style="max-width:700px">
+  <div id="mdEditProyek" class="modal">
     <h3>Edit Proyek / Revisi Item</h3>
     <form id="frmEditProyek" autocomplete="off">
       <div class="g2">
@@ -441,6 +443,7 @@ let dbRekening = JSON.parse(localStorage.getItem('db_rekening') || '[]');
 let activeNoUrut = null;
 let pendingCetakJenis = '';
 let pendingCetakPIC = '';
+let lastFilteredData = []; // Untuk simpan data yang difilter buat laporan
 
 // ── UTILITIES ──
 function formatTgl(tglStr) {
@@ -609,18 +612,28 @@ function bukaProsesSP(noUrut){
   const items = dbP.filter(x => String(x.noUrut)===String(noUrut));
   let html = '';
   
-  // INI BAGIAN YANG DIBERESIN BIAR NARIK DATA (VALUE) DARI DATABASE (DBP)
-  items.forEach((it,idx) => {
-    const hrg = it.hargaSatuan ? rp(it.hargaSatuan) : '';
-    const tot = it.total ? rp(it.total) : (it.hargaSatuan && it.qty ? rp(it.hargaSatuan * it.qty) : '');
+  // MENGHITUNG OTOMATIS DATA YANG KOSONG DARI SPREADSHEET SEBELUM DITAMPILKAN
+  items.forEach((it) => {
+    let q = parseFloat(it.qty);
+    if (isNaN(q) || q <= 0) q = 1; // Default ke 1 kalau qty kosong/0
+    
+    let h = parseFloat(it.hargaSatuan) || 0;
+    let t = parseFloat(it.total) || 0;
+    
+    // Perhitungan 2 arah otomatis
+    if (t > 0 && h === 0) h = t / q;
+    if (h > 0 && t === 0) t = h * q;
+
+    const hrgText = h > 0 ? rp(h) : '';
+    const totText = t > 0 ? rp(t) : '';
     
     html += `<tr>
       <td style="text-align:center"><input type="checkbox" class="chk-sp" checked onchange="hitungGrandTotal()"></td>
       <td><input type="text" class="nb" value="${it.namaBarang}" required></td>
-      <td><input type="number" class="qty" value="${it.qty || 1}" min="1" oninput="hitungTr(this); hitungGrandTotal()"></td>
+      <td><input type="number" class="qty" value="${q}" min="1" oninput="hitungTr(this); hitungGrandTotal()"></td>
       <td><input type="text" class="sat" value="${it.satuan || ''}"></td>
-      <td><input type="text" class="hrg modal-inp" value="${hrg}" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
-      <td><input type="text" class="tot" value="${tot}" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
+      <td><input type="text" class="hrg modal-inp" value="${hrgText}" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
+      <td><input type="text" class="tot" value="${totText}" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
     </tr>`;
   });
   
@@ -644,18 +657,20 @@ function tambahBarisSP(){
   document.getElementById('bodySpBarang').insertAdjacentHTML('beforeend', html);
 }
 
+// NGITUNG KETIKA QTY / HARGA DIKETIK
 function hitungTr(el){
   const tr = el.closest('tr');
-  const q = parseFloat(tr.querySelector('.qty').value)||0;
+  const q = parseFloat(tr.querySelector('.qty').value) || 1;
   const h = unRp(tr.querySelector('.hrg').value);
-  tr.querySelector('.tot').value = (q*h).toLocaleString('id-ID');
+  tr.querySelector('.tot').value = h > 0 ? (q*h).toLocaleString('id-ID') : '';
 }
 
+// NGITUNG KETIKA TOTAL DIKETIK (MENCARI HARGA SATUAN)
 function hitungUnitFromTotal(el) {
   const tr = el.closest('tr');
-  const q = parseFloat(tr.querySelector('.qty').value)||1;
+  const q = parseFloat(tr.querySelector('.qty').value) || 1;
   const total = unRp(tr.querySelector('.tot').value);
-  tr.querySelector('.hrg').value = rp(total / q);
+  tr.querySelector('.hrg').value = total > 0 ? rp(total / q) : '';
 }
 
 function hitungGrandTotal(){
@@ -680,14 +695,19 @@ document.getElementById('frmProsesSP').addEventListener('submit', async e => {
   
   document.querySelectorAll('#bodySpBarang tr').forEach(tr => {
     const chk = tr.querySelector('.chk-sp');
-    const q=parseFloat(tr.querySelector('.qty').value)||0;
-    const h=unRp(tr.querySelector('.hrg').value);
-    const nb=tr.querySelector('.nb').value;
-    const sat=tr.querySelector('.sat').value;
-    const t=q*h;
+    const q = parseFloat(tr.querySelector('.qty').value) || 1;
+    let h = unRp(tr.querySelector('.hrg').value);
+    let t = unRp(tr.querySelector('.tot').value);
+    
+    // Validasi akhir sebelum simpan kalau salah satu gak diketik
+    if (t === 0 && h > 0) t = q * h;
+    if (h === 0 && t > 0) h = t / q;
+
+    const nb = tr.querySelector('.nb').value;
+    const sat = tr.querySelector('.sat').value;
     
     if(chk && chk.checked) {
-      totalAnggaran+=t;
+      totalAnggaran += t;
       items.push({ namaBarang:nb, qty:q, satuan:sat, hargaSatuan:h, total:t });
     } else if(chk && !chk.checked) {
       uncheckedItems.push({ namaBarang:nb, qty:q, satuan:sat, hargaSatuan:0, total:0 });
@@ -807,6 +827,8 @@ function applyFilter(){
     return b.noUrut - a.noUrut;
   });
 
+  lastFilteredData = filtered; // Simpan untuk dicetak
+
   let tA=0,tB=0,tS=0;
   filtered.forEach(r=>{ tA+=Number(r.anggaranAwal); tB+=Number(r.dibayar); tS+=Number(r.sisa); });
   document.getElementById('sumTotal').innerText='Rp '+rp(tA);
@@ -847,6 +869,104 @@ function applyFilter(){
     localStorage.setItem('smm_siap_cetak',JSON.stringify({bundle: filtered[0], items: dbP.filter(x=>String(x.noUrut)===String(filtered[0].noUrut))}));
     document.getElementById('pnlCetak').style.display='flex';
   } else { document.getElementById('pnlCetak').style.display='none'; }
+}
+
+// FUNGSI UNTUK CETAK LAPORAN BERDASARKAN FILTER
+function cetakLaporan() {
+  if (!lastFilteredData || lastFilteredData.length === 0) {
+    return showAlert('Tidak ada data yang sedang ditampilkan untuk dicetak.', 'error');
+  }
+
+  const tDari = document.getElementById('flTglDari').value;
+  const tSampai = document.getElementById('flTglSampai').value;
+  let periode = 'Semua Waktu';
+  if (tDari && tSampai) periode = `${formatTgl(tDari)} s/d ${formatTgl(tSampai)}`;
+  else if (tDari) periode = `Mulai ${formatTgl(tDari)}`;
+  else if (tSampai) periode = `Hingga ${formatTgl(tSampai)}`;
+
+  const fStatus = document.getElementById('flStatus').value || 'Semua Status';
+  const fPIC = document.getElementById('flPIC').value || 'Semua PIC';
+  const fDapur = document.getElementById('flDapur').value || 'Semua Dapur';
+
+  let tA = 0, tB = 0, tS = 0;
+  let tbody = '';
+  
+  lastFilteredData.forEach((r, idx) => {
+    tA += Number(r.anggaranAwal);
+    tB += Number(r.dibayar);
+    tS += Number(r.sisa);
+    
+    const judul = r.judulProyek || 'Pekerjaan Umum';
+    tbody += `
+      <tr>
+        <td style="padding:8px; border:1px solid #ddd; text-align:center">${idx + 1}</td>
+        <td style="padding:8px; border:1px solid #ddd">${formatTgl(r.tglMulai)}</td>
+        <td style="padding:8px; border:1px solid #ddd"><b>${judul}</b><br>${r.namaDapur}</td>
+        <td style="padding:8px; border:1px solid #ddd">${r.pic}</td>
+        <td style="padding:8px; border:1px solid #ddd; text-align:right">Rp ${rp(r.anggaranAwal)}</td>
+        <td style="padding:8px; border:1px solid #ddd; text-align:right">Rp ${rp(r.dibayar)}</td>
+        <td style="padding:8px; border:1px solid #ddd; text-align:right; color:red">Rp ${rp(r.sisa)}</td>
+        <td style="padding:8px; border:1px solid #ddd; text-align:center">${r.status}</td>
+      </tr>
+    `;
+  });
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+      <meta charset="UTF-8">
+      <title>Laporan Pengeluaran</title>
+      <style>
+        body { font-family: -apple-system, sans-serif; padding: 30px; color: #333; }
+        h2 { text-align: center; margin: 0 0 5px 0; color: #548CA8; }
+        .info { margin-bottom: 20px; font-size: 0.95rem; }
+        .info td { padding: 4px 15px 4px 0; }
+        table.data { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 25px; }
+        table.data th { background: #548CA8; color: white; padding: 12px; border: 1px solid #548CA8; }
+        .summary { display: flex; gap: 30px; justify-content: flex-end; font-weight: bold; font-size: 1.1rem; border-top: 2px solid #333; padding-top: 15px; }
+        @media print {
+          @page { margin: 1cm; size: landscape; }
+          body { padding: 0; }
+        }
+      </style>
+    </head>
+    <body>
+      <h2>LAPORAN PENGELUARAN & REKONSTRUKSI</h2>
+      <table class="info">
+        <tr><td><b>Periode</b></td><td>: ${periode}</td></tr>
+        <tr><td><b>Status</b></td><td>: ${fStatus}</td></tr>
+        <tr><td><b>PIC / Dapur</b></td><td>: ${fPIC} / ${fDapur}</td></tr>
+      </table>
+      <table class="data">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Tgl Mulai</th>
+            <th>Judul Proyek & Dapur</th>
+            <th>PIC</th>
+            <th>Anggaran</th>
+            <th>Terbayar</th>
+            <th>Sisa Utang</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>${tbody}</tbody>
+      </table>
+      <div class="summary">
+        <div>Total Anggaran: Rp ${rp(tA)}</div>
+        <div style="color:#609966">Total Terbayar: Rp ${rp(tB)}</div>
+        <div style="color:#d96c6c">Total Sisa Utang: Rp ${rp(tS)}</div>
+      </div>
+      <script>
+        window.onload = () => { window.print(); window.onafterprint = () => window.close(); }
+      </script>
+    </body>
+    </html>
+  `;
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
 }
 
 // ==================== AUTO REKENING & CETAK ====================
@@ -1039,12 +1159,14 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
 
 // ==================== FASE 6: EDIT PROYEK ====================
 function htmlBarisEdit(nb='',q=1,sat='',hrg=0,tot=0){
+  const hrgText = hrg > 0 ? rp(hrg) : '';
+  const totText = tot > 0 ? rp(tot) : '';
   return `<tr>
     <td><input type="text" class="nb" value="${nb}" required></td>
-    <td><input type="number" class="qty" value="${q}" min="1" required></td>
-    <td><input type="text" class="sat" value="${sat}" required></td>
-    <td><input type="text" class="hrg" value="${rp(hrg)}" oninput="fmtRp(this); hitungTr(this)" required></td>
-    <td><input type="text" class="tot" value="${rp(tot)}" oninput="fmtRp(this); hitungUnitFromTotal(this)"></td>
+    <td><input type="number" class="qty" value="${q}" min="1" oninput="hitungTr(this)"></td>
+    <td><input type="text" class="sat" value="${sat}"></td>
+    <td><input type="text" class="hrg" value="${hrgText}" placeholder="0" oninput="fmtRp(this); hitungTr(this)"></td>
+    <td><input type="text" class="tot" value="${totText}" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this)"></td>
     <td><button type="button" class="btn red" style="padding:8px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:18px;height:18px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
   </tr>`;
 }
@@ -1058,7 +1180,21 @@ function bukaEditProyek(noUrut){
   document.getElementById('epDapur').value=p.namaDapur;
   document.getElementById('epPIC').value=p.pic;
   
-  let html=''; items.forEach(it=>html+=htmlBarisEdit(it.namaBarang,it.qty,it.satuan,it.hargaSatuan,it.total));
+  let html=''; 
+  // SAMA KAYAK PROSES SP, INI NGITUNG DATA KOSONG SAAT EDIT
+  items.forEach(it => {
+    let q = parseFloat(it.qty);
+    if (isNaN(q) || q <= 0) q = 1;
+    
+    let h = parseFloat(it.hargaSatuan) || 0;
+    let t = parseFloat(it.total) || 0;
+    
+    if (t > 0 && h === 0) h = t / q;
+    if (h > 0 && t === 0) t = h * q;
+
+    html += htmlBarisEdit(it.namaBarang, q, it.satuan || '', h, t);
+  });
+  
   document.getElementById('bodyEpBarang').innerHTML=html;
   document.getElementById('ovEditProyek').style.display='block'; document.getElementById('mdEditProyek').style.display='block';
 }
@@ -1070,8 +1206,16 @@ document.getElementById('frmEditProyek').addEventListener('submit', async e => {
 
   let totalAng=0, items=[];
   document.querySelectorAll('#bodyEpBarang tr').forEach(tr=>{
-    const q=parseFloat(tr.querySelector('.qty').value), h=unRp(tr.querySelector('.hrg').value), t=q*h; totalAng+=t;
-    items.push({namaBarang:tr.querySelector('.nb').value,qty:q,satuan:tr.querySelector('.sat').value,hargaSatuan:h,total:t});
+    const q = parseFloat(tr.querySelector('.qty').value) || 1;
+    let h = unRp(tr.querySelector('.hrg').value);
+    let t = unRp(tr.querySelector('.tot').value);
+    
+    // Perbaikan simpan biar 2 arah tetap valid
+    if (t === 0 && h > 0) t = q * h;
+    if (h === 0 && t > 0) h = t / q;
+
+    totalAng += t;
+    items.push({namaBarang:tr.querySelector('.nb').value, qty:q, satuan:tr.querySelector('.sat').value, hargaSatuan:h, total:t});
   });
   const idx=dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
   const p=dbM[idx];
