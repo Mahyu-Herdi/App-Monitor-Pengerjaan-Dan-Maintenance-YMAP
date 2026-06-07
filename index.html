@@ -57,11 +57,20 @@
     .btn.red{background:var(--red)}.btn.grn{background:var(--green)}.btn.org{background:#d35400}.btn.full{width:100%;padding:16px;font-size:1rem;margin-top:15px}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
 
-    /* TABLE */
+    /* TABLE: CSS DIUBAH AGAR KOLOM FLEKSIBEL */
     .tbl-wrap{overflow-x:auto;border-radius:16px;box-shadow:var(--sh-in);padding:5px}
-    table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:700px}
+    table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:max-content}
     th{padding:12px;text-align:left;color:var(--muted);font-weight:bold;white-space:nowrap;border-bottom:2px solid rgba(0,0,0,.05)}
     td{padding:12px;border-bottom:1px solid rgba(0,0,0,.03);vertical-align:middle}
+    
+    /* INPUT DI DALAM TABEL (BIAR OTOMATIS PANJANG) */
+    td input { width: 100%; box-sizing: border-box; }
+    td input.nb { min-width: 200px; }
+    td input.qty { min-width: 70px; }
+    td input.sat { min-width: 100px; }
+    td input.hrg, td input.tot { min-width: 130px; }
+    td input[type="checkbox"] { width: 18px; min-width: 18px; }
+
     .badge{padding:6px 12px;border-radius:10px;font-size:.75rem;font-weight:bold;white-space:nowrap;box-shadow:var(--sh-in-sm);display:inline-block}
     .bdg-pg{color:#b37700}.bdg-cc{color:#005f73}.bdg-ln{color:var(--green)}.bdg-pn{color:#7f8c8d}
 
@@ -157,7 +166,7 @@
       </div>
       <div class="tbl-wrap" style="margin:20px 0">
         <table id="tblUsulanBarang">
-          <thead><tr><th>Item Barang / Pekerjaan</th><th style="width:70px">Qty</th><th style="width:120px">Satuan</th><th>Aksi</th></tr></thead>
+          <thead><tr><th>Item Barang / Pekerjaan</th><th>Qty</th><th>Satuan</th><th>Aksi</th></tr></thead>
           <tbody id="bodyUsulanBarang">
             <tr>
               <td><input type="text" class="nb" placeholder="Misal: Semen" required></td>
@@ -194,15 +203,15 @@
         <div><label>Tanggal Selesai (Opsional)</label><input type="date" id="spTglSelesai"></div>
       </div>
       <div class="tbl-wrap" style="margin:8px 0 12px">
-        <table id="tblSpBarang" style="min-width:650px">
+        <table id="tblSpBarang">
           <thead>
             <tr>
-              <th style="width:34px">✓</th>
+              <th>✓</th>
               <th>Item Barang / Pekerjaan</th>
-              <th style="width:60px">Qty</th>
-              <th style="width:70px">Satuan</th>
-              <th style="width:130px">Harga Satuan</th>
-              <th style="width:110px">Total</th>
+              <th>Qty</th>
+              <th>Satuan</th>
+              <th>Harga Satuan</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody id="bodySpBarang"></tbody>
@@ -296,8 +305,8 @@
         <div><label>Nama PIC</label><input type="text" id="epPIC" required></div>
       </div>
       <div class="tbl-wrap" style="margin:15px 0">
-        <table id="tblEpBarang" style="min-width:600px">
-          <thead><tr><th>Item</th><th style="width:70px">Qty</th><th style="width:100px">Satuan</th><th>Harga</th><th>Total</th><th>Aksi</th></tr></thead>
+        <table id="tblEpBarang">
+          <thead><tr><th>Item</th><th>Qty</th><th>Satuan</th><th>Harga</th><th>Total</th><th>Aksi</th></tr></thead>
           <tbody id="bodyEpBarang"></tbody>
         </table>
       </div>
@@ -423,7 +432,7 @@
 </nav>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzmFT38-inOUcNCWw4dXSrvq_4IV8pSneF57O5X3bl-oNOZTsc5Gua7ftgUTvuGOkAp/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzAIa4XvIcPY5_tDErurWus3fjeddYg4bqu0YVXDn7OE_PX4RNR0B6-Db-V5OYb0DYA/exec";
 // ── STATE ──
 let dbM = JSON.parse(localStorage.getItem('db_monitor') || '[]');
 let dbP = JSON.parse(localStorage.getItem('db_pesanan') || '[]');
@@ -534,9 +543,9 @@ function driveImgSrc(url) {
 // ==================== FASE 1: USULAN ====================
 function htmlBarisUsulan(){
   return `<tr>
-    <td><input type="text" class="nb" required></td>
+    <td><input type="text" class="nb" placeholder="Misal: Semen" required></td>
     <td><input type="number" class="qty" value="1" min="1" required></td>
-    <td><input type="text" class="sat" required></td>
+    <td><input type="text" class="sat" placeholder="Sak" required></td>
     <td><button type="button" class="btn red" style="padding:8px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:18px;height:18px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
   </tr>`;
 }
@@ -599,31 +608,38 @@ function bukaProsesSP(noUrut){
   activeNoUrut = noUrut;
   const items = dbP.filter(x => String(x.noUrut)===String(noUrut));
   let html = '';
+  
+  // INI BAGIAN YANG DIBERESIN BIAR NARIK DATA (VALUE) DARI DATABASE (DBP)
   items.forEach((it,idx) => {
+    const hrg = it.hargaSatuan ? rp(it.hargaSatuan) : '';
+    const tot = it.total ? rp(it.total) : (it.hargaSatuan && it.qty ? rp(it.hargaSatuan * it.qty) : '');
+    
     html += `<tr>
       <td style="text-align:center"><input type="checkbox" class="chk-sp" checked onchange="hitungGrandTotal()"></td>
-      <td><input type="text" class="nb" value="${it.namaBarang}" required style="min-width:120px"></td>
-      <td><input type="number" class="qty" value="${it.qty}" min="1" oninput="hitungTr(this); hitungGrandTotal()" style="width:55px"></td>
-      <td><input type="text" class="sat" value="${it.satuan}" style="min-width:60px"></td>
-      <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:110px"></td>
-      <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:90px"></td>
+      <td><input type="text" class="nb" value="${it.namaBarang}" required></td>
+      <td><input type="number" class="qty" value="${it.qty || 1}" min="1" oninput="hitungTr(this); hitungGrandTotal()"></td>
+      <td><input type="text" class="sat" value="${it.satuan || ''}"></td>
+      <td><input type="text" class="hrg modal-inp" value="${hrg}" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
+      <td><input type="text" class="tot" value="${tot}" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
     </tr>`;
   });
+  
   document.getElementById('bodySpBarang').innerHTML = html;
   document.getElementById('ovSP').style.display='block';
   document.getElementById('mdSP').style.display='block';
   hitungGrandTotal();
 }
+
 function closeSP(){ document.getElementById('ovSP').style.display='none'; document.getElementById('mdSP').style.display='none'; }
 
 function tambahBarisSP(){
   const html = `<tr>
     <td style="text-align:center"><input type="checkbox" class="chk-sp" checked onchange="hitungGrandTotal()"></td>
-    <td><input type="text" class="nb" placeholder="Nama barang" required style="min-width:120px"></td>
-    <td><input type="number" class="qty" value="1" min="1" oninput="hitungTr(this); hitungGrandTotal()" style="width:55px"></td>
-    <td><input type="text" class="sat" placeholder="Satuan" style="min-width:60px"></td>
-    <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:110px"></td>
-    <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0;min-width:90px"></td>
+    <td><input type="text" class="nb" placeholder="Nama barang" required></td>
+    <td><input type="number" class="qty" value="1" min="1" oninput="hitungTr(this); hitungGrandTotal()"></td>
+    <td><input type="text" class="sat" placeholder="Satuan"></td>
+    <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
+    <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
   </tr>`;
   document.getElementById('bodySpBarang').insertAdjacentHTML('beforeend', html);
 }
@@ -782,18 +798,12 @@ function applyFilter(){
     return true;
   });
 
-  // LOGIKA SORTING BARU
   filtered.sort((a, b) => {
     const isALunas = a.status.includes('Lunas');
     const isBLunas = b.status.includes('Lunas');
     
-    // Jika A lunas dan B tidak, A pindah ke bawah (return 1)
     if (isALunas && !isBLunas) return 1;
-    // Jika A tidak lunas dan B lunas, A pindah ke atas (return -1)
     if (!isALunas && isBLunas) return -1;
-    
-    // Jika statusnya sama (keduanya lunas atau keduanya belum lunas),
-    // urutkan berdasarkan waktu (terbaru/noUrut besar di atas)
     return b.noUrut - a.noUrut;
   });
 
@@ -847,17 +857,14 @@ function prosesCetak(jenis) {
   
   if(!pic) { buka(jenis); return; }
 
-  // Cari apakah PIC ini ada di database Rekening ATAU sedang aktif di setting
   let rek = dbRekening.find(x => x.an && x.an.toLowerCase() === pic.toLowerCase());
   if(!rek && dbS.an && dbS.an.toLowerCase() === pic.toLowerCase()) rek = dbS;
 
   if (rek) {
-    // Info ketemu, set langsung jadi pengaturan aktif biar nggak ribet ganti manual
     dbS = { ...dbS, bnk: rek.bnk, rek: rek.rek, an: rek.an, lok: rek.lok || dbS.lok, jab: rek.jab || dbS.jab };
     localStorage.setItem('smm_setting', JSON.stringify(dbS));
     buka(jenis);
   } else {
-    // Belum ada info? Panggil modal rekening!
     pendingCetakJenis = jenis;
     pendingCetakPIC = pic;
     document.getElementById('rbAtasNama').value = pic;
@@ -886,7 +893,6 @@ document.getElementById('frmRekBaru').addEventListener('submit', async e => {
   dbRekening.push(newRek);
   localStorage.setItem('db_rekening', JSON.stringify(dbRekening));
   
-  // Jadikan aktif
   dbS = { ...newRek };
   localStorage.setItem('smm_setting', JSON.stringify(dbS));
 
@@ -898,7 +904,7 @@ document.getElementById('frmRekBaru').addEventListener('submit', async e => {
   document.getElementById('ovRekBaru').style.display = 'none';
   document.getElementById('mdRekBaru').style.display = 'none';
   btn.disabled = false; btn.innerText = 'Simpan & Lanjut Cetak';
-  loadSetting(); // Perbarui tampilan di tab pengaturan
+  loadSetting(); 
 
   if(pendingCetakJenis) buka(pendingCetakJenis);
 });
@@ -1034,11 +1040,11 @@ document.getElementById('frmBayar').addEventListener('submit', async e => {
 // ==================== FASE 6: EDIT PROYEK ====================
 function htmlBarisEdit(nb='',q=1,sat='',hrg=0,tot=0){
   return `<tr>
-    <td><input type="text" class="nb" value="${nb}" required style="min-width:120px"></td>
+    <td><input type="text" class="nb" value="${nb}" required></td>
     <td><input type="number" class="qty" value="${q}" min="1" required></td>
     <td><input type="text" class="sat" value="${sat}" required></td>
     <td><input type="text" class="hrg" value="${rp(hrg)}" oninput="fmtRp(this); hitungTr(this)" required></td>
-    <td><input type="text" class="tot" value="${rp(tot)}" oninput="fmtRp(this); hitungUnitFromTotal(this)" style="min-width:90px"></td>
+    <td><input type="text" class="tot" value="${rp(tot)}" oninput="fmtRp(this); hitungUnitFromTotal(this)"></td>
     <td><button type="button" class="btn red" style="padding:8px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:18px;height:18px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
   </tr>`;
 }
@@ -1048,7 +1054,6 @@ function bukaEditProyek(noUrut){
   const p=dbM.find(x=>String(x.noUrut)===String(noUrut));
   const items=dbP.filter(x=>String(x.noUrut)===String(noUrut));
   
-  // Ambil judul untuk diedit
   document.getElementById('epJudul').value = p.judulProyek || '';
   document.getElementById('epDapur').value=p.namaDapur;
   document.getElementById('epPIC').value=p.pic;
@@ -1071,7 +1076,7 @@ document.getElementById('frmEditProyek').addEventListener('submit', async e => {
   const idx=dbM.findIndex(x=>String(x.noUrut)===String(activeNoUrut));
   const p=dbM[idx];
   
-  p.judulProyek = document.getElementById('epJudul').value.trim(); // Simpan perubahan judul
+  p.judulProyek = document.getElementById('epJudul').value.trim(); 
   p.namaDapur=document.getElementById('epDapur').value; 
   p.pic=document.getElementById('epPIC').value;
   p.anggaranAwal=totalAng; p.sisa=totalAng-p.dibayar;
