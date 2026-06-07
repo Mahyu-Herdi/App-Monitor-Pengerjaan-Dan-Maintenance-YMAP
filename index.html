@@ -109,7 +109,7 @@
     .overlay-foto .close-btn{position:absolute;top:15px;right:15px;background:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.4)}
     .overlay-foto .drive-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:10px 24px;border-radius:14px;text-decoration:none;font-weight:bold;font-size:.9rem}
 
-    /* SP & EDIT MODAL (DIBUAT LEBIH LEBAR AGAR TABEL TIDAK TERLALU KEPOTONG) */
+    /* SP & EDIT MODAL */
     #mdSP, #mdEditProyek {max-width:900px!important;width:96%!important}
     .chk-item{display:flex;align-items:center;gap:8px;padding:6px 0}
     .chk-item input[type=checkbox]{width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:var(--blue);box-shadow:none;padding:0}
@@ -589,7 +589,7 @@ document.getElementById('frmUsulan').addEventListener('submit', async e => {
   showSec('usulan');
 });
 
-// ==================== FASE 2: PROSES SP ====================
+// ==================== FASE 2: PROSES SP & CETAK USULAN ====================
 function renderUsulanList(){
   const tb = document.getElementById('tblUsulanList'); tb.innerHTML='';
   const pendings = dbM.filter(x => x.status==='Pending Usulan');
@@ -602,25 +602,89 @@ function renderUsulanList(){
       <td>#${no}</td>
       <td><b style="color:var(--blue)">${judul}</b><br><small>${r.namaDapur}</small></td>
       <td><span class="badge bdg-pn">${r.status}</span></td>
-      <td><button class="btn org" style="padding:6px 12px;font-size:0.8rem" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button></td>
+      <td>
+        <div style="display:flex;gap:6px;flex-direction:column">
+          <button class="btn org" style="padding:6px 12px;font-size:0.8rem" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button>
+          <button class="btn" style="padding:6px 12px;font-size:0.8rem;background:#3498db" onclick="cetakUsulan('${r.noUrut}')">Cetak Usulan</button>
+        </div>
+      </td>
     </tr>`;
   });
 }
+
+function cetakUsulan(noUrut) {
+  const usulan = dbM.find(x => String(x.noUrut) === String(noUrut));
+  const items = dbP.filter(x => String(x.noUrut) === String(noUrut));
+  if(!usulan) return;
+
+  let tbody = '';
+  items.forEach((it, idx) => {
+    tbody += `<tr>
+      <td style="padding:8px; border:1px solid #ddd; text-align:center">${idx + 1}</td>
+      <td style="padding:8px; border:1px solid #ddd">${it.namaBarang}</td>
+      <td style="padding:8px; border:1px solid #ddd; text-align:center">${it.qty}</td>
+      <td style="padding:8px; border:1px solid #ddd; text-align:center">${it.satuan}</td>
+    </tr>`;
+  });
+
+  const htmlCetak = `
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+      <meta charset="UTF-8">
+      <title>Daftar Usulan - ${usulan.namaDapur}</title>
+      <style>
+        body { font-family: -apple-system, sans-serif; padding: 30px; color: #333; }
+        h2 { text-align: center; margin: 0 0 5px 0; color: #548CA8; text-transform: uppercase; }
+        .info { margin-bottom: 20px; font-size: 0.95rem; }
+        .info td { padding: 4px 15px 4px 0; }
+        table.data { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 25px; }
+        table.data th { background: #548CA8; color: white; padding: 10px; border: 1px solid #548CA8; }
+        @media print { @page { margin: 1cm; } body { padding: 0; } }
+      </style>
+    </head>
+    <body>
+      <h2>DAFTAR USULAN KEBUTUHAN</h2>
+      <table class="info">
+        <tr><td><b>Nama Dapur</b></td><td>: ${usulan.namaDapur}</td></tr>
+        <tr><td><b>Judul Proyek</b></td><td>: ${usulan.judulProyek || 'Pekerjaan Umum'}</td></tr>
+        <tr><td><b>Tanggal Usulan</b></td><td>: ${formatTgl(usulan.noUrut)}</td></tr>
+      </table>
+      <table class="data">
+        <thead>
+          <tr>
+            <th style="width:50px">No</th>
+            <th>Item Barang / Pekerjaan</th>
+            <th style="width:80px">Qty</th>
+            <th style="width:100px">Satuan</th>
+          </tr>
+        </thead>
+        <tbody>${tbody}</tbody>
+      </table>
+      <script>
+        window.onload = () => { window.print(); window.onafterprint = () => window.close(); }
+      <\/script>
+    </body>
+    </html>
+  `;
+  const win = window.open('', '_blank');
+  win.document.write(htmlCetak);
+  win.document.close();
+}
+
 
 function bukaProsesSP(noUrut){
   activeNoUrut = noUrut;
   const items = dbP.filter(x => String(x.noUrut)===String(noUrut));
   let html = '';
   
-  // MENGHITUNG OTOMATIS DATA YANG KOSONG DARI SPREADSHEET SEBELUM DITAMPILKAN
   items.forEach((it) => {
     let q = parseFloat(it.qty);
-    if (isNaN(q) || q <= 0) q = 1; // Default ke 1 kalau qty kosong/0
+    if (isNaN(q) || q <= 0) q = 1; 
     
     let h = parseFloat(it.hargaSatuan) || 0;
     let t = parseFloat(it.total) || 0;
     
-    // Perhitungan 2 arah otomatis
     if (t > 0 && h === 0) h = t / q;
     if (h > 0 && t === 0) t = h * q;
 
@@ -699,7 +763,6 @@ document.getElementById('frmProsesSP').addEventListener('submit', async e => {
     let h = unRp(tr.querySelector('.hrg').value);
     let t = unRp(tr.querySelector('.tot').value);
     
-    // Validasi akhir sebelum simpan kalau salah satu gak diketik
     if (t === 0 && h > 0) t = q * h;
     if (h === 0 && t > 0) h = t / q;
 
@@ -960,7 +1023,7 @@ function cetakLaporan() {
       </div>
       <script>
         window.onload = () => { window.print(); window.onafterprint = () => window.close(); }
-      </script>
+      <\/script>
     </body>
     </html>
   `;
@@ -1181,7 +1244,6 @@ function bukaEditProyek(noUrut){
   document.getElementById('epPIC').value=p.pic;
   
   let html=''; 
-  // SAMA KAYAK PROSES SP, INI NGITUNG DATA KOSONG SAAT EDIT
   items.forEach(it => {
     let q = parseFloat(it.qty);
     if (isNaN(q) || q <= 0) q = 1;
@@ -1210,7 +1272,6 @@ document.getElementById('frmEditProyek').addEventListener('submit', async e => {
     let h = unRp(tr.querySelector('.hrg').value);
     let t = unRp(tr.querySelector('.tot').value);
     
-    // Perbaikan simpan biar 2 arah tetap valid
     if (t === 0 && h > 0) t = q * h;
     if (h === 0 && t > 0) h = t / q;
 
