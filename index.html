@@ -471,6 +471,28 @@ const rp = n => (Number(n)||0).toLocaleString('id-ID');
 const unRp = s => parseFloat(String(s).replace(/\./g,'').replace(',','.')) || 0;
 const fmtRp = el => { let v = String(el.value).replace(/[^\d]/g,''); el.value = v ? parseInt(v).toLocaleString('id-ID') : ''; };
 
+// ── UTILITY CETAK CEPAT VIA IFRAME (ANTI STUCK DI TABLET) ──
+function doPrintWithIframe(htmlContent) {
+  let iframe = document.getElementById('printAreaIframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'printAreaIframe';
+    iframe.style.display = 'none'; // Sembunyikan iframe biar UI ga berubah
+    document.body.appendChild(iframe);
+  }
+  
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write(htmlContent);
+  doc.close();
+
+  // Kasih jeda setengah detik biar browser di tablet napas dikit dan ngerender DOM/CSS
+  setTimeout(() => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  }, 500);
+}
+
 // ── ALERT ──
 const ICONS = {
   success: `<svg width="48" height="48" fill="var(--green)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
@@ -661,15 +683,11 @@ function cetakUsulan(noUrut) {
         </thead>
         <tbody>${tbody}</tbody>
       </table>
-      <script>
-        window.onload = () => { window.print(); window.onafterprint = () => window.close(); }
-      <\/script>
     </body>
     </html>
   `;
-  const win = window.open('', '_blank');
-  win.document.write(htmlCetak);
-  win.document.close();
+  // Panggil fungsi iframe di sini biar gak nunggu load tab baru
+  doPrintWithIframe(htmlCetak);
 }
 
 
@@ -1021,15 +1039,11 @@ function cetakLaporan() {
         <div style="color:#609966">Total Terbayar: Rp ${rp(tB)}</div>
         <div style="color:#d96c6c">Total Sisa Utang: Rp ${rp(tS)}</div>
       </div>
-      <script>
-        window.onload = () => { window.print(); window.onafterprint = () => window.close(); }
-      <\/script>
     </body>
     </html>
   `;
-  const win = window.open('', '_blank');
-  win.document.write(html);
-  win.document.close();
+  // Panggil fungsi cetak cepat
+  doPrintWithIframe(html);
 }
 
 // ==================== AUTO REKENING & CETAK ====================
