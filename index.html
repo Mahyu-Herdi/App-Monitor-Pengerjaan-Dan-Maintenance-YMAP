@@ -6,7 +6,6 @@
   <title>Monitoring - Rekonstruksi & Anggaran</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#e8e4d9">
-  <!-- Library Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -114,11 +113,7 @@
     /* SP & EDIT MODAL */
     #mdSP, #mdEditProyek, #mdChart, #mdChartDetail {max-width:950px!important;width:96%!important}
 
-    /* FILTER SECTION */
-    .filter-panel { padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.3); box-shadow: var(--sh-in); margin-bottom: 25px; }
-    .date-filter-row{display:grid;grid-template-columns:1fr 1fr auto auto;gap:15px;align-items:end;margin-bottom:20px}
-    @media(max-width:768px){.date-filter-row{grid-template-columns:1fr 1fr;gap:12px}}
-
+    /* FILTER & SWITCH (Tetap dipertahankan untuk modal) */
     .switch { position: relative; display: inline-block; width: 130px; height: 42px; border-radius: 21px; background: var(--bg); box-shadow: var(--sh-in); margin-bottom: 3px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; transition: .4s; border-radius: 21px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; font-size:0.8rem; font-weight:800; color:var(--muted); z-index:1; }
@@ -130,7 +125,7 @@
     input:not(:checked) + .slider .txt-bayar { color: var(--muted); }
 
     /* CUSTOM UNTUK PENCARIAN */
-    .search-container { position:relative; margin-bottom:25px; z-index: 100; }
+    .search-container { position:relative; z-index: 100; }
     .search-container input { padding-left: 45px; border-radius: 20px; }
     .search-container svg { position:absolute; left:16px; top:16px; width:22px; height:22px; fill:var(--blue); }
     .search-box { display:none; position:absolute; top:60px; left:0; right:0; background:var(--bg); box-shadow:var(--sh-out); border-radius:16px; max-height:300px; overflow-y:auto; border:1px solid #d1cdc0; padding:10px;}
@@ -139,6 +134,11 @@
     .search-item b { color: var(--blue); display:block; font-size:1.05rem; margin-bottom:3px; }
     .search-item span { color: var(--muted); font-size:0.8rem; display:block; }
     .search-item i { color: var(--green); font-size:0.8rem; display:block; margin-top:3px; font-style:normal; font-weight:bold;}
+
+    /* MAIN CONTROL BARU (Pencarian + Tombol Filter) */
+    .main-control { display: flex; gap: 12px; margin-bottom: 25px; align-items: center; }
+    .filter-trigger { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; background: var(--bg); border-radius: 16px; box-shadow: var(--sh-out); cursor: pointer; color: var(--blue); flex-shrink: 0; transition: transform 0.2s, box-shadow 0.2s; }
+    .filter-trigger:active { box-shadow: var(--sh-in); transform: scale(0.95); }
   </style>
 </head>
 <body>
@@ -159,6 +159,37 @@
   </a>
 </div>
 
+<div id="ovFilter" class="overlay" onclick="closeFilter()"></div>
+<div id="mdFilter" class="modal" style="max-width: 400px;">
+  <h3>Filter Lanjutan</h3>
+  <label>Mode Tanggal</label>
+  <label class="switch" style="display:block; margin-bottom:20px;">
+    <input type="checkbox" id="tglModeToggle">
+    <span class="slider"><span class="txt-mulai">Mulai</span><span class="txt-bayar">Bayar</span></span>
+  </label>
+  
+  <div class="g2" style="margin-bottom:20px">
+    <div><label>Dari</label><input type="date" id="flTglDari"></div>
+    <div><label>Sampai</label><input type="date" id="flTglSampai"></div>
+  </div>
+  
+  <div style="margin-bottom:20px">
+    <label>PIC</label><select id="flPIC"><option value="">Semua PIC</option></select>
+    <label style="margin-top:15px">Dapur</label><select id="flDapur"><option value="">Semua Dapur</option></select>
+    <label style="margin-top:15px">Status</label>
+    <select id="flStatus">
+      <option value="">Semua Status</option>
+      <option>Dalam Pengerjaan</option>
+      <option>Belum Lunas / Dicicil</option>
+      <option>Lunas / Selesai</option>
+    </select>
+  </div>
+
+  <div style="display:flex; gap:12px; margin-top:25px;">
+    <button class="btn grn" style="flex:2" onclick="applyFilterModal()">Terapkan Filter</button>
+    <button class="btn red" style="flex:1" onclick="resetFilterModal()">Reset</button>
+  </div>
+</div>
 <div class="container">
 
   <div class="app-header">
@@ -231,64 +262,34 @@
   </div>
 
 
-  <!-- ================= SECTION MONITORING (UTAMA) ================= -->
   <div id="sec-monitor" class="card app-sec">
     <h2><svg viewBox="0 0 24 24"><path d="M5 19.248V4h14v15.248l-2.5-1.5-2.5 1.5-2.5-1.5-2.5 1.5-1.5-1zM17 6H7v2h10V6zm0 4H7v2h10v-2zm-4 4H7v2h6v-2z"/></svg> Dashboard Monitoring Proyek</h2>
     
-    <!-- PENCARIAN CERDAS -->
-    <div class="search-container">
-      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <input type="text" id="inpCari" placeholder="Ketik nama proyek, dapur, PIC, atau item barang..." autocomplete="off" onkeyup="cariDataCepat()">
-      <div id="boxSaran" class="search-box"></div>
+    <div class="main-control">
+      <div class="search-container" style="flex:1; margin-bottom:0">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="inpCari" placeholder="Ketik nama proyek, dapur, PIC..." autocomplete="off" onkeyup="cariDataCepat(); applyFilter()">
+        <div id="boxSaran" class="search-box"></div>
+      </div>
+      <div class="filter-trigger" onclick="openFilter()" title="Filter Lanjutan">
+        <svg viewBox="0 0 24 24" style="width:24px;height:24px"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+      </div>
     </div>
 
-    <!-- KARTU TOTAL -->
-    <div class="g3" style="margin-bottom:30px">
+    <div class="g3" style="margin-bottom:25px">
       <div class="dc"><h4>Total Anggaran</h4><h2 id="sumTotal">Rp 0</h2></div>
       <div class="dc grn"><h4>Total Terbayar</h4><h2 id="sumBayar">Rp 0</h2></div>
       <div class="dc red"><h4>Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2></div>
     </div>
     
-    <!-- PANEL FILTER -->
-    <div class="filter-panel">
-      <div style="margin-bottom:15px">
-        <label style="margin-bottom:10px;font-size:.9rem;color:var(--blue);font-weight:900;text-transform:uppercase;letter-spacing:1px">Filter Data</label>
-        <div class="date-filter-row">
-          <div><label>Dari Tanggal</label><input type="date" id="flTglDari"></div>
-          <div><label>Sampai Tanggal</label><input type="date" id="flTglSampai"></div>
-          <div style="text-align:center">
-            <label style="display:block;margin-bottom:8px">Mode Pencarian</label>
-            <label class="switch">
-              <input type="checkbox" id="tglModeToggle" onchange="applyFilter()">
-              <span class="slider"><span class="txt-mulai">Mulai</span><span class="txt-bayar">Bayar</span></span>
-            </label>
-          </div>
-          <div>
-            <label style="opacity:0;display:block;margin-bottom:8px">.</label>
-            <button class="btn" style="padding:0 25px; height:42px; background:var(--bg); color:var(--txt); box-shadow:var(--sh-out-sm)" onclick="clearDateFilter()">Reset Tgl</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="g3">
-        <div><label>Status</label><select id="flStatus"><option value="">Semua Status</option><option>Dalam Pengerjaan</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
-        <div><label>PIC</label><select id="flPIC"><option value="">Semua PIC</option></select></div>
-        <div><label>Dapur</label><select id="flDapur"><option value="">Semua Dapur</option></select></div>
-        
-        <!-- TOMBOL AKSI FILTER & GRAFIK -->
-        <div style="display:flex;gap:12px;align-items:flex-end; grid-column: 1 / -1; margin-top:5px; flex-wrap:wrap;">
-          <button class="btn grn" style="flex:1; min-width:120px;" onclick="applyFilter()">Cari Filter</button>
-          <button class="btn red" style="flex:1; min-width:120px;" onclick="resetFilter()">Reset Semua</button>
-          <button class="btn" style="flex:1; background:#e67e22; min-width:120px;" onclick="cetakLaporan()">Cetak Laporan</button>
-          <button class="btn purp" style="flex:1; min-width:120px;" onclick="bukaModalChart()">
-            <svg viewBox="0 0 24 24"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/></svg> 
-            Grafik Dapur
-          </button>
-        </div>
-      </div>
+    <div style="display:flex;gap:12px;margin-bottom:25px;flex-wrap:wrap;">
+      <button class="btn" style="flex:1; background:#e67e22; min-width:120px;" onclick="cetakLaporan()">Cetak Laporan</button>
+      <button class="btn purp" style="flex:1; min-width:120px;" onclick="bukaModalChart()">
+        <svg viewBox="0 0 24 24"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/></svg> 
+        Grafik Dapur
+      </button>
     </div>
 
-    <!-- TABEL MONITORING -->
     <div id="pnlCetak" class="pbar" style="display:none">
       <span style="color:var(--blue);font-weight:900;flex:1;font-size:1.05rem">Cetak Dokumen Cepat:</span>
       <button class="btn" onclick="prosesCetak('sp')">Surat Pesanan</button>
@@ -305,14 +306,12 @@
   </div>
 
 
-  <!-- ================= MODAL GRAFIK & DETAIL ================= -->
   <div id="ovChart" class="overlay" onclick="closeModalChart(event)"></div>
   <div id="mdChart" class="modal">
     <h3>Statistik Pengeluaran Dapur</h3>
     
     <div id="infoTertinggi" style="background:rgba(255,255,255,0.4); padding:15px; border-radius:12px; margin-bottom:15px; border-left:5px solid var(--blue); box-shadow:var(--sh-in-sm);">
-      <!-- Info PIC dan Dapur terbesar muncul di sini -->
-    </div>
+      </div>
 
     <div style="height:320px; width:100%; position:relative;">
       <canvas id="dapurChart"></canvas>
@@ -347,7 +346,6 @@
   </div>
 
 
-  <!-- ================= MODAL LAINNYA ================= -->
   <div id="ovEditProyek" class="overlay"></div>
   <div id="mdEditProyek" class="modal">
     <h3>Edit Proyek / Revisi Item</h3>
@@ -570,7 +568,7 @@ function driveImgSrc(url) {
   return match ? `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400` : url;
 }
 
-// ... [Daftar fungsi USULAN, TAMBAH BARIS, HAPUS dll sama seperti aslinya] ...
+// ==================== DAFTAR FUNGSI USULAN ====================
 function htmlBarisUsulan(){
   return `<tr>
     <td><input type="text" class="nb" placeholder="Misal: Semen" required></td>
@@ -661,16 +659,48 @@ function buildFilter(){
   [...new Set(dbM.map(r=>r.pic).filter(Boolean))].forEach(p=>fp.innerHTML+=`<option ${p===cP?'selected':''}>${p}</option>`);
   [...new Set(dbM.map(r=>r.namaDapur).filter(Boolean))].forEach(d=>fd.innerHTML+=`<option ${d===cD?'selected':''}>${d}</option>`);
 }
-function clearDateFilter(){ document.getElementById('flTglDari').value=''; document.getElementById('flTglSampai').value=''; applyFilter(); }
-function resetFilter(){ ['flStatus','flPIC','flDapur'].forEach(id=>document.getElementById(id).value=''); clearDateFilter(); }
+
+// LOGIC BARU UNTUK MODAL FILTER
+function openFilter() {
+  document.getElementById('ovFilter').style.display='block';
+  document.getElementById('mdFilter').style.display='block';
+}
+function closeFilter() {
+  document.getElementById('ovFilter').style.display='none';
+  document.getElementById('mdFilter').style.display='none';
+}
+function applyFilterModal() {
+  closeFilter();
+  applyFilter();
+}
+function resetFilterModal() {
+  document.getElementById('flTglDari').value='';
+  document.getElementById('flTglSampai').value='';
+  document.getElementById('flPIC').value='';
+  document.getElementById('flDapur').value='';
+  document.getElementById('flStatus').value='';
+  document.getElementById('tglModeToggle').checked = false;
+  closeFilter();
+  applyFilter();
+}
 
 function applyFilter(){
+  const keyword = document.getElementById('inpCari').value.toLowerCase();
   const st=document.getElementById('flStatus').value, pi=document.getElementById('flPIC').value, da=document.getElementById('flDapur').value;
   const tDari=document.getElementById('flTglDari').value, tSampai=document.getElementById('flTglSampai').value;
   const modeTgl = document.getElementById('tglModeToggle').checked ? 'bayar' : 'mulai';
   
   const filtered = dbM.filter(r => {
     if(r.status==='Pending Usulan') return false;
+    
+    // Logic Pencarian (Search Bar)
+    if(keyword) {
+      const inJudul = (r.judulProyek || '').toLowerCase().includes(keyword);
+      const inPic = (r.pic || '').toLowerCase().includes(keyword);
+      const inDapur = (r.namaDapur || '').toLowerCase().includes(keyword);
+      if (!(inJudul || inPic || inDapur)) return false;
+    }
+
     if(st && r.status!==st) return false; if(pi && r.pic!==pi) return false; if(da && r.namaDapur!==da) return false;
     if(tDari || tSampai){
       const d = tDari ? new Date(tDari).setHours(0,0,0,0) : null, s = tSampai ? new Date(tSampai).setHours(23,59,59,999) : null;
@@ -720,7 +750,7 @@ function applyFilter(){
 }
 
 
-// ==================== FITUR BARU: SEARCH CERDAS ====================
+// ==================== PENCARIAN CERDAS ====================
 function cariDataCepat() {
   const keyword = document.getElementById('inpCari').value.toLowerCase();
   const box = document.getElementById('boxSaran');
@@ -753,10 +783,11 @@ function cariDataCepat() {
 function pilihSaran(noUrut, judul) {
   document.getElementById('inpCari').value = judul;
   document.getElementById('boxSaran').style.display = 'none';
+  applyFilter(); // Tambahan agar filter berjalan ketika saran dipilih
   bukaLihatDokumen(noUrut);
 }
 
-// ==================== FITUR BARU: GRAFIK ====================
+// ==================== GRAFIK ====================
 let chartDonut = null;
 function bukaModalChart() {
   const dataAktif = lastFilteredData.length > 0 ? lastFilteredData : dbM.filter(x => x.status !== 'Pending Usulan');
@@ -861,7 +892,7 @@ function bukaLihatDokumen(noUrut){
 }
 function closeLihatDokumen(){ document.getElementById('ovLihatDokumen').style.display='none'; document.getElementById('mdLihatDokumen').style.display='none'; }
 
-// ... [Fungsi Edit Proyek, Upload Validasi, Bayar, dll dibiarkan sama - hapus pemotongan di atas biar lengkap] ...
+
 function bukaInputBayar(noUrut){
   activeNoUrut=noUrut;
   const p=dbM.find(x=>String(x.noUrut)===String(noUrut));
