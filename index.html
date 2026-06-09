@@ -9,120 +9,129 @@
   <style>
     :root {
       --bg: #e8e4d9;
-      --txt: #4a4a4a; --muted: #8c8c8c;
-      --blue: #548CA8; --green: #609966; --red: #d96c6c;
+      --txt: #4a4a4a; --muted: #7a7a7a;
+      --blue: #3b718f; --green: #4f8755; --red: #c95b5b;
       --sh-out: 8px 8px 16px #d1cdc0, -8px -8px 16px #fff;
       --sh-out-sm: 4px 4px 8px #d1cdc0, -4px -4px 8px #fff;
       --sh-in: inset 6px 6px 12px #d1cdc0, inset -6px -6px 12px #fff;
       --sh-in-sm: inset 3px 3px 6px #d1cdc0, inset -3px -3px 6px #fff;
-      --clay: 6px 6px 12px #d1cdc0,-6px -6px 12px #fff,inset 2px 2px 5px rgba(255,255,255,.3),inset -3px -3px 5px rgba(0,0,0,.1);
+      --clay: 6px 6px 12px #d1cdc0,-6px -6px 12px #fff,inset 2px 2px 5px rgba(255,255,255,.5),inset -3px -3px 5px rgba(0,0,0,.05);
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:15px 15px 90px;font-size:14px}
     .container{width:100%;max-width:100%;margin:auto}
 
     /* HEADER */
-    .app-header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;margin-bottom:20px;border-radius:20px;background:var(--bg);box-shadow:var(--sh-out)}
+    .app-header{display:flex;justify-content:space-between;align-items:center;padding:18px 25px;margin-bottom:25px;border-radius:24px;background:var(--bg);box-shadow:var(--sh-out)}
     .app-header div{flex:1;margin-right:15px}
-    .app-header .title{font-size:1.2rem;font-weight:800;color:var(--blue);margin:0}
-    .app-header .sub{font-size:.8rem;color:var(--muted);margin:3px 0 0}
+    .app-header .title{font-size:1.3rem;font-weight:900;color:var(--blue);margin:0;letter-spacing:0.5px}
+    .app-header .sub{font-size:.85rem;color:var(--muted);margin:4px 0 0;font-weight:500}
     .app-header img{width:60px;height:60px;object-fit:contain;margin-left:10px}
 
     /* CARD & GRID */
-    .card{background:var(--bg);border-radius:20px;padding:20px;margin-bottom:25px;box-shadow:var(--sh-out)}
-    .card h2,.card h3{color:var(--blue);margin:0 0 15px;font-size:1.1rem;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
-    .card h2 svg,.card h3 svg{width:24px;height:24px;fill:currentColor;flex-shrink:0}
-    .g2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-    .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-    @media(max-width:768px){.g2,.g3{grid-template-columns:1fr;gap:12px}}
+    .card{background:var(--bg);border-radius:24px;padding:25px;margin-bottom:30px;box-shadow:var(--sh-out)}
+    .card h2,.card h3{color:var(--blue);margin:0 0 20px;font-size:1.15rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
+    .card h2 svg,.card h3 svg{width:26px;height:26px;fill:currentColor;flex-shrink:0}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media(max-width:768px){.g2,.g3{grid-template-columns:1fr;gap:15px}}
 
     /* INPUTS */
-    label{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:.8rem;font-weight:bold;color:var(--muted)}
-    input,select,textarea{width:100%;padding:14px;border-radius:14px;border:none;background:var(--bg);color:var(--txt);box-shadow:var(--sh-in);font-size:.95rem;font-weight:bold;transition:all .3s}
+    label{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:.85rem;font-weight:700;color:var(--txt)}
+    input,select,textarea{width:100%;padding:15px;border-radius:16px;border:none;background:var(--bg);color:var(--txt);box-shadow:var(--sh-in);font-size:.95rem;font-weight:bold;transition:all .3s}
     input:focus,select:focus,textarea:focus{outline:none;box-shadow:var(--sh-in),0 0 0 3px rgba(84,140,168,.2)}
     input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
     
-    /* DASH CARD */
-    .dc{border-radius:16px;padding:15px;background:var(--bg);box-shadow:var(--sh-in);text-align:center}
-    .dc h4{margin:0 0 5px;color:var(--muted);font-size:.75rem;text-transform:uppercase}
-    .dc h2{margin:5px 0 0 0!important;font-size:1.8rem!important;font-weight:900!important;text-align:center!important;width:100%!important;display:block!important}
+    /* DASH CARD (Diperbesar & Dibuat Menonjol) */
+    .dc{border-radius:20px;padding:25px 15px;background:linear-gradient(145deg, #f3efe5, #e0dcca);box-shadow:var(--sh-out);text-align:center;transition:transform 0.2s}
+    .dc:hover{transform:translateY(-3px)}
+    .dc h4{margin:0 0 8px;color:var(--muted);font-size:.8rem;text-transform:uppercase;font-weight:700;letter-spacing:1px}
+    .dc h2{margin:0!important;font-size:2.2rem!important;font-weight:900!important;text-align:center!important;width:100%!important;display:block!important;text-shadow: 2px 2px 4px rgba(0,0,0,0.05)}
     .dc.grn h2{color:var(--green)!important}
     .dc.red h2{color:var(--red)!important}
     .dc:not(.grn):not(.red) h2{color:var(--blue)!important}
     
     /* BTN */
-    .btn{padding:14px 18px;border:none;border-radius:14px;background:var(--blue);color:#fff;font-weight:bold;cursor:pointer;box-shadow:var(--clay);transition:all .2s;font-size:.9rem;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn{padding:14px 20px;border:none;border-radius:16px;background:var(--blue);color:#fff;font-weight:bold;cursor:pointer;box-shadow:var(--clay);transition:all .2s;font-size:.95rem;display:flex;align-items:center;justify-content:center;gap:8px}
     .btn svg{width:18px;height:18px;fill:currentColor}
     .btn:active{box-shadow:var(--sh-in-sm);transform:scale(.97)}
-    .btn.red{background:var(--red)}.btn.grn{background:var(--green)}.btn.org{background:#d35400}.btn.full{width:100%;padding:16px;font-size:1rem;margin-top:15px}
+    .btn.red{background:var(--red)}.btn.grn{background:var(--green)}.btn.org{background:#d35400}.btn.full{width:100%;padding:18px;font-size:1.05rem;margin-top:15px}
     .btn:disabled{opacity:0.6;cursor:not-allowed}
 
-    /* TABLE: CSS DIUBAH AGAR KOLOM FLEKSIBEL */
-    .tbl-wrap{overflow-x:auto;border-radius:16px;box-shadow:var(--sh-in);padding:5px}
-    table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:max-content}
-    th{padding:12px;text-align:left;color:var(--muted);font-weight:bold;white-space:nowrap;border-bottom:2px solid rgba(0,0,0,.05)}
-    td{padding:12px;border-bottom:1px solid rgba(0,0,0,.03);vertical-align:middle}
+    /* TABLE: CSS DIUBAH AGAR LEBIH FOKUS & BERKELAS */
+    .tbl-wrap{overflow-x:auto;border-radius:16px;box-shadow:var(--sh-in);padding:8px;background: rgba(255,255,255,0.2);}
+    table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:max-content}
+    th{padding:15px 12px;text-align:left;color:var(--blue);font-weight:800;white-space:nowrap;border-bottom:3px solid rgba(84,140,168,.3);text-transform:uppercase;font-size:.8rem;letter-spacing:.5px}
+    td{padding:14px 12px;border-bottom:1.5px solid rgba(0,0,0,.08);vertical-align:middle;transition:background .2s}
+    tbody tr:hover td { background: rgba(255,255,255,0.4); } /* Efek hover baris tabel */
+    tbody tr:last-child td { border-bottom: none; }
     
-    /* INPUT DI DALAM TABEL (BIAR OTOMATIS PANJANG) */
-    td input { width: 100%; box-sizing: border-box; }
+    /* INPUT DI DALAM TABEL */
+    td input { width: 100%; box-sizing: border-box; padding: 12px; border-radius: 12px; }
     td input.nb { min-width: 200px; }
     td input.qty { min-width: 70px; }
     td input.sat { min-width: 100px; }
-    td input.hrg, td input.tot { min-width: 130px; }
-    td input[type="checkbox"] { width: 18px; min-width: 18px; }
+    td input.hrg, td input.tot { min-width: 140px; }
+    td input[type="checkbox"] { width: 20px; min-width: 20px; accent-color: var(--blue); }
 
-    .badge{padding:6px 12px;border-radius:10px;font-size:.75rem;font-weight:bold;white-space:nowrap;box-shadow:var(--sh-in-sm);display:inline-block}
+    .badge{padding:8px 14px;border-radius:12px;font-size:.75rem;font-weight:800;white-space:nowrap;box-shadow:var(--sh-in-sm);display:inline-block;letter-spacing:.3px}
     .bdg-pg{color:#b37700}.bdg-cc{color:#005f73}.bdg-ln{color:var(--green)}.bdg-pn{color:#7f8c8d}
 
     /* PRINT BAR */
-    .pbar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center;padding:15px;border-radius:16px;box-shadow:var(--sh-in);background:var(--bg)}
+    .pbar{display:flex;gap:12px;margin-bottom:25px;flex-wrap:wrap;align-items:center;padding:18px;border-radius:20px;box-shadow:var(--sh-out);background:linear-gradient(145deg, #f8f6f0, #e8e4d9);}
 
     /* MODAL */
-    .overlay{display:none;position:fixed;inset:0;background:rgba(232,228,217,.8);backdrop-filter:blur(6px);z-index:9998}
-    .modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg);box-shadow:var(--sh-out);padding:25px;border-radius:20px;z-index:9999;width:96%;max-width:500px;max-height:92vh;overflow-y:auto}
-    .modal h3{color:var(--blue);margin:0 0 15px;font-size:1.1rem;text-align:center}
-    .modal p{color:var(--txt);font-size:.95rem;margin:0 0 20px;line-height:1.5;text-align:center}
-    .modal-inp{margin-bottom:20px;font-size:1.2rem;color:var(--blue);box-shadow:var(--sh-in);background:var(--bg);text-align:center}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(232,228,217,.85);backdrop-filter:blur(8px);z-index:9998}
+    .modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg);box-shadow:0 20px 40px rgba(0,0,0,0.15), var(--sh-out);padding:30px;border-radius:24px;z-index:9999;width:96%;max-width:500px;max-height:92vh;overflow-y:auto}
+    .modal h3{color:var(--blue);margin:0 0 20px;font-size:1.25rem;text-align:center;font-weight:800}
+    .modal p{color:var(--txt);font-size:.95rem;margin:0 0 25px;line-height:1.6;text-align:center}
+    .modal-inp{margin-bottom:20px;font-size:1.3rem;color:var(--blue);box-shadow:var(--sh-in);background:var(--bg);text-align:center;font-weight:900}
 
     /* NAV */
-    .nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:92%;max-width:550px;background:var(--bg);box-shadow:var(--sh-out);border-radius:30px;display:flex;justify-content:space-around;align-items:center;padding:10px 5px;z-index:9000}
+    .nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:92%;max-width:550px;background:var(--bg);box-shadow:var(--sh-out);border-radius:30px;display:flex;justify-content:space-around;align-items:center;padding:12px 5px;z-index:9000}
     .ni{display:flex;flex-direction:column;align-items:center;color:var(--muted);cursor:pointer;transition:.3s;padding:8px;width:20%}
-    .ni svg{width:22px;height:22px;fill:currentColor;margin-bottom:4px;transition:.3s}
-    .ni span{font-size:.65rem;font-weight:bold;text-align:center;line-height:1.2}
-    .ni.on{color:var(--blue)}.ni.on svg{transform:translateY(-3px);filter:drop-shadow(0 4px 4px rgba(84,140,168,.3))}
+    .ni svg{width:24px;height:24px;fill:currentColor;margin-bottom:6px;transition:.3s}
+    .ni span{font-size:.7rem;font-weight:800;text-align:center;line-height:1.2}
+    .ni.on{color:var(--blue)}.ni.on svg{transform:translateY(-4px);filter:drop-shadow(0 4px 6px rgba(59,113,143,.3))}
     
-    .file-input-wrapper{display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);box-shadow:var(--sh-in-sm);border-radius:12px;margin-bottom:15px}
-    .file-input-wrapper label{margin:0;font-size:0.85rem;color:var(--blue)}
+    .file-input-wrapper{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;background:var(--bg);box-shadow:var(--sh-in-sm);border-radius:16px;margin-bottom:15px}
+    .file-input-wrapper label{margin:0;font-size:0.9rem;color:var(--blue);font-weight:bold}
     .file-input-wrapper input[type=file]{width:auto;box-shadow:none;padding:0;background:transparent}
     
     /* GALLERY */
-    .gallery-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px;margin-bottom:15px}
-    .gallery-thumb{width:90px;height:90px;object-fit:cover;border-radius:10px;border:2px solid var(--blue);cursor:pointer;box-shadow:var(--sh-in-sm);transition:.2s;flex-shrink:0}
-    .gallery-thumb:hover{transform:scale(1.08);border-color:var(--green)}
-    .drive-link{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;color:var(--blue);text-decoration:none;padding:4px 10px;border-radius:8px;box-shadow:var(--sh-in-sm);margin-top:4px}
-    .drive-link:hover{color:var(--green)}
+    .gallery-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;margin-bottom:20px}
+    .gallery-thumb{width:100px;height:100px;object-fit:cover;border-radius:12px;border:3px solid transparent;cursor:pointer;box-shadow:var(--sh-out-sm);transition:.2s;flex-shrink:0}
+    .gallery-thumb:hover{transform:scale(1.05);border-color:var(--blue)}
+    .drive-link{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--blue);text-decoration:none;padding:6px 12px;border-radius:10px;box-shadow:var(--sh-out-sm);margin-top:6px;font-weight:bold}
+    .drive-link:hover{color:var(--green);box-shadow:var(--sh-in-sm)}
 
     /* FOTO POPUP */
     .overlay-foto{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:11000;align-items:center;justify-content:center}
     .overlay-foto.show{display:flex}
-    .overlay-foto img{max-width:95vw;max-height:90vh;object-fit:contain;border-radius:12px}
-    .overlay-foto .close-btn{position:absolute;top:15px;right:15px;background:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.4)}
-    .overlay-foto .drive-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:10px 24px;border-radius:14px;text-decoration:none;font-weight:bold;font-size:.9rem}
+    .overlay-foto img{max-width:95vw;max-height:90vh;object-fit:contain;border-radius:16px}
+    .overlay-foto .close-btn{position:absolute;top:20px;right:20px;background:#fff;border:none;border-radius:50%;width:45px;height:45px;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,.5);transition:.2s}
+    .overlay-foto .close-btn:hover{transform:scale(1.1)}
+    .overlay-foto .drive-btn{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:12px 28px;border-radius:16px;text-decoration:none;font-weight:bold;font-size:1rem;box-shadow:0 4px 15px rgba(0,0,0,.5)}
 
     /* SP & EDIT MODAL */
-    #mdSP, #mdEditProyek {max-width:900px!important;width:96%!important}
-    .chk-item{display:flex;align-items:center;gap:8px;padding:6px 0}
-    .chk-item input[type=checkbox]{width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:var(--blue);box-shadow:none;padding:0}
+    #mdSP, #mdEditProyek {max-width:950px!important;width:96%!important}
 
-    /* DATE FILTER & TOGGLE SWITCH */
-    .date-filter-row{display:grid;grid-template-columns:1fr 1fr auto auto;gap:10px;align-items:end;margin-bottom:12px}
-    @media(max-width:650px){.date-filter-row{grid-template-columns:1fr 1fr;gap:8px}}
+    /* FILTER SECTION - PREMIUM LOOK */
+    .filter-panel {
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.3); /* Sedikit lebih terang biar beda area */
+      box-shadow: var(--sh-in);
+      margin-bottom: 25px;
+    }
+    .date-filter-row{display:grid;grid-template-columns:1fr 1fr auto auto;gap:15px;align-items:end;margin-bottom:20px}
+    @media(max-width:768px){.date-filter-row{grid-template-columns:1fr 1fr;gap:12px}}
 
-    .switch { position: relative; display: inline-block; width: 120px; height: 38px; border-radius: 19px; background: var(--bg); box-shadow: var(--sh-in-sm); margin-bottom: 3px; }
+    .switch { position: relative; display: inline-block; width: 130px; height: 42px; border-radius: 21px; background: var(--bg); box-shadow: var(--sh-in); margin-bottom: 3px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; transition: .4s; border-radius: 19px; display:flex; align-items:center; justify-content:space-between; padding:0 12px; font-size:0.75rem; font-weight:bold; color:var(--muted); z-index:1; }
-    .slider::before { position: absolute; content: ""; height: 30px; width: 56px; left: 4px; bottom: 4px; background-color: var(--blue); transition: .3s cubic-bezier(0.4, 0.0, 0.2, 1); border-radius: 15px; z-index:-1; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); }
-    input:checked + .slider::before { transform: translateX(56px); }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; transition: .4s; border-radius: 21px; display:flex; align-items:center; justify-content:space-between; padding:0 15px; font-size:0.8rem; font-weight:800; color:var(--muted); z-index:1; }
+    .slider::before { position: absolute; content: ""; height: 34px; width: 60px; left: 4px; bottom: 4px; background-color: var(--blue); transition: .3s cubic-bezier(0.4, 0.0, 0.2, 1); border-radius: 17px; z-index:-1; box-shadow: 2px 2px 6px rgba(0,0,0,0.2); }
+    input:checked + .slider::before { transform: translateX(62px); }
     input:checked + .slider .txt-mulai { color: var(--muted); }
     input:checked + .slider .txt-bayar { color: #fff; }
     input:not(:checked) + .slider .txt-mulai { color: #fff; }
@@ -152,19 +161,19 @@
 <div class="container">
 
   <div class="app-header">
-    <div><div class="title">MONITORING PELAKSANA PEMBANGUNAN & MAINTENANCE</div><div class="sub">Validasi Pekerjaan & Keuangan</div></div>
-    <img src="icon.png" alt="Logo">
+    <div><div class="title">MONITORING PELAKSANA</div><div class="sub">Validasi Pekerjaan & Keuangan</div></div>
+    <img src="icon.png" alt="Logo" onerror="this.style.display='none'">
   </div>
 
   <div id="sec-input" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Form Pengajuan Usulan</h2>
-    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px">Masukkan usulan kebutuhan barang/jasa dapur. PIC dan Harga akan diisi saat pencetakan SP.</p>
+    <p style="font-size:0.9rem;color:var(--muted);margin-bottom:25px">Masukkan usulan kebutuhan barang/jasa dapur. PIC dan Harga akan diisi saat pencetakan SP.</p>
     <form id="frmUsulan" autocomplete="off">
       <div class="g2">
         <div><label>Nama Dapur (Usulan)</label><input type="text" id="uDapur" placeholder="Pilih / ketik nama dapur" required></div>
         <div><label>Judul Proyek / Uraian</label><input type="text" id="uJudul" placeholder="Misal: Perbaikan Atap & Pengecatan" required></div>
       </div>
-      <div class="tbl-wrap" style="margin:20px 0">
+      <div class="tbl-wrap" style="margin:25px 0">
         <table id="tblUsulanBarang">
           <thead><tr><th>Item Barang / Pekerjaan</th><th>Qty</th><th>Satuan</th><th>Aksi</th></tr></thead>
           <tbody id="bodyUsulanBarang">
@@ -172,7 +181,7 @@
               <td><input type="text" class="nb" placeholder="Misal: Semen" required></td>
               <td><input type="number" class="qty" value="1" min="1" required></td>
               <td><input type="text" class="sat" placeholder="Sak" required></td>
-              <td><button type="button" class="btn red" style="padding:8px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
+              <td><button type="button" class="btn red" style="padding:10px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
             </tr>
           </tbody>
         </table>
@@ -195,18 +204,18 @@
   <div id="ovSP" class="overlay"></div>
   <div id="mdSP" class="modal">
     <h3>Tetapkan SP & Harga</h3>
-    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;text-align:left">✅ Centang item yang akan diproses. Qty dan nama bisa diedit. Harga satuan otomatis menghitung total, dan sebaliknya.</p>
+    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;text-align:left;line-height:1.5">✅ Centang item yang akan diproses. Qty dan nama bisa diedit. Harga satuan otomatis menghitung total, dan sebaliknya.</p>
     <form id="frmProsesSP" autocomplete="off">
-      <div class="g2" style="margin-bottom:12px">
+      <div class="g2" style="margin-bottom:20px">
         <div><label>Nama PIC</label><input type="text" id="spPIC" required></div>
         <div><label>Tanggal Mulai</label><input type="date" id="spTglMulai" required></div>
         <div><label>Tanggal Selesai (Opsional)</label><input type="date" id="spTglSelesai"></div>
       </div>
-      <div class="tbl-wrap" style="margin:8px 0 12px">
+      <div class="tbl-wrap" style="margin:10px 0 20px">
         <table id="tblSpBarang">
           <thead>
             <tr>
-              <th>✓</th>
+              <th style="text-align:center">✓</th>
               <th>Item Barang / Pekerjaan</th>
               <th>Qty</th>
               <th>Satuan</th>
@@ -217,14 +226,14 @@
           <tbody id="bodySpBarang"></tbody>
           <tfoot>
             <tr>
-              <td colspan="5" style="text-align:right;font-weight:bold;padding:8px">TOTAL DIPILIH:</td>
-              <td style="font-weight:bold;color:var(--blue);padding:8px" id="spGrandTotal">Rp 0</td>
+              <td colspan="5" style="text-align:right;font-weight:900;padding:15px;color:var(--txt)">TOTAL DIPILIH:</td>
+              <td style="font-weight:900;color:var(--blue);padding:15px;font-size:1.1rem" id="spGrandTotal">Rp 0</td>
             </tr>
           </tfoot>
         </table>
       </div>
-      <button type="button" class="btn" style="margin-bottom:10px" onclick="tambahBarisSP()">+ Tambah Item</button>
-      <div style="display:flex;gap:10px">
+      <button type="button" class="btn" style="margin-bottom:15px" onclick="tambahBarisSP()">+ Tambah Item</button>
+      <div style="display:flex;gap:12px">
         <button type="submit" class="btn grn" style="flex:1" id="btnSimpanSP">Simpan & Cetak SP</button>
         <button type="button" class="btn red" style="flex:1" onclick="closeSP()">Batal</button>
       </div>
@@ -233,15 +242,16 @@
 
   <div id="sec-monitor" class="card app-sec">
     <h2><svg viewBox="0 0 24 24"><path d="M5 19.248V4h14v15.248l-2.5-1.5-2.5 1.5-2.5-1.5-2.5 1.5-1.5-1zM17 6H7v2h10V6zm0 4H7v2h10v-2zm-4 4H7v2h6v-2z"/></svg> Dashboard Monitoring Proyek</h2>
-    <div class="g3" style="margin-bottom:25px">
+    
+    <div class="g3" style="margin-bottom:30px">
       <div class="dc"><h4>Total Anggaran</h4><h2 id="sumTotal">Rp 0</h2></div>
       <div class="dc grn"><h4>Total Terbayar</h4><h2 id="sumBayar">Rp 0</h2></div>
       <div class="dc red"><h4>Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2></div>
     </div>
     
-    <div class="card" style="box-shadow:var(--sh-in);background:transparent;margin-bottom:20px">
-      <div style="margin-bottom:10px">
-        <label style="margin-bottom:8px;font-size:.85rem;color:var(--blue);font-weight:bold">Filter Tanggal</label>
+    <div class="filter-panel">
+      <div style="margin-bottom:15px">
+        <label style="margin-bottom:10px;font-size:.9rem;color:var(--blue);font-weight:900;text-transform:uppercase;letter-spacing:1px">Pencarian & Filter Data</label>
         <div class="date-filter-row">
           <div>
             <label>Dari Tanggal</label>
@@ -252,7 +262,7 @@
             <input type="date" id="flTglSampai">
           </div>
           <div style="text-align:center">
-            <label style="display:block;margin-bottom:6px">Mode Pencarian</label>
+            <label style="display:block;margin-bottom:8px">Mode Pencarian</label>
             <label class="switch">
               <input type="checkbox" id="tglModeToggle" onchange="applyFilter()">
               <span class="slider">
@@ -262,28 +272,28 @@
             </label>
           </div>
           <div>
-            <label style="opacity:0;display:block;margin-bottom:6px">.</label>
-            <button class="btn" style="padding:0 20px; height:38px;" onclick="clearDateFilter()">Reset Tgl</button>
+            <label style="opacity:0;display:block;margin-bottom:8px">.</label>
+            <button class="btn" style="padding:0 25px; height:42px; background:var(--bg); color:var(--txt); box-shadow:var(--sh-out-sm)" onclick="clearDateFilter()">Reset Tgl</button>
           </div>
         </div>
-        <p style="font-size:.75rem;color:var(--muted);margin:4px 0 0">Filter mencari data berdasarkan Tgl Mulai Project atau Tgl Pembayaran.</p>
+        <p style="font-size:.8rem;color:var(--muted);margin:0 0 15px;font-weight:500">Filter mencari data berdasarkan Tgl Mulai Project atau Tgl Pembayaran.</p>
       </div>
 
       <div class="g3">
-        <div><label>Status</label><select id="flStatus"><option value="">Semua</option><option>Dalam Pengerjaan</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
+        <div><label>Status</label><select id="flStatus"><option value="">Semua Status</option><option>Dalam Pengerjaan</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
         <div><label>PIC</label><select id="flPIC"><option value="">Semua PIC</option></select></div>
         <div><label>Dapur</label><select id="flDapur"><option value="">Semua Dapur</option></select></div>
         
-        <div style="display:flex;gap:10px;align-items:flex-end; grid-column: 1 / -1;">
-          <button class="btn grn" style="flex:1" onclick="applyFilter()">Cari Filter</button>
-          <button class="btn red" style="flex:1" onclick="resetFilter()">Reset Semua</button>
-          <button class="btn" style="flex:1; background:#f39c12" onclick="cetakLaporan()">Cetak Laporan</button>
+        <div style="display:flex;gap:12px;align-items:flex-end; grid-column: 1 / -1; margin-top:5px">
+          <button class="btn grn" style="flex:1; font-size:1rem" onclick="applyFilter()">Cari Filter</button>
+          <button class="btn red" style="flex:1; font-size:1rem" onclick="resetFilter()">Reset Semua</button>
+          <button class="btn" style="flex:1; background:#e67e22; font-size:1rem" onclick="cetakLaporan()">Cetak Laporan</button>
         </div>
       </div>
     </div>
 
     <div id="pnlCetak" class="pbar" style="display:none">
-      <span style="color:var(--blue);font-weight:bold;flex:1">Cetak / Buka Dokumen:</span>
+      <span style="color:var(--blue);font-weight:900;flex:1;font-size:1.05rem">Cetak Dokumen Cepat:</span>
       <button class="btn" onclick="prosesCetak('sp')">Surat Pesanan</button>
       <button class="btn" onclick="prosesCetak('invoice')">Invoice</button>
       <button class="btn" onclick="prosesCetak('lampiran')">Lampiran Foto</button>
@@ -306,14 +316,14 @@
         <div><label>Nama Dapur</label><input type="text" id="epDapur" required></div>
         <div><label>Nama PIC</label><input type="text" id="epPIC" required></div>
       </div>
-      <div class="tbl-wrap" style="margin:15px 0">
+      <div class="tbl-wrap" style="margin:20px 0">
         <table id="tblEpBarang">
           <thead><tr><th>Item</th><th>Qty</th><th>Satuan</th><th>Harga</th><th>Total</th><th>Aksi</th></tr></thead>
           <tbody id="bodyEpBarang"></tbody>
         </table>
       </div>
       <button type="button" class="btn" onclick="tambahBarisEdit()">+ Tambah Item</button>
-      <div style="display:flex;gap:10px;margin-top:20px">
+      <div style="display:flex;gap:12px;margin-top:25px">
         <button type="submit" class="btn grn" style="flex:1" id="btnSimpanEp">Simpan Perubahan</button>
         <button type="button" class="btn red" style="flex:1" onclick="closeEditProyek()">Batal</button>
       </div>
@@ -323,14 +333,14 @@
   <div id="ovValidasi" class="overlay"></div>
   <div id="mdValidasi" class="modal">
     <h3>Upload Kelengkapan Dokumen</h3>
-    <p style="font-size:0.8rem">Anda bisa melengkapi dokumen ini kapan saja (sebelum atau sesudah pembayaran).</p>
+    <p style="font-size:0.9rem">Anda bisa melengkapi dokumen ini kapan saja (sebelum atau sesudah pembayaran).</p>
     <form id="frmValidasi">
       <div class="file-input-wrapper"><label>1. Foto Sebelum (Awal)</label><input type="file" id="fAwal" accept="image/*" multiple></div>
       <div class="file-input-wrapper"><label>2. Foto Sedang Kerja</label><input type="file" id="fSedang" accept="image/*" multiple></div>
       <div class="file-input-wrapper"><label>3. Foto Selesai Kerja</label><input type="file" id="fSelesai" accept="image/*" multiple></div>
       <div class="file-input-wrapper"><label>4. Foto Bon Belanja</label><input type="file" id="fBon" accept="image/*" multiple></div>
       <div class="file-input-wrapper"><label>5. Foto Kwitansi Tukang</label><input type="file" id="fKwitansi" accept="image/*" multiple></div>
-      <div style="display:flex;gap:10px;margin-top:20px">
+      <div style="display:flex;gap:12px;margin-top:25px">
         <button type="submit" class="btn grn" style="flex:1" id="btnUploadValidasi">Upload ke Drive</button>
         <button type="button" class="btn red" style="flex:1" onclick="closeValidasi()">Batal</button>
       </div>
@@ -340,20 +350,20 @@
   <div id="ovBayar" class="overlay"></div>
   <div id="mdBayar" class="modal">
     <h3>CATAT PEMBAYARAN</h3>
-    <p id="mdBayarDesc" style="font-size:0.9rem"></p>
+    <p id="mdBayarDesc" style="font-size:1rem"></p>
     <form id="frmBayar">
-      <div style="margin-bottom:15px">
+      <div style="margin-bottom:20px">
         <label>Nominal Pembayaran (Rp)</label>
         <input type="text" id="inpBayar" class="modal-inp" placeholder="Rp 0" required oninput="fmtRp(this)">
       </div>
-      <div class="g2" style="margin-bottom:15px">
+      <div class="g2" style="margin-bottom:20px">
         <div><label>Tanggal Bayar</label><input type="date" id="inpTglBayar" required></div>
         <div><label>Sumber Dana</label><input type="text" id="inpSumberDana" placeholder="Kas Dapur/Transfer" required></div>
       </div>
       <div class="file-input-wrapper">
         <label>Foto Struk Pembayaran (Opsional)</label><input type="file" id="inpStrukBayar" accept="image/*">
       </div>
-      <div style="display:flex;gap:10px">
+      <div style="display:flex;gap:12px">
         <button type="submit" class="btn grn" style="flex:1" id="btnProsesBayar">Simpan & Upload</button>
         <button type="button" class="btn red" style="flex:1" onclick="closeBayar()">Batal</button>
       </div>
@@ -361,16 +371,16 @@
   </div>
   
   <div id="ovLihatDokumen" class="overlay"></div>
-  <div id="mdLihatDokumen" class="modal" style="max-width:650px">
+  <div id="mdLihatDokumen" class="modal" style="max-width:700px">
     <h3>Riwayat & Galeri Proyek</h3>
-    <div id="galeriKonten" style="max-height:68vh;overflow-y:auto;margin-bottom:15px;padding-right:5px"></div>
+    <div id="galeriKonten" style="max-height:68vh;overflow-y:auto;margin-bottom:20px;padding-right:10px"></div>
     <button type="button" class="btn red full" onclick="closeLihatDokumen()">Tutup Layar</button>
   </div>
 
   <div id="ovRekBaru" class="overlay" style="z-index:10000"></div>
   <div id="mdRekBaru" class="modal" style="z-index:10001">
     <h3>Lengkapi Data PIC / Rekening</h3>
-    <p style="font-size:0.85rem">Info cetak untuk PIC ini belum ada. Isi sekali saja, sistem akan mengingatnya dan menjadikannya TTD otomatis.</p>
+    <p style="font-size:0.9rem">Info cetak untuk PIC ini belum ada. Isi sekali saja, sistem akan mengingatnya dan menjadikannya TTD otomatis.</p>
     <form id="frmRekBaru" autocomplete="off">
       <div class="g2">
         <div style="grid-column:1/-1"><label>Atas Nama (PIC)</label><input type="text" id="rbAtasNama" required></div>
@@ -379,7 +389,7 @@
         <div><label>Kota TTD</label><input type="text" id="rbLokasi" placeholder="Cth: Lhokseumawe"></div>
         <div><label>Jabatan</label><input type="text" id="rbJabatan" value="Pelaksana / PIC"></div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:20px">
+      <div style="display:flex;gap:12px;margin-top:25px">
         <button type="submit" class="btn grn" style="flex:1" id="btnSimpanRekBaru">Simpan & Lanjut Cetak</button>
         <button type="button" class="btn red" style="flex:1" onclick="document.getElementById('ovRekBaru').style.display='none'; document.getElementById('mdRekBaru').style.display='none';">Batal</button>
       </div>
@@ -388,7 +398,7 @@
 
   <div id="sec-setting" class="card app-sec" style="display:none">
     <h2>
-      <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:currentColor;flex-shrink:0">
+      <svg viewBox="0 0 24 24" style="width:26px;height:26px;fill:currentColor;flex-shrink:0">
         <path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.61-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
       </svg>
       Pengaturan Sistem & Rekening
@@ -443,7 +453,7 @@ let dbRekening = JSON.parse(localStorage.getItem('db_rekening') || '[]');
 let activeNoUrut = null;
 let pendingCetakJenis = '';
 let pendingCetakPIC = '';
-let lastFilteredData = []; // Untuk simpan data yang difilter buat laporan
+let lastFilteredData = []; 
 
 // ── UTILITIES ──
 function formatTgl(tglStr) {
@@ -471,13 +481,13 @@ const rp = n => (Number(n)||0).toLocaleString('id-ID');
 const unRp = s => parseFloat(String(s).replace(/\./g,'').replace(',','.')) || 0;
 const fmtRp = el => { let v = String(el.value).replace(/[^\d]/g,''); el.value = v ? parseInt(v).toLocaleString('id-ID') : ''; };
 
-// ── UTILITY CETAK CEPAT VIA IFRAME (ANTI STUCK DI TABLET) ──
+// ── UTILITY CETAK CEPAT VIA IFRAME ──
 function doPrintWithIframe(htmlContent) {
   let iframe = document.getElementById('printAreaIframe');
   if (!iframe) {
     iframe = document.createElement('iframe');
     iframe.id = 'printAreaIframe';
-    iframe.style.display = 'none'; // Sembunyikan iframe biar UI ga berubah
+    iframe.style.display = 'none'; 
     document.body.appendChild(iframe);
   }
   
@@ -486,7 +496,6 @@ function doPrintWithIframe(htmlContent) {
   doc.write(htmlContent);
   doc.close();
 
-  // Kasih jeda setengah detik biar browser di tablet napas dikit dan ngerender DOM/CSS
   setTimeout(() => {
     iframe.contentWindow.focus();
     iframe.contentWindow.print();
@@ -495,9 +504,9 @@ function doPrintWithIframe(htmlContent) {
 
 // ── ALERT ──
 const ICONS = {
-  success: `<svg width="48" height="48" fill="var(--green)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
-  error: `<svg width="48" height="48" fill="var(--red)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
-  info: `<svg width="48" height="48" fill="var(--blue)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`
+  success: `<svg width="56" height="56" fill="var(--green)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>`,
+  error: `<svg width="56" height="56" fill="var(--red)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`,
+  info: `<svg width="56" height="56" fill="var(--blue)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`
 };
 
 function showAlert(msg, type='info'){
@@ -571,7 +580,7 @@ function htmlBarisUsulan(){
     <td><input type="text" class="nb" placeholder="Misal: Semen" required></td>
     <td><input type="number" class="qty" value="1" min="1" required></td>
     <td><input type="text" class="sat" placeholder="Sak" required></td>
-    <td><button type="button" class="btn red" style="padding:8px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:18px;height:18px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
+    <td><button type="button" class="btn red" style="padding:10px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:20px;height:20px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
   </tr>`;
 }
 function tambahBarisUsulan(){ document.getElementById('bodyUsulanBarang').insertAdjacentHTML('beforeend', htmlBarisUsulan()); }
@@ -615,19 +624,19 @@ document.getElementById('frmUsulan').addEventListener('submit', async e => {
 function renderUsulanList(){
   const tb = document.getElementById('tblUsulanList'); tb.innerHTML='';
   const pendings = dbM.filter(x => x.status==='Pending Usulan');
-  if(!pendings.length){ tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:#999">Tidak ada usulan pending.</td></tr>'; return; }
+  if(!pendings.length){ tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:#999;padding:20px">Belum ada usulan pending.</td></tr>'; return; }
   
   pendings.forEach(r => {
     const no = String(r.noUrut).slice(-4);
     const judul = r.judulProyek || 'Pekerjaan Umum'; 
     tb.innerHTML += `<tr>
-      <td>#${no}</td>
-      <td><b style="color:var(--blue)">${judul}</b><br><small>${r.namaDapur}</small></td>
+      <td><b style="color:var(--txt)">#${no}</b></td>
+      <td><b style="color:var(--blue);font-size:1rem">${judul}</b><br><small style="color:var(--muted)">${r.namaDapur}</small></td>
       <td><span class="badge bdg-pn">${r.status}</span></td>
       <td>
-        <div style="display:flex;gap:6px;flex-direction:column">
-          <button class="btn org" style="padding:6px 12px;font-size:0.8rem" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button>
-          <button class="btn" style="padding:6px 12px;font-size:0.8rem;background:#3498db" onclick="cetakUsulan('${r.noUrut}')">Cetak Usulan</button>
+        <div style="display:flex;gap:8px;flex-direction:column">
+          <button class="btn org" style="padding:8px 12px;font-size:0.85rem" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button>
+          <button class="btn" style="padding:8px 12px;font-size:0.85rem;background:#3498db" onclick="cetakUsulan('${r.noUrut}')">Cetak Usulan</button>
         </div>
       </td>
     </tr>`;
@@ -686,7 +695,6 @@ function cetakUsulan(noUrut) {
     </body>
     </html>
   `;
-  // Panggil fungsi iframe di sini biar gak nunggu load tab baru
   doPrintWithIframe(htmlCetak);
 }
 
@@ -714,8 +722,8 @@ function bukaProsesSP(noUrut){
       <td><input type="text" class="nb" value="${it.namaBarang}" required></td>
       <td><input type="number" class="qty" value="${q}" min="1" oninput="hitungTr(this); hitungGrandTotal()"></td>
       <td><input type="text" class="sat" value="${it.satuan || ''}"></td>
-      <td><input type="text" class="hrg modal-inp" value="${hrgText}" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
-      <td><input type="text" class="tot" value="${totText}" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
+      <td><input type="text" class="hrg modal-inp" value="${hrgText}" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:10px;font-size:1rem;margin:0"></td>
+      <td><input type="text" class="tot" value="${totText}" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:10px;font-size:1rem;margin:0"></td>
     </tr>`;
   });
   
@@ -733,8 +741,8 @@ function tambahBarisSP(){
     <td><input type="text" class="nb" placeholder="Nama barang" required></td>
     <td><input type="number" class="qty" value="1" min="1" oninput="hitungTr(this); hitungGrandTotal()"></td>
     <td><input type="text" class="sat" placeholder="Satuan"></td>
-    <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
-    <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
+    <td><input type="text" class="hrg modal-inp" placeholder="0" oninput="fmtRp(this); hitungTr(this); hitungGrandTotal()" style="padding:10px;font-size:1rem;margin:0"></td>
+    <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:10px;font-size:1rem;margin:0"></td>
   </tr>`;
   document.getElementById('bodySpBarang').insertAdjacentHTML('beforeend', html);
 }
@@ -908,7 +916,7 @@ function applyFilter(){
     return b.noUrut - a.noUrut;
   });
 
-  lastFilteredData = filtered; // Simpan untuk dicetak
+  lastFilteredData = filtered; 
 
   let tA=0,tB=0,tS=0;
   filtered.forEach(r=>{ tA+=Number(r.anggaranAwal); tB+=Number(r.dibayar); tS+=Number(r.sisa); });
@@ -917,7 +925,7 @@ function applyFilter(){
   document.getElementById('sumSisa').innerText='Rp '+rp(tS);
 
   const tb=document.getElementById('tblMonitor'); tb.innerHTML='';
-  if(!filtered.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center">Tidak ada data aktif.</td></tr>'; document.getElementById('pnlCetak').style.display='none'; return; }
+  if(!filtered.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:25px;color:var(--muted)">Tidak ada data proyek aktif.</td></tr>'; document.getElementById('pnlCetak').style.display='none'; return; }
 
   filtered.forEach(r => {
     const bdg=r.status.includes('Lunas')?'bdg-ln':r.status.includes('Cicil')?'bdg-cc':'bdg-pg';
@@ -926,21 +934,21 @@ function applyFilter(){
     let infoTglTerakhir = '';
     if (r.tglTerbayar && r.tglTerbayar.length > 0 && (r.status.includes('Lunas') || r.status.includes('Cicil'))) {
       const lastTgl = r.tglTerbayar[r.tglTerbayar.length - 1];
-      infoTglTerakhir = `<div style="font-size:0.75rem; color:var(--muted); margin-top:5px; line-height:1.3;">Terakhir bayar:<br><b>${formatTgl(lastTgl)}</b></div>`;
+      infoTglTerakhir = `<div style="font-size:0.75rem; color:var(--muted); margin-top:6px; line-height:1.4;">Terakhir bayar:<br><b>${formatTgl(lastTgl)}</b></div>`;
     }
 
     tb.innerHTML += `<tr>
-      <td>#${String(r.noUrut).slice(-4)}<br><small style="color:var(--muted)">${formatTgl(r.tglMulai)}</small></td>
-      <td><b style="color:var(--blue);font-size:.95rem">${judul}</b><br><b>${r.namaDapur}</b><br><small>PIC: ${r.pic}</small></td>
-      <td>Rp ${rp(r.anggaranAwal)}</td>
-      <td style="color:var(--red);font-weight:bold">Rp ${rp(r.sisa)}</td>
+      <td><b style="color:var(--txt)">#${String(r.noUrut).slice(-4)}</b><br><small style="color:var(--muted);font-weight:600">${formatTgl(r.tglMulai)}</small></td>
+      <td><b style="color:var(--blue);font-size:1.05rem">${judul}</b><br><b style="color:var(--txt)">${r.namaDapur}</b><br><small style="color:var(--muted);font-weight:600">PIC: ${r.pic}</small></td>
+      <td style="font-weight:600">Rp ${rp(r.anggaranAwal)}</td>
+      <td style="color:var(--red);font-weight:900;font-size:1rem">Rp ${rp(r.sisa)}</td>
       <td style="text-align:center"><span class="badge ${bdg}">${r.status}</span>${infoTglTerakhir}</td>
       <td>
-        <div style="display:flex;gap:6px;flex-direction:column">
-          <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="bukaInputBayar('${r.noUrut}')">Bayar</button>
-          <button class="btn org" style="padding:6px;font-size:0.75rem" onclick="bukaValidasi('${r.noUrut}')">Upload Foto</button>
-          <button class="btn" style="padding:6px;font-size:0.75rem;background:#3498db" onclick="bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
-          <button class="btn" style="padding:6px;font-size:0.75rem;background:#7f8c8d" onclick="bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
+        <div style="display:flex;gap:8px;flex-direction:column">
+          <button class="btn grn" style="padding:8px 12px;font-size:0.8rem" onclick="bukaInputBayar('${r.noUrut}')">Bayar</button>
+          <button class="btn org" style="padding:8px 12px;font-size:0.8rem" onclick="bukaValidasi('${r.noUrut}')">Upload Foto</button>
+          <button class="btn" style="padding:8px 12px;font-size:0.8rem;background:#3498db" onclick="bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
+          <button class="btn" style="padding:8px 12px;font-size:0.8rem;background:#7f8c8d" onclick="bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
         </div>
       </td>
     </tr>`;
@@ -1042,7 +1050,6 @@ function cetakLaporan() {
     </body>
     </html>
   `;
-  // Panggil fungsi cetak cepat
   doPrintWithIframe(html);
 }
 
@@ -1117,7 +1124,7 @@ function closeValidasi(){ document.getElementById('ovValidasi').style.display='n
 document.getElementById('frmValidasi').addEventListener('submit', async e => {
   e.preventDefault();
   if(!navigator.onLine) return showAlert('Koneksi internet wajib untuk upload foto ke Drive!','error');
-  const btn=document.getElementById('btnUploadValidasi'); btn.disabled=true; btn.innerText='Mengompres & Upload ke Drive...';
+  const btn=document.getElementById('btnUploadValidasi'); btn.disabled=true; btn.innerText='Mengompres & Upload...';
   try {
     const fA=document.getElementById('fAwal').files, fSe=document.getElementById('fSedang').files, fSl=document.getElementById('fSelesai').files, fB=document.getElementById('fBon').files, fK=document.getElementById('fKwitansi').files;
     const pA=fA.length?await Promise.all([...fA].map(kompres)):[];
@@ -1140,22 +1147,22 @@ document.getElementById('frmValidasi').addEventListener('submit', async e => {
 function bukaLihatDokumen(noUrut){
   const p=dbM.find(x=>String(x.noUrut)===String(noUrut));
   if(!p) return;
-  let riwayatHtml=`<div style="margin-bottom:15px;padding:12px;background:#f9f9f9;border-radius:8px;border:1px solid #ddd">
-    <h4 style="margin:0 0 10px;color:var(--blue);font-size:.9rem">Riwayat Pembayaran (Cicilan)</h4>`;
+  let riwayatHtml=`<div style="margin-bottom:20px;padding:15px;background:#f9f9f9;border-radius:12px;border:1px solid #ddd;box-shadow:var(--sh-in-sm)">
+    <h4 style="margin:0 0 12px;color:var(--blue);font-size:.95rem;font-weight:900">Riwayat Pembayaran (Cicilan)</h4>`;
   if(p.tglTerbayar&&p.tglTerbayar.length>0){
-    riwayatHtml+='<ul style="margin:0;padding-left:20px;font-size:.85rem;color:var(--txt)">';
+    riwayatHtml+='<ul style="margin:0;padding-left:20px;font-size:.9rem;color:var(--txt)">';
     p.tglTerbayar.forEach((t,i)=>{
       let dana=(p.sumberDana&&p.sumberDana[i])?p.sumberDana[i]:'-';
       let strukHtml='';
       if(p.fotoStrukBayar&&p.fotoStrukBayar[i]){
         const thumbSrc=driveImgSrc(p.fotoStrukBayar[i]);
-        strukHtml=`<br><img src="${thumbSrc}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;cursor:pointer;margin-top:4px" onclick="bukaFoto('${thumbSrc}')" title="Lihat struk">`;
+        strukHtml=`<br><img src="${thumbSrc}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;margin-top:6px;border:2px solid var(--blue)" onclick="bukaFoto('${thumbSrc}')" title="Lihat struk">`;
       }
-      riwayatHtml+=`<li style="margin-bottom:8px"><b>Tgl:</b> ${formatTgl(t)}<br><b>Ket:</b> ${dana}${strukHtml}</li>`;
+      riwayatHtml+=`<li style="margin-bottom:12px"><b>Tgl:</b> ${formatTgl(t)}<br><b>Ket:</b> ${dana}${strukHtml}</li>`;
     });
     riwayatHtml+='</ul>';
   } else {
-    riwayatHtml+='<p style="margin:0;font-size:.8rem;color:var(--muted)">Belum ada pembayaran dicatat.</p>';
+    riwayatHtml+='<p style="margin:0;font-size:.85rem;color:var(--muted)">Belum ada pembayaran dicatat.</p>';
   }
   riwayatHtml+='</div>';
   
@@ -1169,9 +1176,9 @@ function bukaLihatDokumen(noUrut){
         <a href="${src}" target="_blank" class="drive-link">🔗 Drive</a>
       </div>`;
     }).join('');
-    return `<div style="margin-bottom:12px">
-      <b style="color:var(--blue);font-size:.85rem">${title}</b>
-      <div class="gallery-row" style="margin-top:6px">${imgs}</div>
+    return `<div style="margin-bottom:15px">
+      <b style="color:var(--blue);font-size:.9rem;display:block;margin-bottom:8px">${title}</b>
+      <div class="gallery-row">${imgs}</div>
     </div>`;
   };
 
@@ -1183,7 +1190,7 @@ function bukaLihatDokumen(noUrut){
   const fK=generateImgHtml(p.fotoKwitansi,'📋 Bukti Kwitansi Tukang');
 
   if(fA||fSe||fSl||fB||fK) html+=fA+fSe+fSl+fB+fK;
-  else html+='<p style="text-align:center;color:var(--muted);font-style:italic;font-size:.85rem">Belum ada foto dokumen yang diupload.</p>';
+  else html+='<p style="text-align:center;color:var(--muted);font-style:italic;font-size:.9rem">Belum ada foto dokumen yang diupload.</p>';
   document.getElementById('galeriKonten').innerHTML=html;
   document.getElementById('ovLihatDokumen').style.display='block';
   document.getElementById('mdLihatDokumen').style.display='block';
@@ -1244,7 +1251,7 @@ function htmlBarisEdit(nb='',q=1,sat='',hrg=0,tot=0){
     <td><input type="text" class="sat" value="${sat}"></td>
     <td><input type="text" class="hrg" value="${hrgText}" placeholder="0" oninput="fmtRp(this); hitungTr(this)"></td>
     <td><input type="text" class="tot" value="${totText}" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this)"></td>
-    <td><button type="button" class="btn red" style="padding:8px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:18px;height:18px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
+    <td><button type="button" class="btn red" style="padding:10px" onclick="hapusBaris(this)"><svg viewBox="0 0 24 24" style="margin:0;width:20px;height:20px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></td>
   </tr>`;
 }
 function tambahBarisEdit(){ document.getElementById('bodyEpBarang').insertAdjacentHTML('beforeend', htmlBarisEdit()); }
