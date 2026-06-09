@@ -1,7 +1,7 @@
 {
-  "name": "SMM Dapur MBG Validasi",
-  "short_name": "SMM Dapur",
-  "description": "Sistem Monitoring, Usulan & Maintenance Dapur MBG",
+  "name": "Validasi Rekapitulasi Pengeluaran Yayasan",
+  "short_name": "Rekap Pengeluaran",
+  "description": "Sistem Monitoring, Usulan & Maintenance",
   "start_url": "./index.html",
   "display": "minimal-ui",
   "background_color": "#F5F2EB",
