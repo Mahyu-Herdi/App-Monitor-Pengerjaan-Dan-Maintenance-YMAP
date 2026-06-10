@@ -46,12 +46,11 @@
     /* DASH CARD */
     .dc{border-radius:16px;padding:15px;background:var(--bg);box-shadow:var(--sh-in);text-align:center}
     .dc h4{margin:0 0 5px;color:var(--muted);font-size:.75rem;text-transform:uppercase}
-    /* [CHANGE 1] Total Anggaran card — angka lebih besar dari sebelumnya (1.8rem → 2.3rem) */
+    /* Total Anggaran card — angka lebih besar dari sebelumnya */
     .dc h2{margin:6px 0 0 0!important;font-size:2.2rem!important;font-weight:900!important;text-align:center!important;width:100%!important;display:block!important}
     .dc.grn h2{color:var(--green)!important}
     .dc.red h2{color:var(--red)!important}
     .dc:not(.grn):not(.red) h2{color:var(--blue)!important}
-    /* Dua kartu sisa & terbayar tetap lebih kecil agar tidak saingi Total Anggaran */
     .dc.grn h2, .dc.red h2{font-size:2.2rem!important}
     
     /* BTN */
@@ -67,10 +66,10 @@
     th{padding:12px;text-align:left;color:var(--muted);font-weight:bold;white-space:nowrap;border-bottom:2px solid rgba(0,0,0,.05)}
     td{padding:12px;border-bottom:1px solid rgba(0,0,0,.03);vertical-align:middle}
     
-    /* [CHANGE 2] Baris tabel aktif — border bawah tebal & highlight saat diklik */
+    /* Baris tabel aktif — border bawah tebal & highlight saat diklik */
     tr.baris-aktif td {
       border-bottom: 3px solid var(--blue) !important;
-      background: rgba(84,140,168,0.07);
+      background: rgba(84,140,168,0.1) !important;
     }
     tr.baris-aktif td:first-child { border-radius: 8px 0 0 8px; }
     tr.baris-aktif td:last-child  { border-radius: 0 8px 8px 0; }
@@ -133,29 +132,24 @@
       box-shadow:var(--sh-out-sm);
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
     }
-/* CHART POPUP CENTER */
-#mdChart{
-  top:50% !important;
-  left:50% !important;
-  right:auto !important;
-  bottom:auto !important;
-  transform:translate(-50%,-50%) !important;
 
-  width:95% !important;
-  max-width:1000px !important;
-
-  max-height:90vh !important;
-  overflow-y:auto !important;
-
-  border-radius:24px !important;
-  box-shadow:var(--sh-out) !important;
-}
-
-#mdChart .modal-fs-header{
-  position:relative !important;
-  top:auto !important;
-}
-    /* [CHANGE 3] Modal Chart Detail — centered, medium size (bukan full-screen) */
+    /* CHART POPUP CENTER */
+    #mdChart{
+      top:50% !important;
+      left:50% !important;
+      right:auto !important;
+      bottom:auto !important;
+      transform:translate(-50%,-50%) !important;
+      width:95% !important;
+      max-width:1000px !important;
+      max-height:90vh !important;
+      overflow-y:auto !important;
+      border-radius:24px !important;
+      box-shadow:var(--sh-out) !important;
+    }
+    #mdChart .modal-fs-header{ position:relative !important; top:auto !important; }
+    
+    /* Modal Chart Detail — centered, medium size */
     #mdChartDetail {
       display:none;
       position:fixed;
@@ -264,33 +258,22 @@
     }
 
     /* CHART INFO ROW */
-    .chart-info-row {
-      display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px;
-    }
-    .chart-info-card {
-      flex:1;min-width:130px;
-      background:var(--bg);border-radius:14px;
-      padding:12px 15px;box-shadow:var(--sh-in);
-      text-align:center;
-    }
+    .chart-info-row { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px; }
+    .chart-info-card { flex:1;min-width:130px; background:var(--bg);border-radius:14px; padding:12px 15px;box-shadow:var(--sh-in); text-align:center; }
     .chart-info-card small{display:block;color:var(--muted);font-size:.7rem;font-weight:bold;text-transform:uppercase;margin-bottom:4px}
     .chart-info-card b{display:block;font-size:1.05rem;font-weight:900}
 
-    /* [CHANGE 4] Overlay khusus untuk modal chart detail (z-index lebih tinggi) */
+    /* Overlay khusus untuk modal chart detail */
     #ovChartDetail { z-index: 10001; }
   </style>
 </head>
 <body>
 
-<!-- LOADING OVERLAY -->
 <div id="loadingOverlay">
   <div class="spinner-wrap">
     <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
       <circle cx="24" cy="24" r="20" fill="none" stroke="#d1cdc0" stroke-width="4"/>
-      <circle cx="24" cy="24" r="20" fill="none" stroke="var(--blue)" stroke-width="4"
-        stroke-linecap="round"
-        stroke-dasharray="30 96"
-        stroke-dashoffset="0"/>
+      <circle cx="24" cy="24" r="20" fill="none" stroke="var(--blue)" stroke-width="4" stroke-linecap="round" stroke-dasharray="30 96" stroke-dashoffset="0"/>
     </svg>
   </div>
   <div id="loadingMsg">Memuat data...</div>
@@ -306,9 +289,7 @@
 <div class="overlay-foto" id="ovFoto" onclick="closeFotoPopup(event)">
   <button class="close-btn" onclick="closeFotoPopup(null,true)">✕</button>
   <img id="popupFotoImg" src="" alt="Foto">
-  <a id="popupFotoDriveBtn" href="#" target="_blank" class="drive-btn">
-    🔗 Lihat di Google Drive
-  </a>
+  <a id="popupFotoDriveBtn" href="#" target="_blank" class="drive-btn">🔗 Lihat di Google Drive</a>
 </div>
 
 <div class="container">
@@ -318,7 +299,6 @@
     <img src="icon.png" alt="Logo">
   </div>
 
-  <!-- ========== SECTION INPUT ========== -->
   <div id="sec-input" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> Form Pengajuan Usulan</h2>
     <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px">Masukkan usulan kebutuhan barang/jasa dapur. PIC dan Harga akan diisi saat pencetakan SP.</p>
@@ -345,7 +325,6 @@
     </form>
   </div>
 
-  <!-- ========== SECTION USULAN ========== -->
   <div id="sec-usulan" class="card app-sec" style="display:none">
     <h2><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg> Daftar Usulan Pending</h2>
     <div class="tbl-wrap">
@@ -356,7 +335,6 @@
     </div>
   </div>
 
-  <!-- ========== MODAL SP (FULL-SCREEN) ========== -->
   <div id="ovSP" class="overlay"></div>
   <div id="mdSP" class="modal-fs">
     <div class="modal-fs-header">
@@ -399,16 +377,14 @@
     </form>
   </div>
 
-  <!-- ========== SECTION MONITOR ========== -->
   <div id="sec-monitor" class="card app-sec">
     <h2><svg viewBox="0 0 24 24"><path d="M5 19.248V4h14v15.248l-2.5-1.5-2.5 1.5-2.5-1.5-2.5 1.5-1.5-1zM17 6H7v2h10V6zm0 4H7v2h10v-2zm-4 4H7v2h6v-2z"/></svg> Dashboard Monitoring Proyek</h2>
     <div class="g3" style="margin-bottom:25px">
-      <div class="dc"><h4>Total Anggaran</h4><h2 id="sumTotal">Rp 0</h2></div>
+      <div class="dc"><h4>Total Biaya</h4><h2 id="sumTotal">Rp 0</h2></div>
       <div class="dc grn"><h4>Total Terbayar</h4><h2 id="sumBayar">Rp 0</h2></div>
       <div class="dc red"><h4>Sisa Utang</h4><h2 id="sumSisa">Rp 0</h2></div>
     </div>
 
-    <!-- SEARCH BAR + FILTER BUTTON -->
     <div class="main-control">
       <div class="search-container" style="flex:1;margin:0">
         <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -420,7 +396,6 @@
       </button>
     </div>
 
-    <!-- FILTER PANEL (INLINE, COLLAPSIBLE) -->
     <div id="filterPanel" style="display:none">
       <div class="card" style="box-shadow:var(--sh-in);background:transparent;margin-bottom:20px;padding:15px">
         <div style="margin-bottom:10px">
@@ -458,7 +433,6 @@
       </div>
     </div>
 
-    <!-- [CHANGE 5] TOMBOL GRAFIK — lebih proporsional, tidak terlalu dominan -->
     <div style="margin-bottom:20px">
       <button class="btn purp" onclick="bukaModalChart()" style="margin-top:0;padding:11px 18px;font-size:.85rem;width:100%;justify-content:center">
         <svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/></svg>
@@ -475,13 +449,12 @@
 
     <div class="tbl-wrap">
       <table id="tblMonitorTable">
-        <thead><tr><th>No/Tgl</th><th>Judul & Dapur/PIC</th><th>Anggaran</th><th>Sisa</th><th>Status</th><th>Aksi Proyek</th></tr></thead>
+        <thead><tr><th>No/Tgl</th><th>Judul & Dapur/PIC</th><th>Biaya</th><th>Sisa</th><th>Status</th><th>Aksi Proyek</th></tr></thead>
         <tbody id="tblMonitor"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- ========== MODAL EDIT PROYEK (FULL-SCREEN) ========== -->
   <div id="ovEditProyek" class="overlay"></div>
   <div id="mdEditProyek" class="modal-fs">
     <div class="modal-fs-header">
@@ -511,7 +484,6 @@
     </form>
   </div>
 
-  <!-- ========== MODAL VALIDASI (FULL-SCREEN) ========== -->
   <div id="ovValidasi" class="overlay"></div>
   <div id="mdValidasi" class="modal-fs">
     <div class="modal-fs-header">
@@ -535,7 +507,6 @@
     </form>
   </div>
 
-  <!-- ========== MODAL BAYAR (FULL-SCREEN) ========== -->
   <div id="ovBayar" class="overlay"></div>
   <div id="mdBayar" class="modal-fs">
     <div class="modal-fs-header">
@@ -565,7 +536,6 @@
     </form>
   </div>
   
-  <!-- ========== MODAL LIHAT DOKUMEN (FULL-SCREEN) ========== -->
   <div id="ovLihatDokumen" class="overlay"></div>
   <div id="mdLihatDokumen" class="modal-fs">
     <div class="modal-fs-header">
@@ -578,7 +548,6 @@
     <div id="galeriKonten" style="padding-bottom:10px"></div>
   </div>
 
-  <!-- ========== MODAL REKENING BARU ========== -->
   <div id="ovRekBaru" class="overlay" style="z-index:10000"></div>
   <div id="mdRekBaru" class="modal" style="z-index:10001">
     <h3>Lengkapi Data PIC / Rekening</h3>
@@ -598,7 +567,6 @@
     </form>
   </div>
 
-  <!-- ========== MODAL CHART (FULL-SCREEN) ========== -->
   <div id="ovChart" class="overlay"></div>
   <div id="mdChart" class="modal-fs">
     <div class="modal-fs-header">
@@ -608,7 +576,12 @@
       </div>
       <button class="modal-fs-close" onclick="closeModalChart(null, true)">✕</button>
     </div>
-    <!-- [CHANGE 6] Info row: Terkecil, Terbesar, Menengah (nama dapur + nominal) -->
+
+    <button class="btn" style="background:#f39c12; width:100%; margin-bottom:15px; justify-content:center; padding:12px;" onclick="cetakLaporanStatistikDapur()">
+      <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff;margin-right:8px"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+      Cetak Laporan PDF Dapur
+    </button>
+
     <div id="chartInfoRow" class="chart-info-row" style="margin-bottom:20px"></div>
     <div style="position:relative;width:100%;max-height:55vh;height:320px;">
       <canvas id="dapurChart"></canvas>
@@ -618,18 +591,15 @@
     </p>
   </div>
 
-  <!-- ========== MODAL CHART DETAIL (CENTERED, MEDIUM SIZE) ========== -->
-  <!-- [CHANGE 7] Modal ini sekarang centered & medium, bukan full-screen -->
   <div id="ovChartDetail" class="overlay"></div>
   <div id="mdChartDetail">
     <div class="modal-fs-header">
       <div class="modal-fs-title" id="cdTitle">Rincian Item</div>
       <button class="modal-fs-close" onclick="closeModalChartDetail(null, true)">✕</button>
     </div>
-    <!-- Ringkasan keuangan dapur di atas tabel item -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
       <div style="background:var(--bg);box-shadow:var(--sh-in);border-radius:14px;padding:12px;text-align:center;border-top:3px solid var(--blue)">
-        <div style="font-size:.7rem;color:var(--muted);font-weight:bold;text-transform:uppercase;margin-bottom:4px">Total Anggaran</div>
+        <div style="font-size:.7rem;color:var(--muted);font-weight:bold;text-transform:uppercase;margin-bottom:4px">Total Biaya</div>
         <div id="cdAnggaran" style="color:var(--blue);font-weight:900;font-size:1rem"></div>
       </div>
       <div style="background:var(--bg);box-shadow:var(--sh-in);border-radius:14px;padding:12px;text-align:center;border-top:3px solid var(--green)">
@@ -641,13 +611,11 @@
         <div id="cdSisa" style="color:var(--red);font-weight:900;font-size:1rem"></div>
       </div>
     </div>
-    <!-- Info tambahan: tanggal & PIC -->
     <div style="background:var(--bg);box-shadow:var(--sh-in-sm);padding:12px 14px;border-radius:12px;margin-bottom:14px;font-size:0.82rem;color:var(--txt)">
       <span><b>Rentang Tgl:</b> <span id="cdTgl"></span></span>
       &nbsp;|&nbsp;
       <span><b>PIC:</b> <span id="cdPIC"></span></span>
     </div>
-    <!-- Tabel item -->
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Proyek & Barang</th><th>Qty</th><th>Harga</th><th>Total</th></tr></thead>
@@ -656,7 +624,6 @@
     </div>
   </div>
 
-  <!-- ========== SECTION SETTING ========== -->
   <div id="sec-setting" class="card app-sec" style="display:none">
     <h2>
       <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:currentColor;flex-shrink:0">
@@ -1154,6 +1121,37 @@ function resetFilter(){
   clearDateFilter();
 }
 
+// PERUBAHAN 3: Fungsi pembantu untuk meng-update 3 kartu di atas
+function updateSummaryCards(dataArr) {
+  let tA=0, tB=0, tS=0;
+  dataArr.forEach(r => { tA += Number(r.anggaranAwal); tB += Number(r.dibayar); tS += Number(r.sisa); });
+  document.getElementById('sumTotal').innerText = 'Rp ' + rp(tA);
+  document.getElementById('sumBayar').innerText = 'Rp ' + rp(tB);
+  document.getElementById('sumSisa').innerText  = 'Rp ' + rp(tS);
+}
+
+// PERUBAHAN 3: Fungsi memfokuskan baris yang diklik
+function toggleBarisAktif(tr, noUrut) {
+  const sudahAktif = tr.classList.contains('baris-aktif');
+  
+  // Hapus semua aktif dulu
+  document.querySelectorAll('#tblMonitor tr.baris-aktif').forEach(r => r.classList.remove('baris-aktif'));
+  
+  if (!sudahAktif) {
+    tr.classList.add('baris-aktif');
+    // Cari data baris ini, dan jadikan dia sebagai summary berfokus
+    const r = dbM.find(x => String(x.noUrut) === String(noUrut));
+    if (r) {
+      document.getElementById('sumTotal').innerText = 'Rp ' + rp(r.anggaranAwal);
+      document.getElementById('sumBayar').innerText = 'Rp ' + rp(r.dibayar);
+      document.getElementById('sumSisa').innerText  = 'Rp ' + rp(r.sisa);
+    }
+  } else {
+    // Kalau diklik lagi (dilepas), kembalikan penjumlahannya ke semua hasil filter saat ini
+    updateSummaryCards(lastFilteredData);
+  }
+}
+
 function applyFilter(){
   const keyword = (document.getElementById('inpCari').value || '').toLowerCase();
   const st=document.getElementById('flStatus').value;
@@ -1213,11 +1211,8 @@ function applyFilter(){
 
   lastFilteredData = filtered;
 
-  let tA=0,tB=0,tS=0;
-  filtered.forEach(r=>{ tA+=Number(r.anggaranAwal); tB+=Number(r.dibayar); tS+=Number(r.sisa); });
-  document.getElementById('sumTotal').innerText='Rp '+rp(tA);
-  document.getElementById('sumBayar').innerText='Rp '+rp(tB);
-  document.getElementById('sumSisa').innerText='Rp '+rp(tS);
+  // PERUBAHAN 3: Hitung total awal menggunakan fungsi helper baru
+  updateSummaryCards(filtered);
 
   const tb=document.getElementById('tblMonitor'); tb.innerHTML='';
   if(!filtered.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center">Tidak ada data aktif.</td></tr>'; document.getElementById('pnlCetak').style.display='none'; return; }
@@ -1232,7 +1227,8 @@ function applyFilter(){
       infoTglTerakhir = `<div style="font-size:0.75rem; color:var(--muted); margin-top:5px; line-height:1.3;">Terakhir bayar:<br><b>${formatTgl(lastTgl)}</b></div>`;
     }
 
-    tb.innerHTML += `<tr onclick="toggleBarisAktif(this)" style="cursor:pointer;transition:background 0.15s">
+    // PERUBAHAN 3: Menambahkan lemparan argumen r.noUrut ke fungsi klik baris
+    tb.innerHTML += `<tr onclick="toggleBarisAktif(this, '${r.noUrut}')" style="cursor:pointer;transition:background 0.15s">
       <td>#${String(r.noUrut).slice(-4)}<br><small style="color:var(--muted)">${formatTgl(r.tglMulai)}</small></td>
       <td><b style="color:var(--blue);font-size:.95rem">${judul}</b><br><b>${r.namaDapur}</b><br><small>PIC: ${r.pic}</small></td>
       <td>Rp ${rp(r.anggaranAwal)}</td>
@@ -1253,14 +1249,6 @@ function applyFilter(){
     localStorage.setItem('smm_siap_cetak',JSON.stringify({bundle: filtered[0], items: dbP.filter(x=>String(x.noUrut)===String(filtered[0].noUrut))}));
     document.getElementById('pnlCetak').style.display='flex';
   } else { document.getElementById('pnlCetak').style.display='none'; }
-}
-
-// [CHANGE 8] Fungsi toggle baris aktif — klik baris → highlight border tebal
-function toggleBarisAktif(tr) {
-  const sudahAktif = tr.classList.contains('baris-aktif');
-  // Hapus semua aktif dulu
-  document.querySelectorAll('#tblMonitor tr.baris-aktif').forEach(r => r.classList.remove('baris-aktif'));
-  if (!sudahAktif) tr.classList.add('baris-aktif');
 }
 
 // ── PENCARIAN CERDAS ──
@@ -1296,10 +1284,10 @@ function pilihSaran(noUrut, judul) {
   document.getElementById('inpCari').value = judul;
   document.getElementById('boxSaran').style.display = 'none';
   applyFilter();
-  bukaLihatDokumen(noUrut);
+  // Bisa juga bukaLihatDokumen(noUrut) kalau butuh langsung modal pop up
 }
 
-// ── CETAK LAPORAN ──
+// ── CETAK LAPORAN GLOBAL ──
 function cetakLaporan() {
   if (!lastFilteredData || lastFilteredData.length === 0) {
     return showAlert('Tidak ada data yang sedang ditampilkan untuk dicetak.', 'error');
@@ -1411,12 +1399,9 @@ function bukaModalChart() {
   const dataVal = labels.map(l => rekap[l].total);
   const totalAnggaran = dataVal.reduce((a,b) => a+b, 0);
 
-  // [CHANGE 9] Info cards: Terkecil, Terbesar, Menengah — tampilkan nama dapur & nominalnya
-  // Urutkan label berdasarkan total
   const labelsSorted = [...labels].sort((a, b) => rekap[a].total - rekap[b].total);
   const dapurTerkecil  = labelsSorted[0];
   const dapurTerbesar  = labelsSorted[labelsSorted.length - 1];
-  // Menengah: ambil yang paling tengah dari urutan
   const idxMid = Math.floor(labelsSorted.length / 2);
   const dapurMenengah  = labelsSorted.length >= 3 ? labelsSorted[idxMid] : null;
 
@@ -1543,7 +1528,133 @@ function closeModalChart(e, force=false) {
   }
 }
 
-// [CHANGE 10] bukaModalChartDetail — tampil di modal centered, bukan full-screen
+// PERUBAHAN 2: Fungsi Cetak Laporan dari Modal Chart
+function cetakLaporanStatistikDapur() {
+  const dataAktif = lastFilteredData.length > 0 ? lastFilteredData : dbM.filter(x => x.status !== 'Pending Usulan');
+  if(dataAktif.length === 0) return showAlert("Tidak ada data untuk dicetak.", "error");
+
+  // Siapkan rekap data per dapur
+  const rekap = {};
+  let totalA = 0, totalB = 0, totalS = 0;
+
+  dataAktif.forEach(p => {
+    if(!rekap[p.namaDapur]) rekap[p.namaDapur] = { total: 0, terbayar: 0, sisa: 0, items: [] };
+    rekap[p.namaDapur].total += Number(p.anggaranAwal);
+    rekap[p.namaDapur].terbayar += Number(p.dibayar);
+    rekap[p.namaDapur].sisa += Number(p.sisa);
+    rekap[p.namaDapur].items.push(p);
+
+    totalA += Number(p.anggaranAwal);
+    totalB += Number(p.dibayar);
+    totalS += Number(p.sisa);
+  });
+
+  // Bagian 1: Ringkasan Per Dapur
+  let htmlRingkas = `
+    <h3>RINGKASAN PER DAPUR</h3>
+    <table class="data">
+      <thead>
+        <tr><th>Nama Dapur</th><th style="text-align:right">Total Biaya</th><th style="text-align:right">Terbayar</th><th style="text-align:right">Sisa</th></tr>
+      </thead>
+      <tbody>
+  `;
+  for(let d in rekap) {
+    htmlRingkas += `<tr>
+      <td><b>${d}</b></td>
+      <td style="text-align:right">Rp ${rp(rekap[d].total)}</td>
+      <td style="text-align:right">Rp ${rp(rekap[d].terbayar)}</td>
+      <td style="text-align:right">Rp ${rp(rekap[d].sisa)}</td>
+    </tr>`;
+  }
+  htmlRingkas += `
+      </tbody>
+      <tfoot>
+        <tr>
+          <th style="text-align:right">TOTAL KESELURUHAN</th>
+          <th style="text-align:right">Rp ${rp(totalA)}</th>
+          <th style="text-align:right">Rp ${rp(totalB)}</th>
+          <th style="text-align:right">Rp ${rp(totalS)}</th>
+        </tr>
+      </tfoot>
+    </table>
+  `;
+
+  // Bagian 2: Rincian Pengeluaran per Dapur
+  let htmlRincian = `
+    <div class="page-break"></div>
+    <h3 style="margin-bottom:20px;">RINCIAN PENGELUARAN BIAYA PER DAPUR</h3>
+  `;
+
+  for(let d in rekap) {
+    htmlRincian += `
+      <h4 style="margin-bottom:5px; color:#548CA8; border-bottom:2px solid #ddd; padding-bottom:3px; text-transform:uppercase;">DAPUR: ${d}</h4>
+      <table class="data" style="margin-bottom: 25px;">
+        <thead>
+          <tr>
+            <th>Nama Proyek / Biaya</th>
+            <th style="text-align:right; width:130px;">Total Biaya</th>
+            <th style="text-align:right; width:130px;">Terbayar</th>
+            <th style="text-align:right; width:130px;">Sisa</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    rekap[d].items.forEach(it => {
+      htmlRincian += `<tr>
+        <td>${it.judulProyek || 'Pekerjaan Umum'}</td>
+        <td style="text-align:right">Rp ${rp(it.anggaranAwal)}</td>
+        <td style="text-align:right">Rp ${rp(it.dibayar)}</td>
+        <td style="text-align:right; color:#d96c6c;">Rp ${rp(it.sisa)}</td>
+      </tr>`;
+    });
+    htmlRincian += `
+        </tbody>
+        <tfoot>
+          <tr>
+            <th style="text-align:right; font-size:1rem;">SUBTOTAL ${d}</th>
+            <th style="text-align:right; font-size:1rem;">Rp ${rp(rekap[d].total)}</th>
+            <th style="text-align:right; font-size:1rem; color:#609966">Rp ${rp(rekap[d].terbayar)}</th>
+            <th style="text-align:right; font-size:1rem; color:#d96c6c">Rp ${rp(rekap[d].sisa)}</th>
+          </tr>
+        </tfoot>
+      </table>
+    `;
+  }
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+      <meta charset="UTF-8">
+      <title>Laporan Statistik Dapur</title>
+      <style>
+        body { font-family: -apple-system, sans-serif; padding: 30px; color: #333; }
+        h2 { text-align: center; margin: 0 0 5px 0; color: #548CA8; }
+        h3 { color: #333; margin-top: 30px; font-size: 1.1rem; }
+        table.data { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 10px; }
+        table.data th { background: #548CA8; color: white; padding: 10px; border: 1px solid #548CA8; }
+        table.data td { padding: 8px 10px; border: 1px solid #ddd; }
+        table.data tfoot th { background: #f0f0f0; color: #333; border: 1px solid #ccc; padding:10px; }
+        .page-break { page-break-before: always; margin-top:30px; }
+        @media print {
+          @page { margin: 1cm; }
+          body { padding: 0; }
+        }
+      </style>
+    </head>
+    <body>
+      <h2>LAPORAN STATISTIK PENGELUARAN DAPUR</h2>
+      <div style="text-align:center; font-size:0.9rem; color:#666; margin-bottom: 20px;">
+        Dicetak pada: ${formatTgl(new Date())}
+      </div>
+      ${htmlRingkas}
+      ${htmlRincian}
+    </body>
+    </html>
+  `;
+  doPrintWithIframe(html);
+}
+
 function bukaModalChartDetail(namaDapur, arrData) {
   document.getElementById('ovChartDetail').style.display = 'block';
   document.getElementById('mdChartDetail').style.display = 'block';
@@ -1559,7 +1670,6 @@ function bukaModalChartDetail(namaDapur, arrData) {
     if(p.tglMulai && p.tglMulai < minTgl) minTgl = p.tglMulai;
     if(p.tglMulai && p.tglMulai > maxTgl) maxTgl = p.tglMulai;
     
-    // [CHANGE 11] Item-item ditampilkan sesuai kode bawaan
     dbP.filter(x => String(x.noUrut) === String(p.noUrut)).forEach(it => {
       html += `<tr>
         <td><b style="color:var(--blue)">[${p.judulProyek || 'Proyek'}]</b><br><span style="color:var(--muted)">${it.namaBarang}</span></td>
