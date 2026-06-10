@@ -133,7 +133,28 @@
       box-shadow:var(--sh-out-sm);
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
     }
+/* CHART POPUP CENTER */
+#mdChart{
+  top:50% !important;
+  left:50% !important;
+  right:auto !important;
+  bottom:auto !important;
+  transform:translate(-50%,-50%) !important;
 
+  width:95% !important;
+  max-width:1000px !important;
+
+  max-height:90vh !important;
+  overflow-y:auto !important;
+
+  border-radius:24px !important;
+  box-shadow:var(--sh-out) !important;
+}
+
+#mdChart .modal-fs-header{
+  position:relative !important;
+  top:auto !important;
+}
     /* [CHANGE 3] Modal Chart Detail — centered, medium size (bukan full-screen) */
     #mdChartDetail {
       display:none;
