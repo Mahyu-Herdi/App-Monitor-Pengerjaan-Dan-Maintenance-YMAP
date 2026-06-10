@@ -378,7 +378,7 @@
           <p style="font-size:.75rem;color:var(--muted);margin:4px 0 0">Filter mencari data berdasarkan Tgl Mulai Project atau Tgl Pembayaran.</p>
         </div>
         <div class="g3">
-          <div><label>Status</label><select id="flStatus"><option value="">Semua</option><option>Dalam Pengerjaan</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
+          <div><label>Status</label><select id="flStatus"><option value="">Semua</option><option>Dalam Pengerjaan</option><option>Selesai & Menunggu Pembayaran</option><option>Belum Lunas / Dicicil</option><option>Lunas / Selesai</option></select></div>
           <div><label>PIC</label><select id="flPIC"><option value="">Semua PIC</option></select></div>
           <div><label>Dapur</label><select id="flDapur"><option value="">Semua Dapur</option></select></div>
           <div style="display:flex;gap:10px;align-items:flex-end;grid-column:1/-1">
@@ -1106,6 +1106,12 @@ function toggleBarisAktif(tr, noUrut) {
 }
 
 function applyFilter(){
+  dbM.forEach(r => {
+    if(r.fotoSelesai && r.fotoSelesai.length > 0 && r.status === 'Dalam Pengerjaan'){
+      r.status = 'Selesai & Menunggu Pembayaran';
+    }
+  });
+
   const keyword = (document.getElementById('inpCari').value || '').toLowerCase();
   const st=document.getElementById('flStatus').value;
   const pi=document.getElementById('flPIC').value;
@@ -1169,7 +1175,7 @@ function applyFilter(){
   if(!filtered.length){ tb.innerHTML='<tr><td colspan="6" style="text-align:center">Tidak ada data aktif.</td></tr>'; document.getElementById('pnlCetak').style.display='none'; return; }
 
   filtered.forEach(r => {
-    const bdg=r.status.includes('Lunas')?'bdg-ln':r.status.includes('Cicil')?'bdg-cc':'bdg-pg';
+    const bdg=r.status.includes('Lunas')?'bdg-ln':r.status.includes('Cicil')?'bdg-cc':r.status.includes('Menunggu')?'bdg-pn':'bdg-pg';
     const judul = r.judulProyek || 'Pekerjaan Umum'; 
     
     let infoTglTerakhir = '';
