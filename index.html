@@ -602,36 +602,12 @@
   <div id="ovChart" class="overlay"></div>
   <div id="mdChart" class="modal-fs">
     <div class="modal-fs-header">
-  <div class="modal-fs-title">
-    <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--blue);vertical-align:middle;margin-right:6px">
-      <path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/>
-    </svg>
-    Statistik Pengeluaran Dapur
-  </div>
-
-  <div style="display:flex;gap:10px;align-items:center">
-    
-    <button
-      onclick="cetakRingkasanPDF()"
-      style="
-        border:none;
-        padding:10px 16px;
-        border-radius:12px;
-        background:#e74c3c;
-        color:white;
-        font-weight:700;
-        cursor:pointer;
-        box-shadow:var(--sh-out-sm);
-      ">
-      PDF
-    </button>
-
-    <button class="modal-fs-close" onclick="closeModalChart(null, true)">
-      ✕
-    </button>
-
-  </div>
-</div>
+      <div class="modal-fs-title">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:var(--blue);vertical-align:middle;margin-right:6px"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2.03 0v8.99H22c-.47-4.74-4.24-8.52-8.97-8.99zm0 11.01V22c4.74-.47 8.5-4.25 8.97-8.99h-8.97z"/></svg>
+        Statistik Pengeluaran Dapur
+      </div>
+      <button class="modal-fs-close" onclick="closeModalChart(null, true)">✕</button>
+    </div>
     <!-- [CHANGE 6] Info row: Terkecil, Terbesar, Menengah (nama dapur + nominal) -->
     <div id="chartInfoRow" class="chart-info-row" style="margin-bottom:20px"></div>
     <div style="position:relative;width:100%;max-height:55vh;height:320px;">
@@ -2014,14 +1990,6 @@ document.addEventListener('click', e => {
     box.style.display = 'none';
   }
 });
-  function cetakRingkasanPDF(){
-
-  alert(
-    "Fitur Cetak PDF Ringkasan Dapur\n\n" +
-    "Silakan tambahkan generator PDF sesuai kebutuhan."
-  );
-
-}
 </script>
 </body>
 </html>
