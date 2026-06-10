@@ -46,7 +46,6 @@
     /* DASH CARD */
     .dc{border-radius:16px;padding:15px;background:var(--bg);box-shadow:var(--sh-in);text-align:center}
     .dc h4{margin:0 0 5px;color:var(--muted);font-size:.75rem;text-transform:uppercase}
-    /* Total Anggaran card — angka lebih besar dari sebelumnya */
     .dc h2{margin:6px 0 0 0!important;font-size:2.2rem!important;font-weight:900!important;text-align:center!important;width:100%!important;display:block!important}
     .dc.grn h2{color:var(--green)!important}
     .dc.red h2{color:var(--red)!important}
@@ -67,10 +66,7 @@
     td{padding:12px;border-bottom:1px solid rgba(0,0,0,.03);vertical-align:middle}
     
     /* Baris tabel aktif — border bawah tebal & highlight saat diklik */
-    tr.baris-aktif td {
-      border-bottom: 3px solid var(--blue) !important;
-      background: rgba(84,140,168,0.1) !important;
-    }
+    tr.baris-aktif td { border-bottom: 3px solid var(--blue) !important; background: rgba(84,140,168,0.1) !important; }
     tr.baris-aktif td:first-child { border-radius: 8px 0 0 8px; }
     tr.baris-aktif td:last-child  { border-radius: 0 8px 8px 0; }
     
@@ -90,8 +86,8 @@
 
     /* OVERLAY & MODAL */
     .overlay{display:none;position:fixed;inset:0;background:rgba(232,228,217,.85);backdrop-filter:blur(6px);z-index:9998}
+    #ovChartDetail { z-index: 10001; }
     
-    /* Modal default: posisi tengah, ukuran sedang */
     .modal{
       display:none;position:fixed;
       top:50%;left:50%;transform:translate(-50%,-50%);
@@ -104,25 +100,24 @@
     .modal p{color:var(--txt);font-size:.95rem;margin:0 0 20px;line-height:1.5;text-align:center}
     .modal-inp{margin-bottom:20px;font-size:1.2rem;color:var(--blue);box-shadow:var(--sh-in);background:var(--bg);text-align:center}
 
-    /* Modal FULL-SCREEN */
-    .modal-fs{
-      display:none;position:fixed;
-      top:0;left:0;right:0;bottom:0;
-      background:var(--bg);
-      padding:20px 15px 80px;
-      border-radius:0;
-      z-index:9999;
-      width:100%;max-width:100%;
-      max-height:100vh;overflow-y:auto;
-      box-shadow:none;
+    /* MODAL SEMI FULL-SCREEN (Centered & Responsive) */
+    .modal-fs {
+      display:none; position:fixed;
+      top:50%; left:50%; transform:translate(-50%,-50%);
+      background:var(--bg); box-shadow:var(--sh-out);
+      padding: 25px 22px 28px; border-radius: 24px;
+      z-index:9999; width:96%; max-width:1000px;
+      max-height:92vh; overflow-y:auto;
     }
+    #mdChartDetail.modal-fs { z-index:10002; max-width:1400px; }
+    
     .modal-fs h3{color:var(--blue);margin:0 0 15px;font-size:1.2rem;font-weight:800;display:flex;align-items:center;gap:10px}
     .modal-fs h3 svg{width:26px;height:26px;fill:currentColor;flex-shrink:0}
-    .modal-fs-header{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:14px 18px;margin-bottom:20px;
-      border-radius:16px;background:var(--bg);
-      box-shadow:var(--sh-out);position:sticky;top:-20px;z-index:10;
+    .modal-fs-header {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:16px 20px; margin:-25px -22px 20px;
+      border-radius:24px 24px 0 0; background:var(--bg);
+      box-shadow:var(--sh-out); position:sticky; top:-25px; z-index:10;
     }
     .modal-fs-title{font-size:1rem;font-weight:800;color:var(--blue)}
     .modal-fs-close{
@@ -131,44 +126,6 @@
       font-size:1.3rem;cursor:pointer;
       box-shadow:var(--sh-out-sm);
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    }
-
-    /* CHART POPUP CENTER */
-    #mdChart{
-      top:50% !important;
-      left:50% !important;
-      right:auto !important;
-      bottom:auto !important;
-      transform:translate(-50%,-50%) !important;
-      width:95% !important;
-      max-width:1000px !important;
-      max-height:90vh !important;
-      overflow-y:auto !important;
-      border-radius:24px !important;
-      box-shadow:var(--sh-out) !important;
-    }
-    #mdChart .modal-fs-header{ position:relative !important; top:auto !important; }
-    
-    /* Modal Chart Detail — centered, medium size */
-    #mdChartDetail {
-      display:none;
-      position:fixed;
-      top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      background:var(--bg);
-      box-shadow:var(--sh-out);
-      padding:25px 22px 28px;
-      border-radius:22px;
-      z-index:10002;
-      width:98vw;max-width:1400px;
-      max-height:90vh;overflow-y:auto;
-    }
-    #mdChartDetail .modal-fs-header {
-      position: sticky;
-      top: -25px;
-      margin: -25px -22px 18px;
-      border-radius:22px 22px 0 0;
-      padding: 16px 20px;
     }
 
     /* NAV */
@@ -197,7 +154,6 @@
     .overlay-foto .drive-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:10px 24px;border-radius:14px;text-decoration:none;font-weight:bold;font-size:.9rem}
 
     /* SP & EDIT MODAL */
-    #mdSP, #mdEditProyek, #mdChart {max-width:900px!important;width:96%!important}
     .chk-item{display:flex;align-items:center;gap:8px;padding:6px 0}
     .chk-item input[type=checkbox]{width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:var(--blue);box-shadow:none;padding:0}
 
@@ -257,14 +213,15 @@
       box-shadow:var(--sh-out);
     }
 
-    /* CHART INFO ROW */
+    /* CHART INFO ROW & CLICKABLE CARDS */
     .chart-info-row { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px; }
     .chart-info-card { flex:1;min-width:130px; background:var(--bg);border-radius:14px; padding:12px 15px;box-shadow:var(--sh-in); text-align:center; }
     .chart-info-card small{display:block;color:var(--muted);font-size:.7rem;font-weight:bold;text-transform:uppercase;margin-bottom:4px}
     .chart-info-card b{display:block;font-size:1.05rem;font-weight:900}
+    .clickable-card { cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; }
+    .clickable-card:hover { transform:scale(1.02); box-shadow:var(--sh-out-sm); }
+    .clickable-card:active { transform:scale(0.97); }
 
-    /* Overlay khusus untuk modal chart detail */
-    #ovChartDetail { z-index: 10001; }
   </style>
 </head>
 <body>
@@ -387,7 +344,7 @@
 
     <div class="main-control">
       <div class="search-container" style="flex:1;margin:0">
-        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"/></svg>
         <input type="text" id="inpCari" placeholder="Ketik nama proyek, dapur, PIC..." autocomplete="off" oninput="cariDataCepat(); applyFilter()">
         <div id="boxSaran" class="search-box"></div>
       </div>
@@ -592,7 +549,7 @@
   </div>
 
   <div id="ovChartDetail" class="overlay"></div>
-  <div id="mdChartDetail">
+  <div id="mdChartDetail" class="modal-fs">
     <div class="modal-fs-header">
       <div class="modal-fs-title" id="cdTitle">Rincian Item</div>
       <button class="modal-fs-close" onclick="closeModalChartDetail(null, true)">✕</button>
@@ -664,7 +621,8 @@
     <span>Dashboard</span>
   </div>
   <div class="ni" id="ni-setting" onclick="showSec('setting')">
-    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.61-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.61-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+    </svg>
     <span>Pengaturan</span>
   </div>
   <div class="ni" id="ni-sinkron" onclick="syncCloud()">
@@ -1121,7 +1079,6 @@ function resetFilter(){
   clearDateFilter();
 }
 
-// PERUBAHAN 3: Fungsi pembantu untuk meng-update 3 kartu di atas
 function updateSummaryCards(dataArr) {
   let tA=0, tB=0, tS=0;
   dataArr.forEach(r => { tA += Number(r.anggaranAwal); tB += Number(r.dibayar); tS += Number(r.sisa); });
@@ -1130,16 +1087,13 @@ function updateSummaryCards(dataArr) {
   document.getElementById('sumSisa').innerText  = 'Rp ' + rp(tS);
 }
 
-// PERUBAHAN 3: Fungsi memfokuskan baris yang diklik
 function toggleBarisAktif(tr, noUrut) {
   const sudahAktif = tr.classList.contains('baris-aktif');
   
-  // Hapus semua aktif dulu
   document.querySelectorAll('#tblMonitor tr.baris-aktif').forEach(r => r.classList.remove('baris-aktif'));
   
   if (!sudahAktif) {
     tr.classList.add('baris-aktif');
-    // Cari data baris ini, dan jadikan dia sebagai summary berfokus
     const r = dbM.find(x => String(x.noUrut) === String(noUrut));
     if (r) {
       document.getElementById('sumTotal').innerText = 'Rp ' + rp(r.anggaranAwal);
@@ -1147,7 +1101,6 @@ function toggleBarisAktif(tr, noUrut) {
       document.getElementById('sumSisa').innerText  = 'Rp ' + rp(r.sisa);
     }
   } else {
-    // Kalau diklik lagi (dilepas), kembalikan penjumlahannya ke semua hasil filter saat ini
     updateSummaryCards(lastFilteredData);
   }
 }
@@ -1210,8 +1163,6 @@ function applyFilter(){
   });
 
   lastFilteredData = filtered;
-
-  // PERUBAHAN 3: Hitung total awal menggunakan fungsi helper baru
   updateSummaryCards(filtered);
 
   const tb=document.getElementById('tblMonitor'); tb.innerHTML='';
@@ -1227,7 +1178,6 @@ function applyFilter(){
       infoTglTerakhir = `<div style="font-size:0.75rem; color:var(--muted); margin-top:5px; line-height:1.3;">Terakhir bayar:<br><b>${formatTgl(lastTgl)}</b></div>`;
     }
 
-    // PERUBAHAN 3: Menambahkan lemparan argumen r.noUrut ke fungsi klik baris
     tb.innerHTML += `<tr onclick="toggleBarisAktif(this, '${r.noUrut}')" style="cursor:pointer;transition:background 0.15s">
       <td>#${String(r.noUrut).slice(-4)}<br><small style="color:var(--muted)">${formatTgl(r.tglMulai)}</small></td>
       <td><b style="color:var(--blue);font-size:.95rem">${judul}</b><br><b>${r.namaDapur}</b><br><small>PIC: ${r.pic}</small></td>
@@ -1284,7 +1234,6 @@ function pilihSaran(noUrut, judul) {
   document.getElementById('inpCari').value = judul;
   document.getElementById('boxSaran').style.display = 'none';
   applyFilter();
-  // Bisa juga bukaLihatDokumen(noUrut) kalau butuh langsung modal pop up
 }
 
 // ── CETAK LAPORAN GLOBAL ──
@@ -1405,8 +1354,9 @@ function bukaModalChart() {
   const idxMid = Math.floor(labelsSorted.length / 2);
   const dapurMenengah  = labelsSorted.length >= 3 ? labelsSorted[idxMid] : null;
 
+  // PERUBAHAN: Menambahkan class .clickable-card dan fungsi onclick
   let infoCardsHtml = `
-    <div class="chart-info-card" style="border-left:4px solid var(--green)">
+    <div class="chart-info-card clickable-card" style="border-left:4px solid var(--green)" onclick="bukaModalChartDetail('${dapurTerkecil}')">
       <small>🟢 Terkecil</small>
       <b style="color:var(--green);font-size:.95rem">${dapurTerkecil || '-'}</b>
       <span style="font-size:.8rem;color:var(--muted);display:block;margin-top:2px">Rp ${rp(dapurTerkecil ? rekap[dapurTerkecil].total : 0)}</span>
@@ -1414,7 +1364,7 @@ function bukaModalChart() {
 
   if (dapurMenengah) {
     infoCardsHtml += `
-      <div class="chart-info-card" style="border-left:4px solid var(--blue)">
+      <div class="chart-info-card clickable-card" style="border-left:4px solid var(--blue)" onclick="bukaModalChartDetail('${dapurMenengah}')">
         <small>🔵 Menengah</small>
         <b style="color:var(--blue);font-size:.95rem">${dapurMenengah}</b>
         <span style="font-size:.8rem;color:var(--muted);display:block;margin-top:2px">Rp ${rp(rekap[dapurMenengah].total)}</span>
@@ -1422,7 +1372,7 @@ function bukaModalChart() {
   }
 
   infoCardsHtml += `
-    <div class="chart-info-card" style="border-left:4px solid var(--red)">
+    <div class="chart-info-card clickable-card" style="border-left:4px solid var(--red)" onclick="bukaModalChartDetail('${dapurTerbesar}')">
       <small>🔴 Terbesar</small>
       <b style="color:var(--red);font-size:.95rem">${dapurTerbesar || '-'}</b>
       <span style="font-size:.8rem;color:var(--muted);display:block;margin-top:2px">Rp ${rp(dapurTerbesar ? rekap[dapurTerbesar].total : 0)}</span>
@@ -1515,7 +1465,7 @@ function bukaModalChart() {
         }
       },
       onClick: (e, elements) => {
-        if(elements.length > 0) bukaModalChartDetail(labels[elements[0].index], rekap[labels[elements[0].index]].arrData);
+        if(elements.length > 0) bukaModalChartDetail(labels[elements[0].index]);
       }
     }
   });
@@ -1528,12 +1478,11 @@ function closeModalChart(e, force=false) {
   }
 }
 
-// PERUBAHAN 2: Fungsi Cetak Laporan dari Modal Chart
+// PERUBAHAN: Cetak Laporan PDF Dapur dengan Page Break per dapur & Tgl/Status
 function cetakLaporanStatistikDapur() {
   const dataAktif = lastFilteredData.length > 0 ? lastFilteredData : dbM.filter(x => x.status !== 'Pending Usulan');
   if(dataAktif.length === 0) return showAlert("Tidak ada data untuk dicetak.", "error");
 
-  // Siapkan rekap data per dapur
   const rekap = {};
   let totalA = 0, totalB = 0, totalS = 0;
 
@@ -1549,7 +1498,7 @@ function cetakLaporanStatistikDapur() {
     totalS += Number(p.sisa);
   });
 
-  // Bagian 1: Ringkasan Per Dapur
+  // Bagian 1: Ringkasan
   let htmlRingkas = `
     <h3>RINGKASAN PER DAPUR</h3>
     <table class="data">
@@ -1579,22 +1528,21 @@ function cetakLaporanStatistikDapur() {
     </table>
   `;
 
-  // Bagian 2: Rincian Pengeluaran per Dapur
-  let htmlRincian = `
-    <div class="page-break"></div>
-    <h3 style="margin-bottom:20px;">RINCIAN PENGELUARAN BIAYA PER DAPUR</h3>
-  `;
-
+  // Bagian 2: Rincian per Dapur (Setiap dapur dipisah halaman)
+  let htmlRincian = ``;
   for(let d in rekap) {
+    htmlRincian += `<div class="page-break"></div>`;
     htmlRincian += `
-      <h4 style="margin-bottom:5px; color:#548CA8; border-bottom:2px solid #ddd; padding-bottom:3px; text-transform:uppercase;">DAPUR: ${d}</h4>
+      <h3 style="margin-bottom:20px; text-align:center; color:#548CA8; text-transform:uppercase;">RINCIAN PENGELUARAN DAPUR: ${d}</h3>
       <table class="data" style="margin-bottom: 25px;">
         <thead>
           <tr>
             <th>Nama Proyek / Biaya</th>
-            <th style="text-align:right; width:130px;">Total Biaya</th>
-            <th style="text-align:right; width:130px;">Terbayar</th>
-            <th style="text-align:right; width:130px;">Sisa</th>
+            <th style="text-align:center; width:110px;">Tgl Mulai</th>
+            <th style="text-align:center; width:120px;">Status</th>
+            <th style="text-align:right; width:110px;">Total Biaya</th>
+            <th style="text-align:right; width:110px;">Terbayar</th>
+            <th style="text-align:right; width:110px;">Sisa</th>
           </tr>
         </thead>
         <tbody>
@@ -1602,6 +1550,8 @@ function cetakLaporanStatistikDapur() {
     rekap[d].items.forEach(it => {
       htmlRincian += `<tr>
         <td>${it.judulProyek || 'Pekerjaan Umum'}</td>
+        <td style="text-align:center">${formatTgl(it.tglMulai)}</td>
+        <td style="text-align:center">${it.status}</td>
         <td style="text-align:right">Rp ${rp(it.anggaranAwal)}</td>
         <td style="text-align:right">Rp ${rp(it.dibayar)}</td>
         <td style="text-align:right; color:#d96c6c;">Rp ${rp(it.sisa)}</td>
@@ -1611,10 +1561,10 @@ function cetakLaporanStatistikDapur() {
         </tbody>
         <tfoot>
           <tr>
-            <th style="text-align:right; font-size:1rem;">SUBTOTAL ${d}</th>
-            <th style="text-align:right; font-size:1rem;">Rp ${rp(rekap[d].total)}</th>
-            <th style="text-align:right; font-size:1rem; color:#609966">Rp ${rp(rekap[d].terbayar)}</th>
-            <th style="text-align:right; font-size:1rem; color:#d96c6c">Rp ${rp(rekap[d].sisa)}</th>
+            <th colspan="3" style="text-align:right; font-size:0.95rem;">SUBTOTAL ${d}</th>
+            <th style="text-align:right; font-size:0.95rem;">Rp ${rp(rekap[d].total)}</th>
+            <th style="text-align:right; font-size:0.95rem; color:#609966">Rp ${rp(rekap[d].terbayar)}</th>
+            <th style="text-align:right; font-size:0.95rem; color:#d96c6c">Rp ${rp(rekap[d].sisa)}</th>
           </tr>
         </tfoot>
       </table>
@@ -1631,13 +1581,13 @@ function cetakLaporanStatistikDapur() {
         body { font-family: -apple-system, sans-serif; padding: 30px; color: #333; }
         h2 { text-align: center; margin: 0 0 5px 0; color: #548CA8; }
         h3 { color: #333; margin-top: 30px; font-size: 1.1rem; }
-        table.data { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 10px; }
+        table.data { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 10px; }
         table.data th { background: #548CA8; color: white; padding: 10px; border: 1px solid #548CA8; }
         table.data td { padding: 8px 10px; border: 1px solid #ddd; }
         table.data tfoot th { background: #f0f0f0; color: #333; border: 1px solid #ccc; padding:10px; }
         .page-break { page-break-before: always; margin-top:30px; }
         @media print {
-          @page { margin: 1cm; }
+          @page { margin: 1cm; size: landscape; }
           body { padding: 0; }
         }
       </style>
@@ -1655,7 +1605,14 @@ function cetakLaporanStatistikDapur() {
   doPrintWithIframe(html);
 }
 
-function bukaModalChartDetail(namaDapur, arrData) {
+// PERUBAHAN: Fungsi buka modal mengambil filter data langsung dari nama dapur
+function bukaModalChartDetail(namaDapur) {
+  if(!namaDapur || namaDapur === '-') return;
+  const dataAktif = lastFilteredData.length > 0 ? lastFilteredData : dbM.filter(x => x.status !== 'Pending Usulan');
+  const arrData = dataAktif.filter(x => x.namaDapur === namaDapur);
+
+  if(!arrData.length) return;
+
   document.getElementById('ovChartDetail').style.display = 'block';
   document.getElementById('mdChartDetail').style.display = 'block';
   document.getElementById('cdTitle').innerText = `📊 ${namaDapur}`;
