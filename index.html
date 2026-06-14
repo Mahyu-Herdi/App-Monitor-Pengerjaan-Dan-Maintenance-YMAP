@@ -71,7 +71,7 @@ table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:max-content
 th{padding:12px; text-align:left;color:var(--muted); font-weight:bold; white-space:nowrap;border-bottom:2px solid rgba(0,0,0,.05)}
 td{padding: 12px; border-bottom:1px solid rgba(0,0,0,.03); vertical-align:middle}
 
-/* Baris tabel aktif - border bawah tebal & highlight saat diklik */
+/* Baris tabel aktif */
 tr.baris-aktif td { border-bottom: 3px solid var(--blue) !important; background: rgba(84,140,168,0.1) !important; }
 tr.baris-aktif td:first-child { border-radius: 8px 0 0 8px; }
 tr.baris-aktif td:last-child { border-radius: 0 8px 8px 0; }
@@ -109,7 +109,7 @@ max-height:92vh; overflow-y:auto;
 .modal p{color:var(--txt); font-size: .95rem; margin:0 0 20px;line-height:1.5;text-align:center}
 .modal-inp{margin-bottom:20px;font-size:1.2rem;color:var(--blue); box-shadow:var(--sh-in);background:var(--bg); text-align:center}
 
-/* MODAL SEMI FULL-SCREEN (Centered & Responsive) */
+/* MODAL SEMI FULL-SCREEN */
 .modal-fs {
 display:none; position:fixed;
 top:50%; left:50%; transform:translate(-50%,-50%);
@@ -316,7 +316,8 @@ Tetapkan SP & Harga
 <table id="tblSpBarang">
 <thead>
 <tr>
-<th></th><th>Item Barang / Pekerjaan</th><th>Qty</th><th>Satuan</th><th>Harga Satuan</th><th>Total</th>
+<th style="text-align:center; width:40px;"><input type="checkbox" id="chkSpAll" checked onchange="toggleSelectAllSp(this)"></th>
+<th>Item Barang / Pekerjaan</th><th>Qty</th><th>Satuan</th><th>Harga Satuan</th><th>Total</th>
 </tr>
 </thead>
 <tbody id="bodySpBarang"></tbody>
@@ -924,6 +925,32 @@ function cetakUsulan(noUrut) {
     doPrintWithIframe(htmlCetak);
 }
 
+// ── FITUR SELEKSI SEMUA ITEM DI POPUP SP ──
+function toggleSelectAllSp(master) {
+    document.querySelectorAll('#bodySpBarang .chk-sp').forEach(chk => {
+        chk.checked = master.checked;
+    });
+    hitungGrandTotal();
+}
+
+function updateMasterCheckbox() {
+    const master = document.getElementById('chkSpAll');
+    if (!master) return;
+    const checkboxes = document.querySelectorAll('#bodySpBarang .chk-sp');
+    if (checkboxes.length === 0) {
+        master.checked = false;
+        return;
+    }
+    master.checked = Array.from(checkboxes).every(chk => chk.checked);
+}
+
+document.addEventListener('change', function(e) {
+    if (e.target && e.target.classList.contains('chk-sp')) {
+        updateMasterCheckbox();
+    }
+});
+// ──────────────────────────────────────────
+
 function bukaProsesSP(noUrut){
     activeNoUrut = noUrut;
     const items = dbP.filter(x => String(x.noUrut)===String(noUrut));
@@ -952,6 +979,7 @@ function bukaProsesSP(noUrut){
     document.getElementById('mdSP').style.display='block';
     
     hitungGrandTotal();
+    if(document.getElementById('chkSpAll')) document.getElementById('chkSpAll').checked = true;
 }
 
 function closeSP(){
@@ -969,6 +997,7 @@ function tambahBarisSP(){
     <td><input type="text" class="tot" placeholder="0" oninput="fmtRp(this); hitungUnitFromTotal(this); hitungGrandTotal()" style="padding:8px;font-size:0.95rem;margin:0"></td>
     </tr>`;
     document.getElementById('bodySpBarang').insertAdjacentHTML('beforeend', html);
+    updateMasterCheckbox();
 }
 
 function hitungTr(el){
@@ -996,7 +1025,7 @@ function hitungGrandTotal(){
     document.getElementById('spGrandTotal').innerText = 'Rp ' + rp(total);
 }
 
-// PERUBAHAN: Fungsi baru untuk menyimpan draft usulan (Tanpa masuk Monitor)
+// PERUBAHAN: Fungsi baru untuk menyimpan draft usulan (Tanpa masuk Monitor) dengan FIX DUPLIKAT
 function simpanDraftUsulan() {
     const btn = document.querySelector('button[onclick="simpanDraftUsulan()"]');
     const oldText = btn.innerText;
@@ -1012,7 +1041,6 @@ function simpanDraftUsulan() {
         const nb = tr.querySelector('.nb').value;
         const sat = tr.querySelector('.sat').value;
 
-        // Draft usulan menyimpan SEMUA baris di tabel (mengabaikan checkbox)
         items.push({ namaBarang:nb, qty:q, satuan:sat, hargaSatuan:h, total:t });
     });
 
@@ -1020,7 +1048,6 @@ function simpanDraftUsulan() {
     const origDapur = idx > -1 ? dbM[idx].namaDapur : '';
     const origJudul = idx > -1 ? dbM[idx].judulProyek : '';
 
-    // Perbarui data dbP untuk usulan ini
     dbP = dbP.filter(x => String(x.noUrut) !== String(activeNoUrut));
     items.forEach(it => {
         dbP.push({ noUrut: activeNoUrut, tglMulai: '', tglSelesai: '', namaDapur: origDapur, pic: '', ...it });
@@ -1028,12 +1055,18 @@ function simpanDraftUsulan() {
 
     localStorage.setItem('db_pesanan', JSON.stringify(dbP));
 
-    // Kirim ke server untuk perbarui Usulan jika online
+    // MENGUBAH action menjadi updateProyek agar tidak menduplikasi baris di Google Sheets
     if(navigator.onLine){
         fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({
-            action:'simpanUsulan',
+            action:'updateProyek',
             noUrut:activeNoUrut,
             namaDapur:origDapur,
+            pic: '',
+            tglMulai: '',
+            anggaranAwal: 0,
+            dibayar: 0,
+            sisa: 0,
+            status: 'Pending Usulan',
             judulProyek:origJudul,
             items:items
         })}).catch(()=>{});
