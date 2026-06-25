@@ -1652,6 +1652,8 @@ function cetakLaporanStatistikDapur() {
         <th>Nama Proyek / Biaya</th>
         <th style="text-align:center; width:110px;">Tgl Mulai</th>
         <th style="text-align:center; width:120px;">Status</th>
+        <th style="text-align:center; width:110px;">Tgl Bayar (Akhir)</th>
+        <th style="text-align:center; width:120px;">Sumber Dana</th>
         <th style="text-align:right; width:110px;">Total Biaya</th>
         <th style="text-align:right; width:110px;">Terbayar</th>
         <th style="text-align:right; width:110px;">Sisa</th>
@@ -1661,10 +1663,15 @@ function cetakLaporanStatistikDapur() {
         `;
         
         rekap[d].items.forEach(it => {
+            let lastTglBayar = (it.tglTerbayar && it.tglTerbayar.length > 0) ? formatTgl(it.tglTerbayar[it.tglTerbayar.length - 1]) : '-';
+            let lastSumber = (it.sumberDana && it.sumberDana.length > 0) ? it.sumberDana[it.sumberDana.length - 1] : '-';
+
             htmlRincian += `<tr>
             <td>${it.judulProyek || 'Pekerjaan Umum'}</td>
             <td style="text-align:center">${formatTgl(it.tglMulai)}</td>
             <td style="text-align:center">${it.status}</td>
+            <td style="text-align:center">${lastTglBayar}</td>
+            <td style="text-align:center">${lastSumber}</td>
             <td style="text-align:right">Rp ${rp(it.anggaranAwal)}</td>
             <td style="text-align:right">Rp ${rp(it.dibayar)}</td>
             <td style="text-align:right; color:#d96c6c;">Rp ${rp(it.sisa)}</td>
@@ -1675,7 +1682,7 @@ function cetakLaporanStatistikDapur() {
         </tbody>
         <tfoot>
         <tr>
-        <th colspan="3" style="text-align:right; font-size:0.95rem;">SUBTOTAL ${d}</th>
+        <th colspan="5" style="text-align:right; font-size:0.95rem;">SUBTOTAL ${d}</th>
         <th style="text-align:right; font-size:0.95rem;">Rp ${rp(rekap[d].total)}</th>
         <th style="text-align:right; font-size:0.95rem; color:#609966">Rp ${rp(rekap[d].terbayar)}</th>
         <th style="text-align:right; font-size:0.95rem; color:#d96c6c">Rp ${rp(rekap[d].sisa)}</th>
@@ -2208,4 +2215,4 @@ document.addEventListener('click', e => {
 });
 </script>
 </body>
-</html> 
+</html>
