@@ -248,7 +248,7 @@ background:var(--bg); padding:10px 22px; border-radius:30px; box-shadow:var(--sh
 /* RESPONSIVE DESIGN (DESKTOP-FIRST & MOBILE-OPTIMIZED) */
 .desktop-only { display: none !important; }
 .mobile-only { display: block !important; }
-.lbl-m { display: inline-block !important; width: 110px; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; margin-right: 5px; }
+.lbl-m { display: inline-block !important; width: 95px; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; vertical-align: middle; margin-right: 8px; }
 
 /* Hide standard horizontal headers globally */
 #tblMonitorTable thead, #sec-usulan table thead {
@@ -335,18 +335,28 @@ background:var(--bg); padding:10px 22px; border-radius:30px; box-shadow:var(--sh
 /* Actions column full width button grid */
 .m-btn-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 8px !important;
-    margin-top: 10px !important;
+    margin-top: 12px !important;
     width: 100% !important;
 }
 
 .m-btn-grid .btn {
     margin: 0 !important;
     width: 100% !important;
-    padding: 10px 8px !important;
-    font-size: 0.8rem !important;
+    padding: 8px 6px !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
     border-radius: 10px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-shadow: var(--sh-out-sm) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
 }
 
 @media (max-width: 600px) {
@@ -1036,19 +1046,25 @@ function renderUsulanList(){
         const judul = r.judulProyek || 'Pekerjaan Umum';
         tb.innerHTML += `<tr>
         <td>
-            <span class="desktop-only">#${no}</span>
-            <div class="mobile-only" style="display:flex; justify-content:space-between; width:100%">
-                <span>No. Usulan:</span>
-                <b>#${no}</b>
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; font-size:0.75rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.3px;">
+                <span>No. Usulan: <b style="color:var(--txt)">#${no}</b></span>
             </div>
         </td>
-        <td><b style="color:var(--blue)">${judul}</b><br><small>${r.namaDapur}</small></td>
-        <td><span class="lbl-m">Status:</span><span class="badge bdg-pn">${r.status}</span></td>
         <td>
-        <div class="m-btn-grid" style="display:flex;gap:6px;flex-direction:column">
-        <button class="btn org" style="padding:6px 12px;font-size:0.8rem" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button>
-        <button class="btn" style="padding:6px 12px;font-size:0.8rem;background:#3498db" onclick="cetakUsulan('${r.noUrut}')">Cetak Usulan</button>
-        </div>
+            <div style="font-size:1rem; font-weight:800; color:var(--blue); line-height:1.35;">${judul}</div>
+            <div style="margin-top:4px; font-size:0.85rem; color:var(--txt);">Dapur: <span style="font-weight:600">${r.namaDapur}</span></div>
+        </td>
+        <td>
+            <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+                <span class="lbl-m">Status:</span>
+                <span class="badge bdg-pn" style="font-size:0.7rem; padding:4px 8px; border-radius:6px;">${r.status}</span>
+            </div>
+        </td>
+        <td>
+            <div class="m-btn-grid">
+                <button class="btn org" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button>
+                <button class="btn" style="background:#4682b4" onclick="cetakUsulan('${r.noUrut}')">Cetak Usulan</button>
+            </div>
         </td>
         </tr>`;
     });
@@ -1491,27 +1507,34 @@ function applyFilter(){
         
         tb.innerHTML += `<tr onclick="toggleBarisAktif(this, '${r.noUrut}')" style="cursor:pointer;transition:background 0.15s">
         <td>
-            <span class="desktop-only">#${String(r.noUrut).slice(-4)}<br><small style="color:var(--muted)">${formatTgl(r.tglMulai)}</small></span>
-            <div class="mobile-only" style="display:flex; justify-content:space-between; width:100%">
-                <span>No. Proyek: <b>#${String(r.noUrut).slice(-4)}</b></span>
-                <small style="color:var(--muted);font-weight:bold">${formatTgl(r.tglMulai)}</small>
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; font-size:0.75rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.3px;">
+                <span>No. Proyek: <b style="color:var(--txt)">#${String(r.noUrut).slice(-4)}</b></span>
+                <span>${formatTgl(r.tglMulai)}</span>
             </div>
         </td>
         <td>
-            <div><b style="color:var(--blue);font-size:.95rem">${judul}</b></div>
-            <div style="margin: 2px 0">Dapur: <b>${r.namaDapur}</b></div>
-            <div><small style="color:var(--muted)">PIC: ${r.pic}</small></div>
+            <div style="font-size:1rem; font-weight:800; color:var(--blue); line-height:1.35;">${judul}</div>
+            <div style="margin: 4px 0 2px; font-size:0.85rem; color:var(--txt);">Dapur: <span style="font-weight:600">${r.namaDapur}</span></div>
+            <div style="font-size:0.8rem; color:var(--muted);">PIC: <span style="font-weight:500">${r.pic}</span></div>
         </td>
-        <td><span class="lbl-m">Total Biaya:</span>Rp ${rp(r.anggaranAwal)}</td>
-        <td style="color:var(--red);font-weight:bold"><span class="lbl-m">Sisa Utang:</span>Rp ${rp(r.sisa)}</td>
-        <td><span class="lbl-m">Status:</span><span class="badge ${bdg}">${r.status}</span>${infoTglTerakhir}</td>
+        <td><span class="lbl-m">Total Biaya:</span><b style="font-size:0.9rem">Rp ${rp(r.anggaranAwal)}</b></td>
+        <td style="color:${r.sisa > 0 ? 'var(--red)' : 'var(--green)'}; font-weight:bold;">
+            <span class="lbl-m">Sisa Utang:</span><b style="font-size:0.9rem">Rp ${rp(r.sisa)}</b>
+        </td>
         <td>
-        <div class="m-btn-grid" style="display:flex;gap:6px;flex-direction:column">
-        <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="event.stopPropagation();bukaInputBayar('${r.noUrut}')">Bayar</button>
-        <button class="btn org" style="padding:6px;font-size:0.75rem" onclick="event.stopPropagation();bukaValidasi('${r.noUrut}')">Upload Foto</button>
-        <button class="btn" style="padding:6px;font-size:0.75rem;background:#3498db" onclick="event.stopPropagation();bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
-        <button class="btn" style="padding:6px;font-size:0.75rem;background:#7f8c8d" onclick="event.stopPropagation();bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
-        </div>
+            <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+                <span class="lbl-m">Status:</span>
+                <span class="badge ${bdg}" style="font-size:0.7rem; padding:4px 8px; border-radius:6px;">${r.status}</span>
+            </div>
+            ${infoTglTerakhir ? `<div style="margin-left:103px;">${infoTglTerakhir}</div>` : ''}
+        </td>
+        <td>
+            <div class="m-btn-grid">
+                <button class="btn grn" onclick="event.stopPropagation();bukaInputBayar('${r.noUrut}')">Bayar</button>
+                <button class="btn org" onclick="event.stopPropagation();bukaValidasi('${r.noUrut}')">Upload Foto</button>
+                <button class="btn" style="background:#4682b4" onclick="event.stopPropagation();bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
+                <button class="btn" style="background:#78909c" onclick="event.stopPropagation();bukaEditProyek('${r.noUrut}')">Edit Rincian</button>
+            </div>
         </td>
         </tr>`;
     });
