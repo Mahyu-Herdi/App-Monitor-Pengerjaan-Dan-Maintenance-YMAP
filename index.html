@@ -21,7 +21,7 @@
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg); color:var(--txt); font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;margin:0;padding:15px 15px 90px;font-size:14px}
+html, body{background:var(--bg); color:var(--txt); font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;margin:0;padding:15px 15px 90px;font-size:14px; max-width:100%; overflow-x:hidden;}
 .container{width: 100%; max-width:100%;margin:auto}
 
 /* HEADER */
@@ -66,7 +66,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 .btn:disabled{opacity:0.6;cursor:not-allowed}
 
 /* TABLE */
-.tbl-wrap{overflow-x:auto;border-radius: 16px;box-shadow:var(--sh-in); padding:5px}
+.tbl-wrap{width:100%; max-width:100%; overflow-x:auto; border-radius: 16px; box-shadow:var(--sh-in); padding:5px; box-sizing:border-box;}
 table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:max-content}
 th{padding:12px; text-align:left;color:var(--muted); font-weight:bold; white-space:nowrap;border-bottom:2px solid rgba(0,0,0,.05)}
 td{padding: 12px; border-bottom:1px solid rgba(0,0,0,.03); vertical-align:middle}
@@ -94,7 +94,7 @@ td input[type="checkbox"] { width: 18px; min-width: 18px; }
 .pbar{display:flex; gap:10px;margin-bottom:20px; flex-wrap:wrap; align-items:center;padding:15px;border-radius: 16px;box-shadow:var(--sh-in); background:var(--bg)}
 #pnlCetak {
     position: fixed;
-    bottom: 20px;
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
     width: 92%;
@@ -188,7 +188,7 @@ display:flex;align-items:center; justify-content:center; flex-shrink:0;
 
 /* DATE FILTER & TOGGLE SWITCH */
 .date-filter-row{display:grid;grid-template-columns:1fr 1fr auto auto; gap:10px;align-items:end; margin-bottom:12px}
-@media(max-width: 650px){.date-filter-row{grid-template-columns: 1fr 1fr;gap:8px}}
+@media(max-width: 768px){.date-filter-row{grid-template-columns: 1fr 1fr;gap:8px}}
 
 .switch { position: relative; display: inline-block; width: 120px; height: 38px; border-radius: 19px; background: var(--bg); box-shadow: var(--sh-in-sm); margin-bottom: 3px; }
 .switch input { opacity: 0; width: 0; height: 0; }
@@ -244,6 +244,158 @@ background:var(--bg); padding:10px 22px; border-radius:30px; box-shadow:var(--sh
 .clickable-card { cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; }
 .clickable-card:hover { transform: scale(1.02); box-shadow:var(--sh-out-sm); }
 .clickable-card:active { transform: scale(0.97); }
+
+/* RESPONSIVE DESIGN (DESKTOP-FIRST & MOBILE-OPTIMIZED) */
+.desktop-only { display: none !important; }
+.mobile-only { display: block !important; }
+.lbl-m { display: inline-block !important; width: 110px; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; margin-right: 5px; }
+
+/* Hide standard horizontal headers globally */
+#tblMonitorTable thead, #sec-usulan table thead {
+    display: none !important;
+}
+
+/* Remove horizontal scroll wrap ONLY on card containers and style as modern grid */
+#sec-monitor .tbl-wrap, #sec-usulan .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: visible !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#tblMonitorTable, #sec-usulan table {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+#tblMonitor, #tblUsulanList {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Transform rows into beautiful separate project cards */
+#tblMonitorTable tr, #sec-usulan table tr {
+    display: flex !important;
+    flex-direction: column !important;
+    background: var(--bg) !important;
+    border: 2px solid rgba(84,140,168,0.08) !important;
+    box-shadow: var(--sh-out-sm) !important;
+    border-radius: 16px !important;
+    padding: 18px !important;
+    position: relative !important;
+    gap: 8px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    text-align: left !important;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+#tblMonitorTable tr:hover, #sec-usulan table tr:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sh-out) !important;
+    border-color: rgba(84,140,168,0.18) !important;
+}
+
+/* Active project card highlighting */
+#tblMonitorTable tr.baris-aktif {
+    border-color: var(--blue) !important;
+    background: rgba(84,140,168,0.04) !important;
+    box-shadow: 0 4px 15px rgba(84,140,168,0.12) !important;
+}
+
+/* Table cells as block elements inside cards */
+#tblMonitorTable td, #sec-usulan table td {
+    display: block !important;
+    width: 100% !important;
+    padding: 4px 0 !important;
+    border: none !important;
+    background: transparent !important;
+    text-align: left !important;
+    font-size: 0.9rem !important;
+    box-sizing: border-box !important;
+}
+
+/* Format the first cell to look like a card header */
+#tblMonitorTable tbody tr td:first-child, #sec-usulan tbody tr td:first-child {
+    border-bottom: 1px dashed rgba(84,140,168,0.18) !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 6px !important;
+}
+
+/* Actions column full width button grid */
+.m-btn-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 10px !important;
+    width: 100% !important;
+}
+
+.m-btn-grid .btn {
+    margin: 0 !important;
+    width: 100% !important;
+    padding: 10px 8px !important;
+    font-size: 0.8rem !important;
+    border-radius: 10px !important;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px 10px 100px !important; /* tight side padding for phones */
+    }
+    #tblMonitor, #tblUsulanList {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    #tblMonitorTable tr, #sec-usulan table tr {
+        padding: 14px !important;
+    }
+    .card {
+        padding: 15px 12px !important;
+        border-radius: 16px !important;
+        margin-bottom: 15px !important;
+    }
+    .app-header {
+        padding: 12px !important;
+        border-radius: 16px !important;
+        margin-bottom: 15px !important;
+    }
+    .app-header .title {
+        font-size: 1rem !important;
+    }
+    .app-header img {
+        width: 45px !important;
+        height: 45px !important;
+    }
+    
+    /* Neumorphic metrics counters scale-down for small screens */
+    .dc {
+        padding: 10px 6px !important;
+    }
+    .dc h4 {
+        font-size: 0.7rem !important;
+    }
+    .dc h2, .dc.grn h2, .dc.red h2 {
+        font-size: 1.25rem !important;
+    }
+
+    /* Print panel stays neatly above navigation */
+    #pnlCetak {
+        bottom: 100px !important;
+        padding: 12px 15px !important;
+        border-radius: 15px !important;
+    }
+}
 
 </style>
 </head>
@@ -883,11 +1035,17 @@ function renderUsulanList(){
         const no = String(r.noUrut).slice(-4);
         const judul = r.judulProyek || 'Pekerjaan Umum';
         tb.innerHTML += `<tr>
-        <td>#${no}</td>
-        <td><b style="color:var(--blue)">${judul}</b><br><small>${r.namaDapur}</small></td>
-        <td><span class="badge bdg-pn">${r.status}</span></td>
         <td>
-        <div style="display:flex;gap:6px;flex-direction:column">
+            <span class="desktop-only">#${no}</span>
+            <div class="mobile-only" style="display:flex; justify-content:space-between; width:100%">
+                <span>No. Usulan:</span>
+                <b>#${no}</b>
+            </div>
+        </td>
+        <td><b style="color:var(--blue)">${judul}</b><br><small>${r.namaDapur}</small></td>
+        <td><span class="lbl-m">Status:</span><span class="badge bdg-pn">${r.status}</span></td>
+        <td>
+        <div class="m-btn-grid" style="display:flex;gap:6px;flex-direction:column">
         <button class="btn org" style="padding:6px 12px;font-size:0.8rem" onclick="bukaProsesSP('${r.noUrut}')">Proses SP</button>
         <button class="btn" style="padding:6px 12px;font-size:0.8rem;background:#3498db" onclick="cetakUsulan('${r.noUrut}')">Cetak Usulan</button>
         </div>
@@ -1332,13 +1490,23 @@ function applyFilter(){
         }
         
         tb.innerHTML += `<tr onclick="toggleBarisAktif(this, '${r.noUrut}')" style="cursor:pointer;transition:background 0.15s">
-        <td>#${String(r.noUrut).slice(-4)}<br><small style="color:var(--muted)">${formatTgl(r.tglMulai)}</small></td>
-        <td><b style="color:var(--blue);font-size:.95rem">${judul}</b><br><b>${r.namaDapur}</b><br><small>PIC: ${r.pic}</small></td>
-        <td>Rp ${rp(r.anggaranAwal)}</td>
-        <td style="color:var(--red);font-weight:bold">Rp ${rp(r.sisa)}</td>
-        <td style="text-align:center"><span class="badge ${bdg}">${r.status}</span>${infoTglTerakhir}</td>
         <td>
-        <div style="display:flex;gap:6px;flex-direction:column">
+            <span class="desktop-only">#${String(r.noUrut).slice(-4)}<br><small style="color:var(--muted)">${formatTgl(r.tglMulai)}</small></span>
+            <div class="mobile-only" style="display:flex; justify-content:space-between; width:100%">
+                <span>No. Proyek: <b>#${String(r.noUrut).slice(-4)}</b></span>
+                <small style="color:var(--muted);font-weight:bold">${formatTgl(r.tglMulai)}</small>
+            </div>
+        </td>
+        <td>
+            <div><b style="color:var(--blue);font-size:.95rem">${judul}</b></div>
+            <div style="margin: 2px 0">Dapur: <b>${r.namaDapur}</b></div>
+            <div><small style="color:var(--muted)">PIC: ${r.pic}</small></div>
+        </td>
+        <td><span class="lbl-m">Total Biaya:</span>Rp ${rp(r.anggaranAwal)}</td>
+        <td style="color:var(--red);font-weight:bold"><span class="lbl-m">Sisa Utang:</span>Rp ${rp(r.sisa)}</td>
+        <td><span class="lbl-m">Status:</span><span class="badge ${bdg}">${r.status}</span>${infoTglTerakhir}</td>
+        <td>
+        <div class="m-btn-grid" style="display:flex;gap:6px;flex-direction:column">
         <button class="btn grn" style="padding:6px;font-size:0.75rem" onclick="event.stopPropagation();bukaInputBayar('${r.noUrut}')">Bayar</button>
         <button class="btn org" style="padding:6px;font-size:0.75rem" onclick="event.stopPropagation();bukaValidasi('${r.noUrut}')">Upload Foto</button>
         <button class="btn" style="padding:6px;font-size:0.75rem;background:#3498db" onclick="event.stopPropagation();bukaLihatDokumen('${r.noUrut}')">Riwayat & Foto</button>
