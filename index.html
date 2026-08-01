@@ -92,6 +92,26 @@ td input[type="checkbox"] { width: 18px; min-width: 18px; }
 
 /* PRINT BAR */
 .pbar{display:flex; gap:10px;margin-bottom:20px; flex-wrap:wrap; align-items:center;padding:15px;border-radius: 16px;box-shadow:var(--sh-in); background:var(--bg)}
+#pnlCetak {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 800px;
+    z-index: 9999;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18), var(--sh-out);
+    background: var(--bg);
+    border: 3px solid var(--blue);
+    margin: 0;
+    padding: 15px 20px;
+    border-radius: 18px;
+    animation: slideUp 0.3s ease-out;
+}
+@keyframes slideUp {
+    from { transform: translate(-50%, 50px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
 
 /* OVERLAY & MODAL */
 .overlay{display:none;position:fixed; inset:0; background:rgba(232,228,217,.85); backdrop-filter:blur(6px);z-index:9998}
@@ -408,6 +428,7 @@ Grafik Statistik Dapur
 <button class="btn" onclick="prosesCetak('sp')">Surat Pesanan</button>
 <button class="btn" onclick="prosesCetak('invoice')">Invoice</button>
 <button class="btn" onclick="prosesCetak('lampiran')">Lampiran Foto</button>
+<button class="btn red" style="padding: 10px 14px; min-width: auto; margin: 0; border-radius: 12px;" onclick="event.stopPropagation(); tutupPanelCetak()">✕</button>
 </div>
 
 <div class="tbl-wrap">
@@ -736,6 +757,11 @@ function showSec(key){
     if(key==='usulan') renderUsulanList();
     if(key==='monitor'){ buildFilter(); applyFilter(); }
     if(key==='setting') loadSetting();
+    
+    // Auto-hide the print panel if leaving the monitor screen
+    if (key !== 'monitor') {
+        document.getElementById('pnlCetak').style.display = 'none';
+    }
 }
 
 // ── KOMPRES FOTO ──
@@ -1197,10 +1223,29 @@ function toggleBarisAktif(tr, noUrut) {
             document.getElementById('sumTotal').innerText = 'Rp ' + rp(r.anggaranAwal);
             document.getElementById('sumBayar').innerText = 'Rp ' + rp(r.dibayar);
             document.getElementById('sumSisa').innerText = 'Rp ' + rp(r.sisa);
+            localStorage.setItem('smm_siap_cetak', JSON.stringify({bundle: r, items: dbP.filter(x => String(x.noUrut) === String(r.noUrut))}));
+            const lbl = document.querySelector('#pnlCetak span');
+            if (lbl) lbl.innerText = `Cetak Dokumen (#${String(r.noUrut).slice(-4)} - ${r.judulProyek || r.namaDapur || 'Proyek'}):`;
+            document.getElementById('pnlCetak').style.display = 'flex';
         }
     } else {
         updateSummaryCards(lastFilteredData);
+        if (lastFilteredData && lastFilteredData.length === 1) {
+            const r = lastFilteredData[0];
+            localStorage.setItem('smm_siap_cetak', JSON.stringify({bundle: r, items: dbP.filter(x => String(x.noUrut) === String(r.noUrut))}));
+            const lbl = document.querySelector('#pnlCetak span');
+            if (lbl) lbl.innerText = `Cetak Dokumen (#${String(r.noUrut).slice(-4)} - ${r.judulProyek || r.namaDapur || 'Proyek'}):`;
+            document.getElementById('pnlCetak').style.display = 'flex';
+        } else {
+            document.getElementById('pnlCetak').style.display = 'none';
+        }
     }
+}
+
+function tutupPanelCetak() {
+    document.getElementById('pnlCetak').style.display = 'none';
+    document.querySelectorAll('#tblMonitor tr.baris-aktif').forEach(r => r.classList.remove('baris-aktif'));
+    updateSummaryCards(lastFilteredData);
 }
 
 function applyFilter(){
@@ -1304,7 +1349,10 @@ function applyFilter(){
     });
     
     if(filtered.length===1){
-        localStorage.setItem('smm_siap_cetak',JSON.stringify({bundle: filtered[0], items: dbP.filter(x=>String(x.noUrut)===String(filtered[0].noUrut))}));
+        const r = filtered[0];
+        localStorage.setItem('smm_siap_cetak',JSON.stringify({bundle: r, items: dbP.filter(x=>String(x.noUrut)===String(r.noUrut))}));
+        const lbl = document.querySelector('#pnlCetak span');
+        if (lbl) lbl.innerText = `Cetak Dokumen (#${String(r.noUrut).slice(-4)} - ${r.judulProyek || r.namaDapur || 'Proyek'}):`;
         document.getElementById('pnlCetak').style.display='flex';
     } else { 
         document.getElementById('pnlCetak').style.display='none'; 
