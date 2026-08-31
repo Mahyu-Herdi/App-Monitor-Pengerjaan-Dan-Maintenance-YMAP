@@ -1,98 +1,171 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><title>Surat Pesanan (SP)</title>
+  <meta charset="UTF-8">
+  <title>Surat Pesanan (SP)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    @page { size: A4; margin: 15mm 18mm; }
+    @page { size: A4 portrait; margin: 10mm 15mm; }
     *{ box-sizing:border-box; margin:0; padding:0; }
-    body{ font-family:'Times New Roman',Times,serif; font-size:11pt; color:#111; background:#fff; line-height:1.5; }
-    .kop{ margin-bottom:12px; border-bottom:3px double #000; padding-bottom:8px; }
-    .kop img{ width:100%; height:auto; display:block; }
-    .kop-fallback{ text-align:center; padding:10px 0; }
-    .kop-fallback h1{ font-size:14pt; font-weight:bold; margin:0; }
-    .kop-fallback p{ font-size:9pt; color:#555; margin:2px 0; }
-    .doc-title{ text-align:center; margin:14px 0 4px; }
-    .doc-title h2{ font-size:13pt; font-weight:bold; letter-spacing:1px; border-bottom:1.5px solid #000; display:inline-block; padding-bottom:2px; }
-    .doc-no{ text-align:center; font-size:10pt; color:#444; margin-bottom:14px; }
-    .info{ border:1px solid #bbb; border-radius:3px; padding:8px 12px; margin-bottom:14px; background:#fafafa; font-size:10.5pt; }
+    html, body { height: 100%; font-family:'Times New Roman',Times,serif; font-size:10.5pt; color:#111; background:#fff; line-height:1.45; }
+    #printWrapper { width: 100%; max-width: 190mm; margin: 0 auto; background: #fff; page-break-inside: avoid; }
+    
+    .kop{ margin-bottom:10px; border-bottom:3px double #000; padding-bottom:6px; }
+    .kop img{ width:100%; max-height:85px; object-fit:contain; display:block; }
+    .kop-fallback{ text-align:center; padding:8px 0; }
+    .kop-fallback h1{ font-size:13.5pt; font-weight:bold; margin:0; }
+    .kop-fallback p{ font-size:8.5pt; color:#555; margin:2px 0; }
+    
+    .doc-title{ text-align:center; margin:8px 0 2px; }
+    .doc-title h2{ font-size:12.5pt; font-weight:bold; letter-spacing:1px; border-bottom:1.5px solid #000; display:inline-block; padding-bottom:2px; }
+    .doc-no{ text-align:center; font-size:9.5pt; color:#444; margin-bottom:10px; }
+    
+    .info{ border:1px solid #bbb; border-radius:4px; padding:6px 10px; margin-bottom:10px; background:#fafafa; font-size:10pt; }
     .info table{ border:none; margin:0; width:100%; }
-    .info td{ border:none; padding:2px 8px 2px 0; vertical-align:top; }
-    .info td:nth-child(odd){ font-weight:bold; width:130px; color:#333; }
-    table.items{ width:100%; border-collapse:collapse; margin-bottom:6px; font-size:10.5pt; }
-    table.items th{ background:#2c3e50; color:#fff; padding:7px 8px; text-align:center; border:1px solid #2c3e50; font-size:10pt; }
-    table.items td{ border:1px solid #bbb; padding:6px 8px; vertical-align:middle; }
-    table.items tbody tr:nth-child(even){ background:#f8f8f8; }
-    table.items tfoot td{ border:1px solid #888; padding:7px 8px; background:#eef2f5; font-weight:bold; }
+    .info td{ border:none; padding:2px 6px 2px 0; vertical-align:top; }
+    .info td:nth-child(odd){ font-weight:bold; width:125px; color:#333; }
+    
+    .p-intro { margin-bottom:6px; font-size:10pt; }
+    
+    table.items{ width:100%; border-collapse:collapse; margin-bottom:6px; font-size:10pt; }
+    table.items th{ background:#2c3e50; color:#fff; padding:6px 6px; text-align:center; border:1px solid #2c3e50; font-size:9.5pt; }
+    table.items td{ border:1px solid #bbb; padding:5px 6px; vertical-align:middle; }
+    table.items tbody tr:nth-child(even){ background:#f9f9f9; }
+    table.items tfoot td{ border:1px solid #888; padding:6px 8px; background:#eef2f5; font-weight:bold; }
     .tc{ text-align:center; } .tr{ text-align:right; }
-    .ttd{ display:flex; justify-content:space-between; margin-top:40px; gap:20px; }
-    .ttd-box{ flex:1; text-align:center; font-size:10.5pt; }
-    .ttd-box .ruang{ height:55px; border-bottom:1px solid #555; margin:8px 20px; }
+    
+    .ttd{ display:flex; justify-content:space-between; margin-top:22px; gap:20px; page-break-inside:avoid; }
+    .ttd-box{ flex:1; text-align:center; font-size:10pt; }
+    .ttd-box .ruang{ height:48px; border-bottom:1px solid #555; margin:6px 20px; }
     .ttd-box .nama{ font-weight:bold; text-decoration:underline; }
     
     /* MODAL TTD */
-    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); z-index: 9999; display: flex; justify-content: center; align-items: center; font-family: sans-serif; }
-    .modal-box { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    .modal-box h3 { margin: 0 0 15px 0; color: #2c3e50; font-size: 16px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px;}
-    .modal-box label { display: block; margin-top: 12px; font-size: 13px; font-weight: bold; color: #444; }
-    .modal-box .inp { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; outline: none; }
+    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.65); z-index: 9999; display: flex; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .modal-box { background: #fff; padding: 22px; border-radius: 14px; width: 92%; max-width: 400px; box-shadow: 0 12px 35px rgba(0,0,0,0.35); }
+    .modal-box h3 { margin: 0 0 12px 0; color: #2c3e50; font-size: 16px; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 8px;}
+    .modal-box label { display: block; margin-top: 10px; font-size: 12.5px; font-weight: bold; color: #444; }
+    .modal-box .inp { width: 100%; padding: 8px 10px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font-size: 13.5px; box-sizing: border-box; outline: none; }
+    .modal-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
     
-    @media print{ .no-print{ display:none!important; } }
-    .no-print{ position:fixed; bottom:20px; right:20px; display:flex; gap:10px; z-index:99; }
-    .btnP{ padding:10px 22px; border:none; border-radius:8px; font-size:13px; font-weight:bold; cursor:pointer; background:#2c3e50; color:#fff; }
+    /* LOADING OVERLAY */
+    #loadingToast { display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#2c3e50; color:#fff; padding:10px 20px; border-radius:30px; font-size:13px; font-weight:bold; z-index:10000; box-shadow:0 4px 15px rgba(0,0,0,0.25); font-family:sans-serif; align-items:center; gap:8px; }
+    
+    @media print{
+      .no-print{ display:none!important; }
+      body { background: #fff; padding: 0; margin: 0; }
+      #printWrapper { width: 100%; max-width: 100%; }
+    }
+    
+    .no-print{
+      position:fixed; bottom:18px; right:18px; display:flex; gap:8px; z-index:99;
+      background:rgba(255,255,255,0.92); backdrop-filter:blur(6px); padding:8px 12px;
+      border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.18); border:1px solid #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .btnP{
+      padding:9px 15px; border:none; border-radius:8px; font-size:12.5px; font-weight:bold;
+      cursor:pointer; background:#2c3e50; color:#fff; display:inline-flex; align-items:center; gap:6px;
+      transition:background 0.15s, transform 0.1s;
+    }
+    .btnP:hover{ transform: translateY(-1px); }
+    .btnP.green{ background:#27ae60; }
+    .btnP.blue{ background:#2980b9; }
+    .btnP.orange{ background:#d35400; }
   </style>
 </head>
 <body>
 
+<div id="loadingToast">
+  <svg width="18" height="18" viewBox="0 0 24 24" style="animation:spin 1s linear infinite;fill:#fff"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="4" fill="none" stroke-dasharray="31.4 31.4"/></svg>
+  <span id="loadingMsg">Memproses PDF...</span>
+</div>
+
+<style>
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+
 <div id="modalPenandatangan" class="modal-overlay">
   <div class="modal-box">
-    <h3>Data Penandatangan (SP)</h3>
+    <h3>Pengaturan Penandatangan (SP)</h3>
     <label>Nama (Menyetujui)</label>
     <input type="text" id="inpNamaTtd" class="inp">
     <label>Jabatan</label>
     <input type="text" id="inpJabTtd" class="inp">
     <label>Tempat / Kota</label>
     <input type="text" id="inpLokTtd" class="inp">
-    <button class="btnP" style="width:100%; margin-top:20px; background:#27ae60;" onclick="cetakSekarang()">Terapkan & Cetak</button>
+    
+    <div class="modal-btn-grid">
+      <button class="btnP green" style="justify-content:center" onclick="terapkanDanAksi('print')">
+        <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg> Cetak
+      </button>
+      <button class="btnP blue" style="justify-content:center" onclick="terapkanDanAksi('download')">
+        <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg> Unduh PDF
+      </button>
+      <button class="btnP orange" style="justify-content:center; grid-column:1/-1;" onclick="terapkanDanAksi('share')">
+        <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg> Kirim ke WA / Share PDF
+      </button>
+    </div>
+    <button type="button" style="width:100%; margin-top:8px; padding:7px; background:#f0f0f0; border:none; border-radius:6px; font-size:12px; cursor:pointer; color:#666;" onclick="tutupModalTtd()">Lihat Dokumen Terlebih Dahulu</button>
   </div>
 </div>
 
-<div class="kop" id="kopEl"></div>
-<div class="doc-title"><h2>SURAT PESANAN (SP) / PERINTAH KERJA</h2></div>
-<div class="doc-no">Nomor: <b id="noDoc">—</b></div>
+<div id="printWrapper">
+  <div class="kop" id="kopEl"></div>
+  <div class="doc-title"><h2>SURAT PESANAN (SP) / PERINTAH KERJA</h2></div>
+  <div class="doc-no">Nomor: <b id="noDoc">—</b></div>
 
-<div class="info">
-  <table>
-    <tr><td>Pekerjaan / Uraian</td><td colspan="3">: <span id="iJudulProyek" style="font-weight:bold;font-size:11pt"></span></td></tr>
-    <tr><td>Nama Dapur</td><td>: <span id="iDapur"></span></td><td>Tgl. Mulai</td><td>: <span id="iTglMulai"></span></td></tr>
-    <tr><td>PIC / SPPG</td><td>: <span id="iPIC"></span></td><td>Tgl. Selesai</td><td>: <span id="iTglSelesai"></span></td></tr>
+  <div class="info">
+    <table>
+      <tr><td>Pekerjaan / Uraian</td><td colspan="3">: <span id="iJudulProyek" style="font-weight:bold;font-size:10.5pt"></span></td></tr>
+      <tr><td>Nama Dapur</td><td>: <span id="iDapur"></span></td><td>Tgl. Mulai</td><td>: <span id="iTglMulai"></span></td></tr>
+      <tr><td>PIC / SPPG</td><td>: <span id="iPIC"></span></td><td>Tgl. Selesai</td><td>: <span id="iTglSelesai"></span></td></tr>
+    </table>
+  </div>
+  
+  <p class="p-intro">Diperintahkan untuk melaksanakan pengadaan material/pekerjaan rincian berikut:</p>
+  <table class="items">
+    <thead><tr><th style="width:28px">No</th><th>Barang / Pekerjaan</th><th style="width:42px">Qty</th><th style="width:60px">Sat</th><th style="width:110px">Harga Satuan</th><th style="width:115px">Total (Rp)</th></tr></thead>
+    <tbody id="spBody"></tbody>
+    <tfoot><tr><td colspan="5" class="tr">ESTIMASI ANGGARAN</td><td class="tr" id="spTotal">Rp 0</td></tr></tfoot>
   </table>
-</div>
-<p style="margin-bottom:8px">Diperintahkan untuk melaksanakan pengadaan material/pekerjaan rincian berikut:</p>
-<table class="items">
-  <thead><tr><th style="width:32px">No</th><th>Barang / Pekerjaan</th><th style="width:45px">Qty</th><th style="width:70px">Sat</th><th style="width:115px">Harga Satuan</th><th style="width:115px">Total (Rp)</th></tr></thead>
-  <tbody id="spBody"></tbody>
-  <tfoot><tr><td colspan="5" class="tr">ESTIMASI ANGGARAN</td><td class="tr" id="spTotal">Rp 0</td></tr></tfoot>
-</table>
 
-<div class="ttd">
-  <div class="ttd-box">
-    <div>Menyetujui,</div>
-    <div style="font-weight:bold" id="tJab">—</div>
-    <div class="ruang"></div>
-    <div class="nama" id="tNama1">—</div>
-    <div id="tLok1"></div>
+  <div class="ttd">
+    <div class="ttd-box">
+      <div>Menyetujui,</div>
+      <div style="font-weight:bold" id="tJab">—</div>
+      <div class="ruang"></div>
+      <div class="nama" id="tNama1">—</div>
+      <div id="tLok1"></div>
+    </div>
+    <div class="ttd-box">
+      <div id="tKota">—</div>
+      <div style="font-weight:bold">Pelaksana / PIC</div>
+      <div class="ruang"></div>
+      <div class="nama" id="tNamaPIC">—</div>
+      <div>PIC Dapur</div>
+    </div>
   </div>
-  <div class="ttd-box">
-    <div id="tKota">—</div>
-    <div style="font-weight:bold">Pelaksana / PIC</div>
-    <div class="ruang"></div>
-    <div class="nama" id="tNamaPIC">—</div>
-    <div>PIC Dapur</div>
-  </div>
+</div>
+
+<div class="no-print">
+  <button class="btnP" onclick="bukaModalTtd()">
+    <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> Edit TTD
+  </button>
+  <button class="btnP green" onclick="cetakDokumen()">
+    <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg> Cetak
+  </button>
+  <button class="btnP blue" onclick="unduhPDF()">
+    <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg> Unduh PDF
+  </button>
+  <button class="btnP orange" onclick="sharePDF()">
+    <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg> Kirim WA (PDF)
+  </button>
 </div>
 
 <script>
 let tglCetakGlobal = '';
+let namaDapurGlobal = '';
+let judulProyekGlobal = '';
 
 function formatTglLengkap(tglStr) {
   if (!tglStr) return '—';
@@ -104,30 +177,206 @@ function formatTglLengkap(tglStr) {
 
 const rp = n => (Number(n)||0).toLocaleString('id-ID');
 
-function cetakSekarang() {
-  document.getElementById('tNama1').innerText = document.getElementById('inpNamaTtd').value;
-  document.getElementById('tJab').innerText = document.getElementById('inpJabTtd').value;
-  document.getElementById('tLok1').innerText = document.getElementById('inpLokTtd').value;
-  document.getElementById('tKota').innerText = `${document.getElementById('inpLokTtd').value}, ${tglCetakGlobal}`;
+function bukaModalTtd() {
+  document.getElementById('modalPenandatangan').style.display = 'flex';
+}
+
+function tutupModalTtd() {
+  applyDataTtd();
   document.getElementById('modalPenandatangan').style.display = 'none';
+  sesuaikanSatuHalaman();
+}
+
+function applyDataTtd() {
+  const nm = document.getElementById('inpNamaTtd').value.trim();
+  const jb = document.getElementById('inpJabTtd').value.trim();
+  const lk = document.getElementById('inpLokTtd').value.trim();
+  
+  document.getElementById('tNama1').innerText = nm || '—';
+  document.getElementById('tJab').innerText = jb || 'Koordinator';
+  document.getElementById('tLok1').innerText = lk || '';
+  document.getElementById('tKota').innerText = lk ? `${lk}, ${tglCetakGlobal}` : tglCetakGlobal;
+}
+
+function terapkanDanAksi(aksi) {
+  applyDataTtd();
+  document.getElementById('modalPenandatangan').style.display = 'none';
+  sesuaikanSatuHalaman();
+  
+  if (aksi === 'print') {
+    setTimeout(() => cetakDokumen(), 200);
+  } else if (aksi === 'download') {
+    setTimeout(() => unduhPDF(), 200);
+  } else if (aksi === 'share') {
+    setTimeout(() => sharePDF(), 200);
+  }
+}
+
+function sesuaikanSatuHalaman() {
+  const wrap = document.getElementById("printWrapper");
+  if (!wrap) return;
+  
+  wrap.style.zoom = '1';
+  wrap.style.transform = 'none';
+  
+  // A4 standard printable height ~1010px minus padding
+  const maxH = 1000;
+  const curH = wrap.scrollHeight || wrap.offsetHeight;
+  
+  if (curH > maxH) {
+    const scale = Math.max(0.60, Math.floor((maxH / curH) * 100) / 100);
+    wrap.style.zoom = scale;
+    
+    // Add compact class to paddings if heavily populated
+    document.querySelectorAll('table.items td, table.items th').forEach(td => {
+      td.style.padding = '3px 5px';
+    });
+    const ttd = document.querySelector('.ttd');
+    if (ttd) ttd.style.marginTop = '14px';
+  }
+}
+
+function cetakDokumen() {
+  applyDataTtd();
+  sesuaikanSatuHalaman();
   window.print();
 }
 
-function loadKop(kopUrl) {
+function tampilkanLoading(pesan) {
+  const toast = document.getElementById('loadingToast');
+  document.getElementById('loadingMsg').innerText = pesan || 'Memproses...';
+  toast.style.display = 'flex';
+}
+
+function sembunyikanLoading() {
+  document.getElementById('loadingToast').style.display = 'none';
+}
+
+function getSafeFileName() {
+  const d = (namaDapurGlobal || 'Dapur').replace(/[/\\?%*:|"<>]/g, '-').trim();
+  const p = (judulProyekGlobal || 'Proyek').replace(/[/\\?%*:|"<>]/g, '-').trim();
+  return `SP - ${d} - ${p}`;
+}
+
+async function unduhPDF() {
+  applyDataTtd();
+  sesuaikanSatuHalaman();
+  tampilkanLoading('Menyiapkan file PDF...');
+  
+  const fileName = `${getSafeFileName()}.pdf`;
+  const el = document.getElementById('printWrapper');
+  
+  const opt = {
+    margin: [8, 12, 8, 12],
+    filename: fileName,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, logging: false },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  
+  try {
+    if (typeof html2pdf !== 'undefined') {
+      await html2pdf().set(opt).from(el).save();
+    } else {
+      window.print();
+    }
+  } catch(e) {
+    console.error(e);
+    window.print();
+  } finally {
+    sembunyikanLoading();
+  }
+}
+
+async function sharePDF() {
+  applyDataTtd();
+  sesuaikanSatuHalaman();
+  tampilkanLoading('Membuat PDF untuk WhatsApp / Share...');
+  
+  const fileName = `${getSafeFileName()}.pdf`;
+  const el = document.getElementById('printWrapper');
+  
+  const opt = {
+    margin: [8, 12, 8, 12],
+    filename: fileName,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, logging: false },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  
+  try {
+    if (typeof html2pdf !== 'undefined') {
+      const pdfBlob = await html2pdf().set(opt).from(el).outputPdf('blob');
+      sembunyikanLoading();
+      
+      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: fileName,
+          text: `Berikut kami kirimkan Surat Pesanan (SP):\n*${judulProyekGlobal}* di *${namaDapurGlobal}*.`,
+          files: [file]
+        });
+      } else {
+        // Otomatis download file PDF
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        
+        // Buka WhatsApp
+        const waText = encodeURIComponent(`Halo, terlampir dokumen Surat Pesanan (SP):\n*${getSafeFileName()}*\n\n(File PDF sudah otomatis terunduh di perangkat Anda dan siap dilampirkan).`);
+        window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
+      }
+    } else {
+      sembunyikanLoading();
+      window.print();
+    }
+  } catch(e) {
+    sembunyikanLoading();
+    console.error(e);
+    window.print();
+  }
+}
+
+function loadKop(kopUrl, cb) {
   const el = document.getElementById('kopEl');
-  const img = new Image();
-  img.onload = () => { el.innerHTML = `<img src="${kopUrl || 'Kop.png'}" alt="Kop Surat">`; };
-  img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Pembangunan Dan Administrasi (MAP)</p></div>`; };
-  img.src = kopUrl || 'Kop.png';
+  if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
+    const img = new Image();
+    img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; if(cb) cb(); };
+    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1><p>Program Pembangunan Dan Administrasi (MAP)</p></div>`; if(cb) cb(); };
+    img.src = 'Kop.png';
+  } else {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { el.innerHTML = `<img src="${kopUrl}" alt="Kop Surat">`; if(cb) cb(); };
+    img.onerror = () => {
+      const img2 = new Image();
+      img2.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; if(cb) cb(); };
+      img2.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; if(cb) cb(); };
+      img2.src = 'Kop.png';
+    };
+    img.src = kopUrl;
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const d = JSON.parse(localStorage.getItem('smm_siap_cetak'));
   const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
-  if(!d) return;
+  if(!d) {
+    document.body.innerHTML = '<h3 style="padding:20px;text-align:center;">Data kosong. Silakan kembali ke aplikasi dan pilih proyek.</h3>';
+    return;
+  }
 
   const b = d.bundle, items = d.items||[];
   tglCetakGlobal = formatTglLengkap(new Date().toISOString().slice(0,10));
+  namaDapurGlobal = b.namaDapur || s.lok || 'Dapur';
+  judulProyekGlobal = b.judulProyek || 'Pekerjaan Umum';
+
+  // SET DYNAMIC DOCUMENT TITLE WITH DAPUR & PROYEK
+  document.title = getSafeFileName();
 
   document.getElementById('noDoc').innerText = `SP/${String(b.noUrut).slice(-4)}/MAP/${new Date().getFullYear()}`;
   document.getElementById('iJudulProyek').innerText = (b.judulProyek || 'PEKERJAAN UMUM').toUpperCase();
@@ -140,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('inpNamaTtd').value = s.an || '';
   document.getElementById('inpJabTtd').value = s.jab || 'Koordinator';
   document.getElementById('inpLokTtd').value = s.lok || '';
+  applyDataTtd();
 
   let tot=0, html='';
   items.forEach((it,i) => {
@@ -150,7 +400,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('spTotal').innerText = 'Rp ' + rp(tot);
   document.getElementById('tNamaPIC').innerText = b.pic || '—';
   
-  loadKop(s.kop);
+  loadKop(s.kop, () => {
+    sesuaikanSatuHalaman();
+  });
 });
 </script>
 </body>

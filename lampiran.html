@@ -1,58 +1,105 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><title>Lampiran Foto</title>
+  <meta charset="UTF-8">
+  <title>Lampiran Foto</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    @page { size: A4; margin: 15mm; }
+    @page { size: A4; margin: 12mm 15mm; }
     *{ box-sizing:border-box; margin:0; padding:0; }
-    body{ font-family: Arial, sans-serif; font-size:10pt; color:#111; }
-    .kop{ margin-bottom:12px; border-bottom:2px solid #000; padding-bottom:8px; }
-    .kop img{ width:100%; height:auto; display:block; }
+    body{ font-family: Arial, sans-serif; font-size:10pt; color:#111; background:#fff; }
+    #printWrapper { width:100%; max-width:190mm; margin:0 auto; background:#fff; }
+    
+    .kop{ margin-bottom:10px; border-bottom:2px solid #000; padding-bottom:6px; }
+    .kop img{ width:100%; max-height:85px; object-fit:contain; display:block; }
     .kop-fallback{ text-align:center; padding:8px 0; }
     .kop-fallback h1{ font-size:13pt; font-weight:bold; margin:0; }
-    .header{ margin-bottom:16px; font-weight:bold; padding-bottom:6px; border-bottom:1px solid #000; font-size:10.5pt; }
-    .section-title{ font-size:11pt; font-weight:bold; margin:14px 0 8px; color:#2c3e50; border-left:4px solid #2c3e50; padding-left:8px; }
-    .photo-grid{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
-    .photo-card{ width: calc(33% - 6px); text-align:center; border:1px solid #ccc; padding:5px; }
-    .photo-card img{ width:100%; height:180px; object-fit:contain; background:#f5f5f5; display:block; }
-    .photo-card .caption{ font-size:8pt; color:#555; margin-top:4px; }
-    .no-foto{ font-style:italic; color:#999; font-size:9pt; padding:8px 0; }
+    
+    .header{ margin-bottom:14px; font-weight:bold; padding-bottom:6px; border-bottom:1px solid #000; font-size:10pt; line-height:1.4; }
+    .section-title{ font-size:10.5pt; font-weight:bold; margin:12px 0 6px; color:#2c3e50; border-left:4px solid #2c3e50; padding-left:8px; }
+    .photo-grid{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .photo-card{ width: calc(33.333% - 6px); text-align:center; border:1px solid #ccc; padding:5px; border-radius:4px; background:#fafafa; }
+    .photo-card img{ width:100%; height:160px; object-fit:contain; background:#f5f5f5; display:block; border-radius:2px; }
+    .photo-card .caption{ font-size:8pt; color:#555; margin-top:4px; font-weight:bold; }
+    .no-foto{ font-style:italic; color:#999; font-size:9pt; padding:6px 0; }
     .page-break{ page-break-before: always; }
-    @media print{ .no-print{ display:none!important; } }
-    .no-print{ position:fixed; bottom:20px; right:20px; }
-    .btnP{ padding:10px 22px; border:none; border-radius:8px; background:#2c3e50; color:#fff; font-weight:bold; cursor:pointer; font-size:13px; }
+    
+    /* LOADING OVERLAY */
+    #loadingToast { display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#2c3e50; color:#fff; padding:10px 20px; border-radius:30px; font-size:13px; font-weight:bold; z-index:10000; box-shadow:0 4px 15px rgba(0,0,0,0.25); font-family:sans-serif; align-items:center; gap:8px; }
+    
+    @media print{
+      .no-print{ display:none!important; }
+      body { background: #fff; padding: 0; margin: 0; }
+      #printWrapper { width: 100%; max-width: 100%; }
+    }
+    
+    .no-print{
+      position:fixed; bottom:18px; right:18px; display:flex; gap:8px; z-index:99;
+      background:rgba(255,255,255,0.92); backdrop-filter:blur(6px); padding:8px 12px;
+      border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.18); border:1px solid #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .btnP{
+      padding:9px 15px; border:none; border-radius:8px; font-size:12.5px; font-weight:bold;
+      cursor:pointer; background:#2c3e50; color:#fff; display:inline-flex; align-items:center; gap:6px;
+      transition:background 0.15s, transform 0.1s;
+    }
+    .btnP:hover{ transform: translateY(-1px); }
+    .btnP.green{ background:#27ae60; }
+    .btnP.blue{ background:#2980b9; }
+    .btnP.orange{ background:#d35400; }
   </style>
 </head>
 <body>
-<div class="kop" id="kopEl"></div>
-<div class="header">
-  LAMPIRAN BUKTI FISIK PEKERJAAN &nbsp;|&nbsp; 
-  Dapur: <span id="lblDapur">—</span> &nbsp;|&nbsp; 
-  PIC: <span id="lblPIC">—</span> &nbsp;|&nbsp;
-  No. SP: <span id="lblNo">—</span>
+
+<div id="loadingToast">
+  <svg width="18" height="18" viewBox="0 0 24 24" style="animation:spin 1s linear infinite;fill:#fff"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="4" fill="none" stroke-dasharray="31.4 31.4"/></svg>
+  <span id="loadingMsg">Memproses PDF...</span>
 </div>
 
-<div id="kontenFoto"></div>
+<style>
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
 
-<div class="no-print"><button class="btnP" onclick="window.print()">🖨 Cetak</button></div>
+<div id="printWrapper">
+  <div class="kop" id="kopEl"></div>
+  <div class="header">
+    LAMPIRAN BUKTI FISIK PEKERJAAN &nbsp;|&nbsp; 
+    Dapur: <span id="lblDapur">—</span> &nbsp;|&nbsp; 
+    PIC: <span id="lblPIC">—</span> &nbsp;|&nbsp;
+    No. SP: <span id="lblNo">—</span>
+  </div>
+
+  <div id="kontenFoto"></div>
+</div>
+
+<div class="no-print">
+  <button class="btnP green" onclick="cetakDokumen()">
+    <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg> Cetak
+  </button>
+  <button class="btnP blue" onclick="unduhPDF()">
+    <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg> Unduh PDF
+  </button>
+  <button class="btnP orange" onclick="sharePDF()">
+    <svg style="width:15px;height:15px;fill:currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg> Kirim WA (PDF)
+  </button>
+</div>
 
 <script>
-// Konversi URL Drive menggunakan server lh3 Google agar kebal blokir
+let namaDapurGlobal = '';
+let judulProyekGlobal = '';
+
 function driveImgSrc(url) {
   if (!url) return url;
-  
   let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || 
               url.match(/\/d\/([a-zA-Z0-9_-]+)/) || 
               url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-              
   if (match && match[1]) {
-    // Menggunakan server lh3.googleusercontent khusus untuk merender gambar public Drive
     return `https://lh3.googleusercontent.com/d/${match[1]}`;
   }
   return url;
 }
 
-// Fungsi memisahkan data string koma dari Google Sheets
 function pastikanArray(val) {
   if (!val) return [];
   if (Array.isArray(val)) return val;
@@ -63,21 +110,116 @@ function pastikanArray(val) {
   return [];
 }
 
-// Load kop surat
+function getSafeFileName() {
+  const d = (namaDapurGlobal || 'Dapur').replace(/[/\\?%*:|"<>]/g, '-').trim();
+  const p = (judulProyekGlobal || 'Proyek').replace(/[/\\?%*:|"<>]/g, '-').trim();
+  return `Lampiran Foto - ${d} - ${p}`;
+}
+
+function cetakDokumen() {
+  window.print();
+}
+
+function tampilkanLoading(pesan) {
+  const toast = document.getElementById('loadingToast');
+  document.getElementById('loadingMsg').innerText = pesan || 'Memproses...';
+  toast.style.display = 'flex';
+}
+
+function sembunyikanLoading() {
+  document.getElementById('loadingToast').style.display = 'none';
+}
+
+async function unduhPDF() {
+  tampilkanLoading('Menyiapkan file PDF...');
+  const fileName = `${getSafeFileName()}.pdf`;
+  const el = document.getElementById('printWrapper');
+  
+  const opt = {
+    margin: [10, 10, 10, 10],
+    filename: fileName,
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { scale: 1.8, useCORS: true, logging: false },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  
+  try {
+    if (typeof html2pdf !== 'undefined') {
+      await html2pdf().set(opt).from(el).save();
+    } else {
+      window.print();
+    }
+  } catch(e) {
+    console.error(e);
+    window.print();
+  } finally {
+    sembunyikanLoading();
+  }
+}
+
+async function sharePDF() {
+  tampilkanLoading('Membuat PDF untuk WhatsApp / Share...');
+  const fileName = `${getSafeFileName()}.pdf`;
+  const el = document.getElementById('printWrapper');
+  
+  const opt = {
+    margin: [10, 10, 10, 10],
+    filename: fileName,
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { scale: 1.8, useCORS: true, logging: false },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  
+  try {
+    if (typeof html2pdf !== 'undefined') {
+      const pdfBlob = await html2pdf().set(opt).from(el).outputPdf('blob');
+      sembunyikanLoading();
+      
+      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: fileName,
+          text: `Berikut kami kirimkan Lampiran Foto Bukti Fisik:\n*${judulProyekGlobal}* di *${namaDapurGlobal}*.`,
+          files: [file]
+        });
+      } else {
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        
+        const waText = encodeURIComponent(`Halo, terlampir dokumen Lampiran Foto Bukti Fisik:\n*${getSafeFileName()}*\n\n(File PDF sudah otomatis terunduh di perangkat Anda dan siap dilampirkan).`);
+        window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
+      }
+    } else {
+      sembunyikanLoading();
+      window.print();
+    }
+  } catch(e) {
+    sembunyikanLoading();
+    console.error(e);
+    window.print();
+  }
+}
+
 function loadKop(kopUrl, cb) {
   const el = document.getElementById('kopEl');
   if (!kopUrl || kopUrl.trim() === '' || kopUrl === 'Kop.png') {
     const img = new Image();
-    img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; cb(); };
-    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; cb(); };
+    img.onload = () => { el.innerHTML = `<img src="Kop.png" alt="Kop Surat">`; if(cb) cb(); };
+    img.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; if(cb) cb(); };
     img.src = 'Kop.png';
   } else {
     const img = new Image();
-    img.onload = () => { el.innerHTML = `<img src="${kopUrl}">`; cb(); };
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { el.innerHTML = `<img src="${kopUrl}">`; if(cb) cb(); };
     img.onerror = () => {
       const img2 = new Image();
-      img2.onload = () => { el.innerHTML = `<img src="Kop.png">`; cb(); };
-      img2.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; cb(); };
+      img2.onload = () => { el.innerHTML = `<img src="Kop.png">`; if(cb) cb(); };
+      img2.onerror = () => { el.innerHTML = `<div class="kop-fallback"><h1>YAYASAN MUSLIM ACEH PEDULI</h1></div>`; if(cb) cb(); };
       img2.src = 'Kop.png';
     };
     img.src = kopUrl;
@@ -91,7 +233,7 @@ function buatSection(judul, arrRaw, labelPrefix) {
   let cards = arr.map((src, i) => {
     const thumb = driveImgSrc(src);
     return `<div class="photo-card">
-      <img src="${thumb}" crossorigin="anonymous" referrerpolicy="no-referrer" alt="${labelPrefix} ${i+1}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'150\\'><rect fill=\\'%23f0f0f0\\' width=\\'200\\' height=\\'150\\'/><text x=\\'100\\' y=\\'75\\' text-anchor=\\'middle\\' fill=\\'%23999\\' font-size=\\'12\\'>Gagal Load / Akses Gdrive Ditolak</text></svg>'">
+      <img src="${thumb}" crossorigin="anonymous" referrerpolicy="no-referrer" alt="${labelPrefix} ${i+1}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'150\\'><rect fill=\\'%23f0f0f0\\' width=\\'200\\' height=\\'150\\'/><text x=\\'100\\' y=\\'75\\' text-anchor=\\'middle\\' fill=\\'%23999\\' font-size=\\'11\\'>Foto Tidak Dapat Dimuat</text></svg>'">
       <div class="caption">${labelPrefix} #${i+1}</div>
     </div>`;
   }).join('');
@@ -103,18 +245,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const data = JSON.parse(localStorage.getItem('smm_siap_cetak'));
   const s = JSON.parse(localStorage.getItem('smm_setting') || '{}');
   if (!data || !data.bundle) {
-    document.getElementById('kontenFoto').innerHTML = '<p style="padding:20px;text-align:center;">Data kosong. Silakan kembali ke aplikasi utama, cari proyek, lalu klik cetak lampiran.</p>';
+    document.getElementById('kontenFoto').innerHTML = '<p style="padding:20px;text-align:center;">Data kosong. Silakan kembali ke aplikasi utama, pilih proyek, lalu klik cetak lampiran.</p>';
     return;
   }
 
   const b = data.bundle;
+  namaDapurGlobal = b.namaDapur || s.lok || 'Dapur';
+  judulProyekGlobal = b.judulProyek || 'Pekerjaan Umum';
+
+  // SET DYNAMIC DOCUMENT TITLE WITH DAPUR & PROYEK
+  document.title = getSafeFileName();
 
   document.getElementById('lblDapur').innerText = b.namaDapur || '—';
   document.getElementById('lblPIC').innerText = b.pic || '—';
   document.getElementById('lblNo').innerText = `SP/${String(b.noUrut).slice(-4)}/MBG/${new Date().getFullYear()}`;
 
   let html = '';
-
   // Halaman 1: Progress pekerjaan
   html += buatSection('I. Foto Kondisi Awal (Sebelum Pekerjaan)', b.fotoAwal, 'Kondisi Awal');
   html += buatSection('II. Foto Saat Pengerjaan (Progress)', b.fotoSedang, 'Progress');
@@ -128,9 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('kontenFoto').innerHTML = html;
   
-  loadKop(s.kop, () => {
-    setTimeout(() => window.print(), 2000);
-  });
+  loadKop(s.kop);
 });
 </script>
 </body>
