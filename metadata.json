@@ -1,6 +1,0 @@
-{
-  "name": "Validasi Rekapitulasi Pengeluaran Yayasan",
-  "description": "Sistem Monitoring, Usulan & Maintenance",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
