@@ -308,6 +308,44 @@ function doPost(e) {
       return ContentService.createTextOutput(JSON.stringify({status: "Sukses"})).setMimeType(ContentService.MimeType.JSON);
     }
 
+    // 8. HAPUS FOTO DARI DATABASE DAN GOOGLE DRIVE
+    if(data.action === "hapusFoto") {
+      const dbMon = sheetMonitor.getDataRange().getValues();
+      let rowIndex = -1;
+      for (let i = 1; i < dbMon.length; i++) {
+        if(dbMon[i][0] == data.noUrut) {
+          rowIndex = i;
+          break;
+        }
+      }
+      if (rowIndex !== -1) {
+        // Kolom fotoAwal (9), fotoSedang (10), fotoSelesai (11), fotoBon (12), fotoKwitansi (13), fotoStrukBayar (17)
+        const colIndices = [9, 10, 11, 12, 13, 17];
+        for (let j = 0; j < colIndices.length; j++) {
+          let colIdx = colIndices[j];
+          let cellVal = String(dbMon[rowIndex][colIdx - 1] || "");
+          let urls = cellVal.split(" \n").filter(Boolean);
+          const foundIdx = urls.indexOf(data.fotoUrl);
+          if (foundIdx !== -1) {
+            urls.splice(foundIdx, 1);
+            sheetMonitor.getRange(rowIndex + 1, colIdx).setValue(urls.join(" \n"));
+            
+            // Hapus file dari Drive
+            try {
+              const fileId = ambilFileId(data.fotoUrl);
+              if (fileId) {
+                DriveApp.getFileById(fileId).setTrashed(true);
+              }
+            } catch(e) {
+              // Abaikan jika gagal menghapus file fisik di Drive
+            }
+            break;
+          }
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({status: "Sukses"})).setMimeType(ContentService.MimeType.JSON);
+    }
+
 
   } catch (error) {
     return ContentService.createTextOutput(
@@ -380,4 +418,17 @@ function getTargetFolder(noUrut, namaDapur, pic, judulProyek) {
   const folderProyek = getOrCreateSubFolder(folderPic, namaFolderProyek);
   
   return folderProyek;
+}
+
+function ambilFileId(url) {
+  if (!url) return null;
+  // Format drive.google.com/open?id=...
+  let match = url.match(/id=([^&]+)/);
+  if (match) return match[1];
+  
+  // Format drive.google.com/file/d/...
+  match = url.match(/\/file\/d\/([^/]+)/);
+  if (match) return match[1];
+  
+  return null;
 }

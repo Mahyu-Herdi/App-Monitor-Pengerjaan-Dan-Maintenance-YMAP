@@ -174,6 +174,8 @@ display:flex;align-items:center; justify-content:center; flex-shrink:0;
 .gallery-thumb:hover{transform:scale(1.08); border-color:var(--green)}
 .drive-link{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;color:var(--blue);text-decoration:none;padding:4px 10px;border-radius:8px;box-shadow:var(--sh-in-sm);margin-top:4px}
 .drive-link:hover{color:var(--green)}
+.btn-delete-foto{position:absolute;top:-5px;right:-5px;width:22px;height:22px;background:var(--red);border:1.5px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.25);z-index:10;transition:.2s}
+.btn-delete-foto:hover{transform:scale(1.1);background:#c0392b}
 
 /* FOTO POPUP */
 .overlay-foto{display:none;position:fixed; inset:0;background:rgba(0,0,0,.9);z-index:11000;align-items:center; justify-content:center}
@@ -445,6 +447,18 @@ background:var(--bg); padding:10px 22px; border-radius:30px; box-shadow:var(--sh
 <div style="display: flex; justify-content:center;margin-bottom: 15px" id="mdIcon"></div>
 <p id="mdMsg" style="font-weight:bold"></p>
 <button class="btn full" style="margin-top:0" onclick="closeAlert()">Mengerti</button>
+</div>
+
+<div id="ovConfirm" class="overlay" style="z-index:10002"></div>
+<div id="mdConfirm" class="modal" style="z-index:10003; max-width:340px">
+<div style="display: flex; justify-content:center;margin-bottom: 15px; color: var(--red)">
+  <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+</div>
+<p id="mdConfirmMsg" style="font-weight:bold; text-align:center; margin-bottom:15px; font-size:.95rem;"></p>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+  <button class="btn full red" style="margin:0; padding:10px;" id="btnConfirmYes">Ya, Hapus</button>
+  <button class="btn full" style="margin:0; padding:10px; background:var(--bg); border:1px solid var(--border); color:var(--txt)" onclick="closeConfirm()">Batal</button>
+</div>
 </div>
 
 <div class="overlay-foto" id="ovFoto" onclick="closeFotoPopup(event)">
@@ -962,6 +976,23 @@ function closeAlert(){
     document.getElementById('ovAlert').style.display='none';
     document.getElementById('mdAlert').style.display='none'; 
 }
+
+let confirmCallback = null;
+function showConfirm(msg, callback){
+    document.getElementById('mdConfirmMsg').innerText = msg;
+    document.getElementById('ovConfirm').style.display='block';
+    document.getElementById('mdConfirm').style.display='block';
+    confirmCallback = callback;
+}
+function closeConfirm(){
+    document.getElementById('ovConfirm').style.display='none';
+    document.getElementById('mdConfirm').style.display='none';
+    confirmCallback = null;
+}
+document.getElementById('btnConfirmYes').addEventListener('click', () => {
+    if(confirmCallback) confirmCallback();
+    closeConfirm();
+});
 
 // ── NAVIGASI ──
 function showSec(key){
@@ -2247,7 +2278,13 @@ function bukaLihatDokumen(noUrut){
             let strukHtml='';
             if(p.fotoStrukBayar&&p.fotoStrukBayar[i]){
                 const thumbSrc=driveImgSrc(p.fotoStrukBayar[i]);
-                strukHtml=`<br><img src="${thumbSrc}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;cursor:pointer;margin-top:4px" onclick="bukaFoto('${thumbSrc}')" title="Lihat struk">`;
+                strukHtml=`<br>
+                <div style="position:relative; display:inline-block; margin-top:4px;">
+                    <img src="${thumbSrc}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;cursor:pointer;" onclick="bukaFoto('${thumbSrc}')" title="Lihat struk">
+                    <button type="button" class="btn-delete-foto" style="top:-6px; right:-6px; width:18px; height:18px;" onclick="hapusFotoSatu('${noUrut}', '${p.fotoStrukBayar[i]}')" title="Hapus struk ini">
+                        <svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:#fff;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+                </div>`;
             }
             riwayatHtml+=`<li style="margin-bottom:8px"><b>Tgl:</b> ${formatTgl(t)}<br><b>Ket:</b> ${dana}${strukHtml}</li>`;
         });
@@ -2261,8 +2298,11 @@ function bukaLihatDokumen(noUrut){
         if(!arr||!arr.length) return '';
         let imgs=arr.map(src=>{
             const thumb=driveImgSrc(src);
-            return `<div style="flex-shrink:0;text-align:center">
+            return `<div style="position:relative; flex-shrink:0; text-align:center">
             <img src="${thumb}" class="gallery-thumb" onclick="bukaFoto('${thumb}')" title="Klik untuk perbesar">
+            <button type="button" class="btn-delete-foto" onclick="hapusFotoSatu('${noUrut}', '${src}')" title="Hapus foto ini">
+                <svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:#fff;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
             <br>
             <a href="${src}" target="_blank" class="drive-link" style="display:inline-flex;align-items:center;justify-content:center;gap:3px">
               <svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg> Drive
@@ -2296,6 +2336,52 @@ function bukaLihatDokumen(noUrut){
 function closeLihatDokumen(){
     document.getElementById('ovLihatDokumen').style.display='none';
     document.getElementById('mdLihatDokumen').style.display='none';
+}
+
+async function hapusFotoSatu(noUrut, fotoUrl){
+    showConfirm("Apakah Anda yakin ingin menghapus foto ini dari Google Drive & database?", async () => {
+        showLoading("Menghapus foto...");
+        try {
+            if(!navigator.onLine) {
+                throw new Error("Koneksi internet wajib untuk menghapus foto dari Drive!");
+            }
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    action: 'hapusFoto',
+                    noUrut: noUrut,
+                    fotoUrl: fotoUrl
+                })
+            });
+            const data = await res.json();
+            if (data.status !== 'Sukses') {
+                throw new Error(data.pesan || 'Gagal menghapus foto di server');
+            }
+            
+            // Perbarui state lokal
+            const idx = dbM.findIndex(x => String(x.noUrut) === String(noUrut));
+            if (idx !== -1) {
+                const p = dbM[idx];
+                const keys = ['fotoAwal', 'fotoSedang', 'fotoSelesai', 'fotoBon', 'fotoKwitansi', 'fotoStrukBayar'];
+                keys.forEach(k => {
+                    if (p[k] && Array.isArray(p[k])) {
+                        const fIdx = p[k].indexOf(fotoUrl);
+                        if (fIdx !== -1) p[k].splice(fIdx, 1);
+                    }
+                });
+                localStorage.setItem('db_monitor', JSON.stringify(dbM));
+            }
+            
+            showAlert("Foto berhasil dihapus!", "success");
+            bukaLihatDokumen(noUrut);
+            applyFilter();
+        } catch (err) {
+            showAlert("Gagal menghapus foto: " + err.message, "error");
+        } finally {
+            hideLoading();
+        }
+    });
 }
 
 // ==================== FASE 5: BAYAR ====================
