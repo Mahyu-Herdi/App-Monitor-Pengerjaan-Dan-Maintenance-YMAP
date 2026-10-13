@@ -1,0 +1,18 @@
+{
+  "name": "Validasi Rekapitulasi Pengeluaran Yayasan",
+  "short_name": "Rekap Pengeluaran",
+  "description": "Sistem Monitoring, Usulan & Maintenance",
+  "start_url": "./index.html",
+  "display": "minimal-ui",
+  "background_color": "#F5F2EB",
+  "theme_color": "#F5F2EB",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
