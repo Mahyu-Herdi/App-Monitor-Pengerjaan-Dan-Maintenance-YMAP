@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "mkdir -p public && cp index.html invoice.html lampiran.html sp.html manifest.json sw.js config.js Kop.png icon.png public/ && echo 'Build complete'"
+    "build": "node -e \"console.log('Build complete')\""
   },
   "dependencies": {}
 }
