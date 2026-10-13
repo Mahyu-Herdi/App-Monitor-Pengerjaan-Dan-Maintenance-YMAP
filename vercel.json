@@ -1,3 +1,4 @@
 {
-  "outputDirectory": "."
+  "buildCommand": "mkdir -p public && cp index.html invoice.html lampiran.html sp.html manifest.json sw.js config.js Kop.png icon.png public/",
+  "outputDirectory": "public"
 }
