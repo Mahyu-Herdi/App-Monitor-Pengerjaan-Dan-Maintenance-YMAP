@@ -1,0 +1,8 @@
+{
+  "name": "Monitoring - Rekonstruksi - Fasilitas",
+  "description": "Aplikasi monitoring rekonstruksi fasilitas dan pencatatan pekerjaan",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

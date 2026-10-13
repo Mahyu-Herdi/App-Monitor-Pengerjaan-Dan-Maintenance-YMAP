@@ -1,7 +1,6 @@
 // Naikkan versinya biar HP kamu otomatis memperbarui aplikasi
-const CACHE_NAME = 'smm-dapur-v4'; 
-// config.js sudah dihapus dari daftar di bawah ini
-const ASSETS = ['./', './index.html', './manifest.json', './sp.html', './invoice.html', './lampiran.html']; 
+const CACHE_NAME = 'smm-dapur-v6'; 
+const ASSETS = ['./', './index.html', './config.js', './manifest.json', './sp.html', './invoice.html', './lampiran.html']; 
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
