@@ -989,6 +989,7 @@ Pengaturan Sistem & Rekening
 <div style="grid-column:1/-1"><label>URL Kop Surat (opsional — kosongkan jika pakai Kop.png di folder)</label><input type="text" id="sKopUrl" placeholder="https://... atau kosongkan"></div>
 </div>
 <button class="btn grn full" id="btnSimpanSetting" onclick="saveSetting()">Simpan & Sync Pengaturan</button>
+<button class="btn red full" onclick="logout()" style="margin-top:10px">Logout</button>
 </div>
 
 <nav class="nav">
@@ -2869,6 +2870,18 @@ function toggleShowPass() {
         if (eyeHide) eyeHide.style.display = 'none';
     }
 }
+
+function logout() {
+    if(confirm('Yakin ingin logout dari aplikasi?')) {
+        sessionStorage.removeItem('is_authenticated');
+        localStorage.removeItem('is_authenticated');
+        document.documentElement.classList.remove('authenticated');
+        const overlay = document.getElementById('loginOverlay');
+        if (overlay) overlay.style.display = 'flex';
+        window.location.href = './index.html?logout=' + Date.now();
+    }
+}
+
 
 // ==================== INIT ====================
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
