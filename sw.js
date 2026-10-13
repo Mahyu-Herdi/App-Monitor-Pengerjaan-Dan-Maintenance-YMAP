@@ -1,5 +1,5 @@
 // Naikkan versinya biar HP kamu otomatis memperbarui aplikasi
-const CACHE_NAME = 'smm-dapur-v7'; 
+const CACHE_NAME = 'smm-dapur-v6'; 
 const ASSETS = ['./', './index.html', './config.js', './manifest.json', './sp.html', './invoice.html', './lampiran.html']; 
 
 self.addEventListener('install', e => {
